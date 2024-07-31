@@ -1,0 +1,325 @@
+/**
+ * @file
+ * Views 3D Carousel.
+ *
+ * Filename:     views-3d-carousel.css
+ * Website:      https://www.flashwebcenter.com
+ * Developer:    Alaa Haddad https://www.alaahaddad.com.
+ */
+
+/* 3d_carousel */
+.vvjc {
+  display: grid;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeIn 1s ease-in 0.4s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+
+}
+
+.vvjc * {
+  box-sizing: border-box;
+}
+
+.vvjc > .vvjc__inner {
+  max-height: 38.125rem;
+  perspective: 40rem;
+  position: relative;
+  width: 100%;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.vvjc .vvjc-items {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
+
+.vvjc .vvjc-items > .view__3d-item {
+  max-width: 71.875rem;
+  max-height: 34.375rem;
+  position: absolute;
+  transform-style: preserve-3d;
+  width: calc(100% - 24px);
+  top: 0;
+  left: 12px;
+  right: 12px;
+  transition: transform 1s, opacity 1s;
+}
+
+.vvjc .views--3d-carousel-nav {
+  min-height: 48px;
+  width: 100%;
+}
+
+.vvjc .views--3d-carousel-nav .hide-0 {
+  display: none;
+}
+
+.vvjc .views--3d-carousel-nav div {
+  text-align: center;
+  width: 100%;
+}
+
+.vvjc.car__large-height-100 > .vvjc__inner,
+.vvjc.car__large-height-100 > .vvjc__inner > .vvjc-items {
+  height: 10rem; /* 160px / 16px */
+}
+
+.vvjc.car__large-height-100 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 6.25rem; /* 100px / 16px */
+}
+
+.vvjc.car__large-height-150 > .vvjc__inner,
+.vvjc.car__large-height-150 > .vvjc__inner > .vvjc-items {
+  height: 13.125rem; /* 210px / 16px */
+}
+
+.vvjc.car__large-height-150 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 9.375rem; /* 150px / 16px */
+}
+
+.vvjc.car__large-height-200 > .vvjc__inner,
+.vvjc.car__large-height-200 > .vvjc__inner > .vvjc-items {
+  height: 16.25rem; /* 260px / 16px */
+}
+
+.vvjc.car__large-height-200 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 12.5rem; /* 200px / 16px */
+}
+
+.vvjc.car__large-height-250 > .vvjc__inner,
+.vvjc.car__large-height-250 > .vvjc__inner > .vvjc-items {
+  height: 19.375rem; /* 310px / 16px */
+}
+
+.vvjc.car__large-height-250 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 15.625rem; /* 250px / 16px */
+}
+
+.vvjc.car__large-height-300 > .vvjc__inner,
+.vvjc.car__large-height-300 > .vvjc__inner > .vvjc-items {
+  height: 22.5rem; /* 360px / 16px */
+}
+
+.vvjc.car__large-height-300 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 18.75rem; /* 300px / 16px */
+}
+
+.vvjc.car__large-height-350 > .vvjc__inner,
+.vvjc.car__large-height-350 > .vvjc__inner > .vvjc-items {
+  height: 25.625rem; /* 410px / 16px */
+}
+
+.vvjc.car__large-height-350 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 21.875rem; /* 350px / 16px */
+}
+
+.vvjc.car__large-height-400 > .vvjc__inner,
+.vvjc.car__large-height-400 > .vvjc__inner > .vvjc-items {
+  height: 28.75rem; /* 460px / 16px */
+}
+
+.vvjc.car__large-height-400 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 25rem; /* 400px / 16px */
+}
+
+.vvjc.car__large-height-450 > .vvjc__inner,
+.vvjc.car__large-height-450 > .vvjc__inner > .vvjc-items {
+  height: 31.875rem; /* 510px / 16px */
+}
+
+.vvjc.car__large-height-450 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 28.125rem; /* 450px / 16px */
+}
+
+.vvjc.car__large-height-500 > .vvjc__inner,
+.vvjc.car__large-height-500 > .vvjc__inner > .vvjc-items {
+  height: 35rem; /* 560px / 16px */
+}
+
+.vvjc.car__large-height-500 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 31.25rem; /* 500px / 16px */
+}
+
+.vvjc.car__large-height-550 > .vvjc__inner,
+.vvjc.car__large-height-550 > .vvjc__inner > .vvjc-items {
+  height: 38.125rem; /* 610px / 16px */
+}
+
+.vvjc.car__large-height-550 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  height: 34.375rem; /* 550px / 16px */
+}
+
+.vvjc .field--name-pb-media-image .field__item {
+  display: flex;
+  justify-content: center;
+}
+
+.vvjc .field--name-pb-media-image .field__item img {
+  display: block;
+  width: auto !important;
+}
+
+.vvjc .pb__img-wrapper div {
+  width: 100%;
+}
+
+.vvjc .views--3d-carousel-nav > .car__prev-next-arrow-Off,
+.vvjc .views--3d-carousel-nav > .time__in-seconds {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  width: 0;
+  font-size: 8px;
+  line-height: 0;
+}
+
+.vvjc .views--3d-carousel-nav button.pp {
+  text-align: center;
+  display: none;
+  font-weight: normal;
+  min-width: 48px;
+  min-height: 32px;
+}
+
+.vvjc .views--3d-carousel-nav button {
+  transition: opacity 0.5s, visibility 0.5s;
+  opacity: 1;
+  visibility: visible;
+  padding: 12px;
+  font-size: 18px;
+}
+
+.vvjc .views--3d-carousel-nav .car__slide-number {
+  font-size: 14px;
+}
+
+.vvjc .views--3d-carousel-nav .car__slide-number,
+.vvjc .views--3d-carousel-nav .car__button {
+  min-width: 48px;
+  min-height: 48px;
+  font-weight: normal;
+  transition: width 0.2s ease-in-out;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vvjc .views--3d-carousel-nav .car__next.hidden,
+.vvjc .views--3d-carousel-nav .car__prev.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, visibility 0s 0.5s;
+}
+
+.vvjc .views--3d-carousel-nav .car__next,
+.vvjc .views--3d-carousel-nav .car__prev {
+  font-size: 24px;
+}
+
+.vvjc .views--3d-carousel-nav > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+}
+
+.vvjc .vvjc__inner:hover .pb__active .pb__image-overlay-fade .pb__overlay-container {
+  opacity: 1;
+}
+
+.vvjc .vvjc__inner:hover .pb__active .pb__image-overlay-zoom .pb__overlay-container {
+  transform: scale(1);
+}
+
+.vvjc .vvjc__inner:hover .pb__active .pb__image-overlay-title .pb__overlay-title {
+  opacity: 1;
+}
+
+.vvjc .vvjc__inner:hover .pb__active .pb__image-overlay-slide_top .pb__overlay-container {
+  bottom: 0;
+  height: 100%;
+}
+
+.vvjc .vvjc__inner:hover .pb__active .pb__image-overlay-slide_bottom .pb__overlay-container {
+  height: 100%;
+}
+
+.vvjc .vvjc__inner:hover .pb__active .pb__image-overlay-slide_left .pb__overlay-container {
+  width: 100%;
+}
+
+.vvjc .vvjc__inner:hover .pb__active .pb__image-overlay-slide_right .pb__overlay-container {
+  width: 100%;
+  left: 0;
+}
+
+.vvjc > .vvjc__inner.car_width_300 {
+  max-width: 18.75rem;
+  perspective: 22rem;
+}
+
+.vvjc > .vvjc__inner.car_width_400 {
+  max-width: 25rem;
+  perspective: 24rem;
+}
+
+.vvjc > .vvjc__inner.car_width_500 {
+  max-width: 31.25rem;
+  perspective: 26rem;
+}
+
+.vvjc > .vvjc__inner.car_width_600 {
+  max-width: 37.5rem;
+  perspective: 28rem;
+}
+
+.vvjc > .vvjc__inner.car_width_700 {
+  max-width: 43.75rem;
+  perspective: 30rem;
+}
+
+.vvjc > .vvjc__inner.car_width_800 {
+  max-width: 50rem;
+  perspective: 32rem;
+}
+
+.vvjc > .vvjc__inner.car_width_900 {
+  max-width: 56.25rem;
+  perspective: 34rem;
+}
+
+.vvjc > .vvjc__inner.car_width_1000 {
+  max-width: 62.5rem !important;
+  perspective: 40rem;
+}
+
+.vvjc .view__3d-item:hover * {
+  cursor: default;
+  pointer-events: none;
+}
+
+.vvjc .view__3d-item.pb__active:hover a {
+  cursor: pointer;
+  pointer-events: initial;
+}

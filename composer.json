@@ -1,0 +1,23 @@
+{
+    "name": "drupal/vvjc",
+    "description": "Provides a 3D Carousel format for Views.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Alaa Haddad (alaahaddad.com)",
+            "homepage": "https://www.drupal.org/u/flashwebcenter",
+            "role": "Maintainer"
+        }
+    ],
+    "homepage": "https://drupal.org/project/vvjc",
+  "require": {
+    "drupal/core": "*"
+  },
+    "support": {
+        "issues": "https://drupal.org/project/issues/vvjc",
+        "source": "https://git.drupalcode.org/project/vvjc"
+    }
+}
+

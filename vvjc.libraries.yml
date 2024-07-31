@@ -1,0 +1,42 @@
+vvjc:
+  version: VERSION
+  css:
+    theme:
+      css/vvjc.css: { }
+  js:
+    js/vvjc.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.ajax
+    - core/drupalSettings
+    - core/once
+
+vvjc__576:
+  version: VERSION
+  css:
+    theme:
+      css/vvjc-576.css: { weight: 202 }
+
+vvjc__768:
+  version: VERSION
+  css:
+    theme:
+      css/vvjc-768.css: { weight: 202 }
+
+vvjc__992:
+  version: VERSION
+  css:
+    theme:
+      css/vvjc-992.css: { weight: 202 }
+
+vvjc__1200:
+  version: VERSION
+  css:
+    theme:
+      css/vvjc-1200.css: { weight: 202 }
+
+vvjc__1400:
+  version: VERSION
+  css:
+    theme:
+      css/vvjc-1400.css: { weight: 202 }

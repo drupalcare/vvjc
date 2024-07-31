@@ -1,0 +1,7 @@
+name: 'Views Vanilla Javascript 3D Carousel'
+type: module
+description: 'Provides a Vanilla Javascript 3D Carousel format for Views.'
+core_version_requirement: ^10 || ^11
+package: views
+dependencies:
+  - drupal:views
