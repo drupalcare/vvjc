@@ -198,7 +198,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#unique_id' => $this->options['unique_id'],
       '#attached' => [
         'library' => [
-          'vvjc/vvjc', // Your custom library
+          'vvjc/vvjc',
         ],
       ],
     ];

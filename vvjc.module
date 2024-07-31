@@ -70,7 +70,7 @@ function template_preprocess_views_view_vvjc(&$variables) {
   // Define list attributes if needed.
   $list_attributes = [];
 
-  $variables['list_attributes'] = new \Drupal\Core\Template\Attribute($list_attributes);
+  $variables['list_attributes'] = new Attribute($list_attributes);
 
   $variables['settings'] = [
     'time_in_seconds' => $handler->options['time_in_seconds'],
@@ -85,4 +85,3 @@ function template_preprocess_views_view_vvjc(&$variables) {
   // Ensure unformatted preprocess function is called.
   template_preprocess_views_view_unformatted($variables);
 }
-

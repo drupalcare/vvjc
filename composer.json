@@ -1,6 +1,6 @@
 {
     "name": "drupal/vvjc",
-    "description": "Provides a 3D Carousel format for Views.",
+    "description": "Provides a Vanilla Javascript 3D Carousel format for Views.",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
