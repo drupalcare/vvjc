@@ -26,7 +26,7 @@ editing views.
 
 ## Installation
 
-1. Download and enable the **Views 3D Carousel** module.
+1. Download and enable the **Views Vanilla JavaScript 3D Carousel** module.
 2. Clear the cache: `drush cr` or via the Drupal admin interface.
 
 ## Usage

@@ -1,18 +1,18 @@
 /**
  * @file
- * Views 3D Carousle
+ * Views Vanilla JavaScript 3D Carousel
  *
- * Filename:     views-3d-carousel.js
+ * Filename:     vvjc.js
  * Website:      https://www.flashwebcenter.com
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 ((Drupal, drupalSettings, once) => {
   'use strict';
 
-  Drupal.behaviors.Views3DCarousel = {
+  Drupal.behaviors.VVJCarousel = {
     attach: function(context, settings) {
       let intervalIds = new Map();
-      const carousels = once('views3DCarousel', '.vvjc-items', context);
+      const carousels = once('VVJCarousel', '.vvjc-items', context);
       if (!carousels.length) {
         return;
       }
