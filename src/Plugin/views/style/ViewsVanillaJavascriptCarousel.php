@@ -35,11 +35,11 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['max_width'] = ['default' => 'car_width_500'];
+    $options['max_width'] = ['default' => '500'];
     $options['time_in_seconds'] = ['default' => 5000];
     $options['large_screen_height'] = ['default' => 300];
     $options['small_screen_height'] = ['default' => 200];
-    $options['available_breakpoints'] = ['default' => 'view__992'];
+    $options['available_breakpoints'] = ['default' => 'vvjc__992'];
     $options['perspective'] = ['default' => ''];
     $options['unique_id'] = ['default' => $this->generateUniqueId()];
     return $options;
@@ -90,14 +90,14 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#type' => 'select',
       '#title' => $this->t('Max Width'),
       '#options' => [
-        'car_width_300' => $this->t('300 px'),
-        'car_width_400' => $this->t('400 px'),
-        'car_width_500' => $this->t('500 px'),
-        'car_width_600' => $this->t('600 px'),
-        'car_width_700' => $this->t('700 px'),
-        'car_width_800' => $this->t('800 px'),
-        'car_width_900' => $this->t('900 px'),
-        'car_width_1000' => $this->t('1000 px'),
+        '300' => $this->t('300 px'),
+        '400' => $this->t('400 px'),
+        '500' => $this->t('500 px'),
+        '600' => $this->t('600 px'),
+        '700' => $this->t('700 px'),
+        '800' => $this->t('800 px'),
+        '900' => $this->t('900 px'),
+        '1000' => $this->t('1000 px'),
       ],
       '#default_value' => $this->options['max_width'],
       '#description' => $this->t('Choose a breakpoint for the carousel. This defines the width at which the carousel will adjust its layout.'),

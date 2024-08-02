@@ -79,7 +79,7 @@ display:
         options:
           grouping: {  }
           time_in_seconds: '5000'
-          max_width: car_width_500
+          max_width: '500'
           available_breakpoints: vvjc__992
           large_screen_height: '300'
           small_screen_height: '200'

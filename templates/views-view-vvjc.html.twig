@@ -20,31 +20,29 @@
  */
 #}
 
-{# Define breakpoints and attach the corresponding library #}
-{% set pb_breakpoints = 'vvjc/' ~ options.available_breakpoints %}
-{{ attach_library(pb_breakpoints) }}
 
 {# Set unique IDs for the carousel and container #}
 {% set unique_id = options.unique_id %}
-{% set main_id = 'vvjc-' ~ unique_id %}
+{% set time_in_seconds = options.time_in_seconds %}
+{% set vvjc_id = 'vvjc-' ~ unique_id %}
 {% set carousel_id = 'vvjc-items-' ~ unique_id %}
-{% set co_id = 'co-' ~ unique_id %}
+{% set bottom_nav_id = 'vvjc-nav-' ~ unique_id %}
 
 {# Set the classes for the view #}
 {% set classes = [
   'vvjc',
-  main_id,
-  'car__large-height-' ~ options.large_screen_height,
-  'car__small-height-' ~ options.small_screen_height,
+  vvjc_id,
+  'height-large-' ~ options.large_screen_height,
+  'height-small-' ~ options.small_screen_height,
 ] %}
-{% set classes_inner = 'vvjc__inner ' ~ options.max_width %}
+{% set classes_inner = 'vvjc-inner ' ~ 'max-width-' ~ options.max_width %}
 
-<div {{ attributes.addClass(classes).setAttribute('id', main_id) }} role="region" aria-label="Image Carousel">
+<div {{ attributes.addClass(classes).setAttribute('id', vvjc_id) }} role="region" aria-label="Image Carousel">
   <div class="{{ classes_inner }}"{% if options.perspective %} style="perspective:{{ options.perspective }}px"{% endif %}>
     <div id="{{ carousel_id }}" class="vvjc-items" role="group" aria-roledescription="carousel" aria-labelledby="index-{{ unique_id }}">
       {% for row in rows %}
         {% set row_id = 'item-' ~ unique_id ~ '-' ~ loop.index %}
-        <div id="{{ row_id }}" class="view__3d-item item-{{ unique_id }}-{{ loop.index }}" role="tabpanel" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="{{ loop.first ? '0' : '-1' }}" aria-labelledby="label-{{ row_id }}">
+        <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="tabpanel" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="{{ loop.first ? '0' : '-1' }}" aria-labelledby="label-{{ row_id }}">
           <div id="label-{{ row_id }}" class="visually-hidden">Slide {{ loop.index }} of {{ rows|length }}</div>
           {{ row.content }}
         </div>
@@ -52,24 +50,26 @@
     </div>
   </div>
 
-  <div id="{{ co_id }}" class="views--3d-carousel-nav" aria-label="Carousel Controls">
-    <div class="pb__row">
-      <button id="prev-{{ unique_id }}" role="button" class="car__button car__prev" aria-controls="{{ carousel_id }}" aria-label="Previous Slide">
-        <span class="visually-hidden">{{ 'Previous Slide'|t }}</span>&#10094;
-      </button>
-      <span id="index-{{ unique_id }}" class="car__slide-number" aria-label="{{ 'Slide 1 of @count'|t({'@count': rows|length}) }}" aria-live="polite"></span>
-      {% if options.time_in_seconds > 0 %}
-        <button id="btn-{{ unique_id }}" class="car__button hide-{{ options.time_in_seconds }} car_play" aria-controls="{{ carousel_id }}" aria-label="Play Slideshow">
-          <span class="visually-hidden">{{ 'Play Pause Slideshow'|t }}</span>&#10073;&nbsp;&#10073;
+  <div id="{{ bottom_nav_id }}" class="vvjc-nav" aria-label="Carousel Controls">
+    <div class="vvjc-nav-inner">
+      {% if time_in_seconds > 0 %}
+        <button id="btn-{{ unique_id }}" class="button display-{{ time_in_seconds }} play" aria-controls="{{ carousel_id }}" aria-label="Play Slideshow">
+          <span class="visually-hidden">{{ 'Play Pause 3D Carousel'|t }}</span>&#10073;&nbsp;&#10073;
         </button>
       {% endif %}
-      <button id="next-{{ unique_id }}" role="button" class="car__button car__next" aria-controls="{{ carousel_id }}" aria-label="Next Slide">
+      <button id="prev-{{ unique_id }}" role="button" class="button prev-arrow" aria-controls="{{ carousel_id }}" aria-label="Previous Slide">
+        <span class="visually-hidden">{{ 'Previous Slide'|t }}</span>&#10094;
+      </button>
+      <span id="index-{{ unique_id }}" class="current-slide-number" aria-label="{{ 'Slide 1 of @count'|t({'@count': rows|length}) }}" aria-live="polite"></span>
+
+      <button id="next-{{ unique_id }}" role="button" class="button next-arrow" aria-controls="{{ carousel_id }}" aria-label="Next Slide">
         <span class="visually-hidden">{{ 'Next Slide'|t }}</span>&#10095;
       </button>
     </div>
 
-    <div class="time__in-seconds" aria-hidden="true">
-      {{ options.time_in_seconds }}
+    <div class="time-in-seconds" aria-hidden="false" aria-label="{{ 'This is the time in milliseconds for each slide transition. Current setting is ' ~ time_in_seconds ~ ' milliseconds.'|t }}">
+      {{ time_in_seconds }}
     </div>
+
   </div>
 </div>

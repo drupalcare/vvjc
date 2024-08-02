@@ -51,7 +51,7 @@
 
       const getCarInfo = (carouselId) => {
         const carousel = context.getElementById(carouselId);
-        const cells = carousel.querySelectorAll(`#${carouselId}>.view__3d-item`);
+        const cells = carousel.querySelectorAll(`#${carouselId}>.vvjc-item`);
         const cellCount = cells.length;
         const cellWidth = carousel.offsetWidth;
         const theta = 360 / cellCount;
@@ -102,7 +102,7 @@
           cells[i].style.opacity = i < cellCount ? 1 : 0;
           cells[i].style.transform = i < cellCount ? `rotateY(${theta * i}deg) translateZ(${radius}px)` : "none";
         }
-        cells[0].classList.add('pb__active');
+        cells[0].classList.add('active');
         indexNo.innerHTML = 1;
         nextBtnId.classList.remove('hidden');
         nextBtnId.removeAttribute('tabindex');
@@ -112,14 +112,14 @@
       };
 
       const backward = (carouselId) => {
-        const cells = context.querySelectorAll(`#${carouselId}>.view__3d-item`);
+        const cells = context.querySelectorAll(`#${carouselId}>.vvjc-item`);
         const cellCount = cells.length;
         const btnId = carouselId.split('-')[2];
         const prevBtnId = context.getElementById(`prev-${btnId}`);
         const nextBtnId = context.getElementById(`next-${btnId}`);
         const indexNo = context.getElementById(`index-${btnId}`);
         for (let i = 0; i < cellCount; i++) {
-          if (!cells[i].classList.contains('pb__active')) continue;
+          if (!cells[i].classList.contains('active')) continue;
           if (i === 0) {
             const prevOn = parseInt(`${btnId}00`);
             const prevOff = parseInt(`${btnId}01`);
@@ -136,7 +136,7 @@
           }
           nextBtnId.classList.remove('hidden');
           nextBtnId.removeAttribute('tabindex');
-          cells[i].classList.remove('pb__active');
+          cells[i].classList.remove('active');
           i -= 1;
           if (!cells[i]) continue;
           if (i === 0) {
@@ -144,21 +144,21 @@
             prevBtnId.setAttribute('tabindex', '-1');
             nextBtnId.classList.remove('hidden');
           }
-          cells[i].classList.add('pb__active');
+          cells[i].classList.add('active');
           indexNo.innerHTML = i + 1;
           return i;
         }
       };
 
       let forward = (carouselId) => {
-        let cells = context.querySelectorAll(`#${carouselId}>.view__3d-item`);
+        let cells = context.querySelectorAll(`#${carouselId}>.vvjc-item`);
         let cellCount = cells.length;
         let btnId = carouselId.split('-')[2];
         let prevBtnId = context.getElementById(`prev-${btnId}`);
         let nextBtnId = context.getElementById(`next-${btnId}`);
         let indexNo = context.getElementById(`index-${btnId}`);
         for (let i = 0; i < cellCount; i++) {
-          if (cells[i].classList.contains('pb__active')) {
+          if (cells[i].classList.contains('active')) {
             if (i == cellCount - 1) {
               let prevOn = parseInt(`${btnId}00`);
               let prevOff = parseInt(`${btnId}01`);
@@ -181,7 +181,7 @@
             }
             prevBtnId.classList.remove('hidden');
             prevBtnId.removeAttribute('tabindex');
-            cells[i].classList.remove('pb__active');
+            cells[i].classList.remove('active');
             i++;
             if (cells[i]) {
               if (i == cellCount - 1) {
@@ -189,7 +189,7 @@
                 nextBtnId.setAttribute('tabindex', '-1');
                 prevBtnId.classList.remove('hidden');
               }
-              cells[i].classList.add('pb__active');
+              cells[i].classList.add('active');
               n = i;
               indexNo.innerHTML = n + 1;
               return n;
@@ -211,7 +211,7 @@
 
       let nextBtn = (carouselId) => {
         let cTimeId = carouselId.split('-')[2];
-        let cTime = parseInt(context.querySelector(`#co-${cTimeId} > .time__in-seconds`).textContent);
+        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId} > .time-in-seconds`).textContent);
         navigateCarousel(carouselId, forward);
         manageAutoSlideInterval(carouselId, 'clear');
         if (!isPaused) {
@@ -221,7 +221,7 @@
 
       let prevBtn = (carouselId) => {
         let cTimeId = carouselId.split('-')[2];
-        let cTime = parseInt(context.querySelector(`#co-${cTimeId} > .time__in-seconds`).textContent);
+        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId} > .time-in-seconds`).textContent);
         navigateCarousel(carouselId, backward);
         manageAutoSlideInterval(carouselId, 'clear');
         if (!isPaused) {
@@ -269,7 +269,7 @@
       carousels.forEach(carouselC => {
         let carouselId = carouselC.id;
         let cTimeId = carouselId.split('-')[2];
-        let cTime = parseInt(context.querySelector(`#co-${cTimeId} > .time__in-seconds`).textContent);
+        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId} > .time-in-seconds`).textContent);
 
         cTime = parseInt(cTime);
         if (cTime != 0) {
@@ -277,29 +277,29 @@
 
           let stopOnHover = context.getElementById(carouselId);
           let playPause = context.getElementById(`btn-${cTimeId}`);
-          playPause.style.display = 'inline';
+          playPause.style.display = 'flex';
 
           stopOnHover.addEventListener('mouseover', function() {
-            if (playPause.classList.contains('car_play')) {
+            if (playPause.classList.contains('play')) {
               clearInterval(intervalIds.get(carouselId)); // Use interval from the Map
             }
           });
 
           stopOnHover.addEventListener('mouseout', function() {
-            if (playPause.classList.contains('car_play')) {
+            if (playPause.classList.contains('play')) {
               intervalIds.set(carouselId, setAutoPlayInterval(carouselId, cTime)); // Reset the interval
             }
           });
 
           playPause.addEventListener('click', function() {
-            if (this.classList.contains('car_play')) {
-              this.classList.replace('car_play', 'pb__pause');
+            if (this.classList.contains('play')) {
+              this.classList.replace('play', 'pb__pause');
               this.innerHTML = '&#9654;';
               isPaused = true;
               manageAutoSlideInterval(carouselId, 'clear');
             }
             else {
-              this.classList.replace('pb__pause', 'car_play');
+              this.classList.replace('pb__pause', 'play');
               this.innerHTML = '&#10073;&nbsp;&#10073;';
               isPaused = false;
               manageAutoSlideInterval(carouselId, 'start', cTime);
@@ -328,14 +328,14 @@
         }
       };
 
-      once('init-car__next', '.views--3d-carousel-nav .car__next', context)
+      once('init-next-arrow', '.vvjc-nav .next-arrow', context)
         .forEach(element => {
           element.addEventListener('click', function(event) {
             nextBtn(getThisId(event.target.id));
           });
         });
 
-      once('init-car__prev', '.views--3d-carousel-nav .car__prev', context)
+      once('init-prev-arrow', '.vvjc-nav .prev-arrow', context)
         .forEach(element => {
           element.addEventListener('click', function(event) {
             prevBtn(getThisId(event.target.id));

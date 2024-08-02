@@ -7,92 +7,92 @@
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 @media (max-width:75rem) {
-  .vvjc.car__small-height-500 > .vvjc__inner,
-  .vvjc.car__small-height-500 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-500 > .vvjc-inner,
+  .vvjc.height-small-500 > .vvjc-inner > .vvjc-items {
     height: 35rem; /* 560px / 16px */
   }
 
-  .vvjc.car__small-height-500 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-500 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 31.25rem; /* 500px / 16px */
   }
 
-  .vvjc.car__small-height-450 > .vvjc__inner,
-  .vvjc.car__small-height-450 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-450 > .vvjc-inner,
+  .vvjc.height-small-450 > .vvjc-inner > .vvjc-items {
     height: 31.875rem; /* 510px / 16px */
   }
 
-  .vvjc.car__small-height-450 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-450 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 28.125rem; /* 450px / 16px */
   }
 
-  .vvjc.car__small-height-400 > .vvjc__inner,
-  .vvjc.car__small-height-400 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-400 > .vvjc-inner,
+  .vvjc.height-small-400 > .vvjc-inner > .vvjc-items {
     height: 28.75rem; /* 460px / 16px */
   }
 
-  .vvjc.car__small-height-400 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-400 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 25rem; /* 400px / 16px */
   }
 
-  .vvjc.car__small-height-350 > .vvjc__inner,
-  .vvjc.car__small-height-350 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-350 > .vvjc-inner,
+  .vvjc.height-small-350 > .vvjc-inner > .vvjc-items {
     height: 25.625rem; /* 410px / 16px */
   }
 
-  .vvjc.car__small-height-350 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-350 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 21.875rem; /* 350px / 16px */
   }
 
-  .vvjc.car__small-height-300 > .vvjc__inner,
-  .vvjc.car__small-height-300 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-300 > .vvjc-inner,
+  .vvjc.height-small-300 > .vvjc-inner > .vvjc-items {
     height: 22.5rem; /* 360px / 16px */
   }
 
-  .vvjc.car__small-height-300 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-300 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 18.75rem; /* 300px / 16px */
   }
 
-  .vvjc.car__small-height-250 > .vvjc__inner,
-  .vvjc.car__small-height-250 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-250 > .vvjc-inner,
+  .vvjc.height-small-250 > .vvjc-inner > .vvjc-items {
     height: 19.375rem; /* 310px / 16px */
   }
 
-  .vvjc.car__small-height-250 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-250 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 15.625rem; /* 250px / 16px */
   }
 
-  .vvjc.car__small-height-200 > .vvjc__inner,
-  .vvjc.car__small-height-200 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-200 > .vvjc-inner,
+  .vvjc.height-small-200 > .vvjc-inner > .vvjc-items {
     height: 16.25rem; /* 260px / 16px */
   }
 
-  .vvjc.car__small-height-200 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-200 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 12.5rem; /* 200px / 16px */
   }
 
-  .vvjc.car__small-height-150 > .vvjc__inner,
-  .vvjc.car__small-height-150 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-150 > .vvjc-inner,
+  .vvjc.height-small-150 > .vvjc-inner > .vvjc-items {
     height: 13.125rem; /* 210px / 16px */
   }
 
-  .vvjc.car__small-height-150 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-150 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 9.375rem; /* 150px / 16px */
   }
 
-  .vvjc.car__small-height-100 > .vvjc__inner,
-  .vvjc.car__small-height-100 > .vvjc__inner > .vvjc-items {
+  .vvjc.height-small-100 > .vvjc-inner,
+  .vvjc.height-small-100 > .vvjc-inner > .vvjc-items {
     height: 10rem; /* 160px / 16px */
   }
 
-  .vvjc.car__small-height-100 > .vvjc__inner > .vvjc-items > .view__3d-item {
+  .vvjc.height-small-100 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 6.25rem; /* 100px / 16px */
   }
 
-  .vvjc > .vvjc__inner {
+  .vvjc > .vvjc-inner {
     overflow: hidden;
   }
 
-  .vvjc .vvjc-items > .view__3d-item {
+  .vvjc .vvjc-items > .vvjc-item {
     padding: 0 16px;
   }
 
