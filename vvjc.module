@@ -2,7 +2,9 @@
 
 /**
  * @file
- * Contains vvjc.module.
+ * Provides the module implementation for vvjc.
+ *
+ * Contains template preprocessing and theme definitions for Views.
  *
  * Filename:     vvjc.module
  * Website:      https://www.flashwebcenter.com
@@ -25,22 +27,27 @@ function vvjc_help($route_name, RouteMatchInterface $route_match) {
 
 /**
  * Helper function to render README.md.
+ *
+ * @return string
+ *   The rendered content of README.md.
  */
 function _vvjc_helper_render_readme() {
-  $text = file_get_contents(__DIR__ . "/README.md");
+  $readme_path = __DIR__ . '/README.md';
+  $text = file_get_contents($readme_path);
+
+  if ($text === FALSE) {
+    return t('README.md file not found.');
+  }
 
   if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
-    return '<pre>' . $text . '</pre>';
+    return '<pre>' . htmlspecialchars($text) . '</pre>';
   }
 
   // Use the Markdown filter to render the README.
   $filter_manager = \Drupal::service('plugin.manager.filter');
-  $settings = \Drupal::configFactory()
-    ->get('markdown.settings')
-    ->getRawData();
-  $config = ['settings' => $settings];
-  $filter = $filter_manager->createInstance('markdown', $config);
-  return $filter->process($text, 'en');
+  $settings = \Drupal::config('markdown.settings')->getRawData();
+  $filter = $filter_manager->createInstance('markdown', ['settings' => $settings]);
+  return $filter->process($text, 'en')->getProcessedText();
 }
 
 /**
@@ -63,15 +70,49 @@ function vvjc_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_preprocess_HOOK() for views_view_vvjc.
  */
-function template_preprocess_views_view_vvjc(&$variables) {
+function template_preprocess_views_view_vvjc(array &$variables) {
+  // Load necessary views theme functions.
   \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
+
+  // Access the style plugin handler.
   $handler = $variables['view']->style_plugin;
 
-  // Define list attributes if needed.
+  // Initialize list attributes array.
   $list_attributes = [];
 
+  // Add options as data attributes.
+  if (!empty($handler->options['time_in_seconds'])) {
+    $list_attributes['data-time-in-seconds'] = $handler->options['time_in_seconds'];
+  }
+
+  if (!empty($handler->options['max_width'])) {
+    $list_attributes['data-max-width'] = $handler->options['max_width'];
+  }
+
+  if (!empty($handler->options['large_screen_height'])) {
+    $list_attributes['data-large-screen-height'] = $handler->options['large_screen_height'];
+  }
+
+  if (!empty($handler->options['small_screen_height'])) {
+    $list_attributes['data-small-screen-height'] = $handler->options['small_screen_height'];
+  }
+
+  if (!empty($handler->options['available_breakpoints'])) {
+    $list_attributes['data-available-breakpoints'] = $handler->options['available_breakpoints'];
+  }
+
+  if (!empty($handler->options['perspective'])) {
+    $list_attributes['data-perspective'] = $handler->options['perspective'];
+  }
+
+  if (!empty($handler->options['unique_id'])) {
+    $list_attributes['data-unique-id'] = $handler->options['unique_id'];
+  }
+
+  // Create an Attribute object for the list.
   $variables['list_attributes'] = new Attribute($list_attributes);
 
+  // Pass additional settings to the template as a JSON object for JavaScript.
   $variables['settings'] = [
     'time_in_seconds' => $handler->options['time_in_seconds'],
     'max_width' => $handler->options['max_width'],
