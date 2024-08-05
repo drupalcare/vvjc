@@ -18,7 +18,7 @@ use Drupal\Core\Template\Attribute;
 /**
  * Implements hook_help().
  */
-function vvjc_help($route_name, RouteMatchInterface $route_match) {
+function vvjc_help($route_name, RouteMatchInterface $route_match): ?string {
   if ($route_name === 'help.page.vvjc') {
     return _vvjc_helper_render_readme();
   }
@@ -31,7 +31,7 @@ function vvjc_help($route_name, RouteMatchInterface $route_match) {
  * @return string
  *   The rendered content of README.md.
  */
-function _vvjc_helper_render_readme() {
+function _vvjc_helper_render_readme(): string {
   $readme_path = __DIR__ . '/README.md';
   $text = file_get_contents($readme_path);
 

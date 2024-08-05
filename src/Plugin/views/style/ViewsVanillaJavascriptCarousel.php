@@ -32,8 +32,9 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
    *
    * @return array
    *   An array of default options.
+   * @throws \Random\RandomException
    */
-  protected function defineOptions() {
+  protected function defineOptions(): array {
     $options = parent::defineOptions();
     $options['max_width'] = ['default' => '500'];
     $options['time_in_seconds'] = ['default' => 5000];
@@ -53,7 +54,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state): void {
     parent::buildOptionsForm($form, $form_state);
 
     // Add a warning message at the top of the settings form.
@@ -173,8 +174,9 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
    *
    * @return int
    *   An 8-digit unique numeric ID.
+   * @throws \Random\RandomException
    */
-  protected function generateUniqueId() {
+  protected function generateUniqueId(): int {
     return random_int(10000000, 99999999);
   }
 
@@ -184,7 +186,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
    * @return array
    *   A render array for the 3D carousel.
    */
-  public function render() {
+  public function render(): array {
     $rows = [];
     foreach ($this->view->result as $row) {
       $rows[] = $this->view->rowPlugin->render($row);
