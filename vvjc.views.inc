@@ -42,6 +42,17 @@ function vvjc_views_data_alter(array &$data): void {
         'type' => 'string',
         'label' => t('Unique ID for the view display'),
       ],
+      // New fields for background color and opacity.
+      'background_color' => [
+        'type' => 'string',
+        'label' => t('Background Color'),
+        'description' => t('The hex code of the background color for carousel items.'),
+      ],
+      'background_color_opacity' => [
+        'type' => 'float',
+        'label' => t('Background Color Opacity'),
+        'description' => t('The opacity level for the background color of carousel items, ranging from 0 to 1.'),
+      ],
     ],
   ];
 }

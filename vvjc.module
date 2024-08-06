@@ -109,6 +109,18 @@ function template_preprocess_views_view_vvjc(array &$variables) {
     $list_attributes['data-unique-id'] = $handler->options['unique_id'];
   }
 
+  // Calculate and pass the background_rgb variable to the template.
+  if (!empty($handler->options['background_color'])) {
+    $rgb = _vvjc_hex_to_rgb($handler->options['background_color']);
+    $opacity = $handler->options['background_color_opacity'] ?? 1;
+    $background_rgb = "rgba({$rgb['r']}, {$rgb['g']}, {$rgb['b']}, $opacity)";
+    $variables['background_rgb'] = $background_rgb;
+  }
+  else {
+    // Explicitly set to null if no color is chosen.
+    $variables['background_rgb'] = NULL;
+  }
+
   // Create an Attribute object for the list.
   $variables['list_attributes'] = new Attribute($list_attributes);
 
@@ -125,4 +137,28 @@ function template_preprocess_views_view_vvjc(array &$variables) {
 
   // Ensure unformatted preprocess function is called.
   template_preprocess_views_view_unformatted($variables);
+}
+
+/**
+ * Helper function to convert hex color to RGB.
+ *
+ * @param string $hex
+ *   The hex color code.
+ *
+ * @return array
+ *   An associative array with 'r', 'g', 'b' values.
+ */
+function _vvjc_hex_to_rgb(string $hex): array {
+  $hex = ltrim($hex, '#');
+
+  // Handle short hex format (e.g., #123)
+  if (strlen($hex) === 3) {
+    $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+  }
+
+  return [
+    'r' => hexdec(substr($hex, 0, 2)),
+    'g' => hexdec(substr($hex, 2, 2)),
+    'b' => hexdec(substr($hex, 4, 2)),
+  ];
 }

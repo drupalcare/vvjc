@@ -32,6 +32,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
    *
    * @return array
    *   An array of default options.
+   *
    * @throws \Random\RandomException
    */
   protected function defineOptions(): array {
@@ -43,6 +44,9 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $options['available_breakpoints'] = ['default' => 'vvjc__992'];
     $options['perspective'] = ['default' => ''];
     $options['unique_id'] = ['default' => $this->generateUniqueId()];
+    $options['background_color'] = ['default' => ''];
+    $options['background_color_opacity'] = ['default' => 1];
+    $options['disable_background'] = ['default' => FALSE];
     return $options;
   }
 
@@ -167,6 +171,49 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#description' => $this->t('The details of perspective may change based on the quantity of items in the 3D carousel. By default, this setting adjusts with each width selection. You can modify this value in pixels if the carousel circle appears too broad.'),
       '#required' => FALSE,
     ];
+
+    // Add the background color field.
+    $form['background_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Background Color'),
+      '#default_value' => $this->options['background_color'],
+      '#description' => $this->t('Choose a background color. This color will be applied to each carousel item.'),
+    // Allow for empty value.
+      '#empty_value' => '',
+      '#states' => [
+        'disabled' => [
+          ':input[name="style_options[disable_background]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    // Add the background color opacity field.
+    $form['background_color_opacity'] = [
+      '#type' => 'range',
+      '#title' => $this->t('Background Color Opacity'),
+      '#default_value' => $this->options['background_color_opacity'],
+      '#min' => 0,
+      '#max' => 1,
+      '#step' => 0.1,
+      '#description' => $this->t('Set the opacity level for the background color.'),
+      '#suffix' => '<span id="background-opacity-value">' . $this->options['background_color_opacity'] . '</span>',
+      '#attributes' => [
+        'oninput' => 'document.getElementById("background-opacity-value").innerText = this.value;',
+      ],
+      '#states' => [
+        'disabled' => [
+          ':input[name="style_options[disable_background]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    // Add the disable background checkbox.
+    $form['disable_background'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable Background Color'),
+      '#default_value' => $this->options['disable_background'],
+      '#description' => $this->t('Check this to disable background color completely.'),
+    ];
   }
 
   /**
@@ -174,6 +221,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
    *
    * @return int
    *   An 8-digit unique numeric ID.
+   *
    * @throws \Random\RandomException
    */
   protected function generateUniqueId(): int {

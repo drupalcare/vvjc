@@ -20,7 +20,6 @@
  */
 #}
 
-
 {# Set unique IDs for the carousel and container #}
 {% set unique_id = options.unique_id %}
 {% set time_in_seconds = options.time_in_seconds %}
@@ -42,7 +41,7 @@
     <div id="{{ carousel_id }}" class="vvjc-items" role="region" aria-roledescription="carousel" aria-labelledby="index-{{ unique_id }}">
       {% for row in rows %}
         {% set row_id = 'item-' ~ unique_id ~ '-' ~ loop.index %}
-        <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="tabpanel" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="{{ loop.first ? '0' : '-1' }}" aria-labelledby="label-{{ row_id }}">
+        <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="tabpanel" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="{{ loop.first ? '0' : '-1' }}" aria-labelledby="label-{{ row_id }}" {% if background_rgb and not options.disable_background %} style="background-color:{{ background_rgb }}"{% endif %}>
           <div id="label-{{ row_id }}" class="visually-hidden">{{ 'Slide @index of @count'|t({'@index': loop.index, '@count': rows|length}) }}</div>
           {{ row.content }}
         </div>
@@ -70,7 +69,5 @@
     <div class="time-in-seconds" aria-hidden="false" aria-label="{{ 'This is the time in milliseconds for each slide transition. Current setting is @time milliseconds.'|t({'@time': time_in_seconds}) }}">
       {{ time_in_seconds }}
     </div>
-
   </div>
 </div>
-
