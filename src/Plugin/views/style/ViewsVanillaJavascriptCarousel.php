@@ -64,7 +64,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     // Add a warning message at the top of the settings form.
     $form['warning_message'] = [
       '#type' => 'markup',
-      '#markup' => '<div class="messages messages--warning">' . $this->t('Note: Pagination does not work for this display style. It is recommended to limit the number of items to 30 for optimal performance.') . '</div>',
+      '#markup' => '<div class="messages messages--warning">' . $this->t('Note: It is recommended to limit the number of items to 30 for optimal performance.') . '</div>',
     ];
 
     $form['time_in_seconds'] = [
