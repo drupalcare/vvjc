@@ -42,7 +42,7 @@ function vvjc_views_data_alter(array &$data): void {
         'type' => 'string',
         'label' => t('Unique ID for the view display'),
       ],
-      // New fields for background color and opacity.
+      // New fields for background color, opacity, and disable background.
       'background_color' => [
         'type' => 'string',
         'label' => t('Background Color'),
@@ -52,6 +52,11 @@ function vvjc_views_data_alter(array &$data): void {
         'type' => 'float',
         'label' => t('Background Color Opacity'),
         'description' => t('The opacity level for the background color of carousel items, ranging from 0 to 1.'),
+      ],
+      'disable_background' => [
+        'type' => 'boolean',
+        'label' => t('Disable Background Color'),
+        'description' => t('A flag to disable the background color of carousel items.'),
       ],
     ],
   ];

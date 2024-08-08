@@ -67,27 +67,18 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#markup' => '<div class="messages messages--warning">' . $this->t('Note: It is recommended to limit the number of items to 30 for optimal performance.') . '</div>',
     ];
 
-    $form['time_in_seconds'] = [
+    $form['available_breakpoints'] = [
       '#type' => 'select',
-      '#title' => $this->t('Time In Seconds'),
+      '#title' => $this->t('Available Breakpoints'),
       '#options' => [
-        '0' => $this->t('None'),
-        '3000' => $this->t('3 s'),
-        '4000' => $this->t('4 s'),
-        '5000' => $this->t('5 s'),
-        '6000' => $this->t('6 s'),
-        '7000' => $this->t('7 s'),
-        '8000' => $this->t('8 s'),
-        '9000' => $this->t('9 s'),
-        '10000' => $this->t('10 s'),
-        '11000' => $this->t('11 s'),
-        '12000' => $this->t('12 s'),
-        '13000' => $this->t('13 s'),
-        '14000' => $this->t('14 s'),
-        '15000' => $this->t('15 s'),
+        'vvjc__576' => $this->t('576px / 36rem'),
+        'vvjc__768' => $this->t('768px / 48rem'),
+        'vvjc__992' => $this->t('992px / 62rem'),
+        'vvjc__1200' => $this->t('1200px / 75rem'),
+        'vvjc__1400' => $this->t('1400px / 87.5rem'),
       ],
-      '#default_value' => $this->options['time_in_seconds'],
-      '#description' => $this->t('By default, the 3D carousel scrolls every 5 seconds. You can modify this interval. If set between 3-15 seconds, a play/pause button appears and the carousel pauses on mouse hover. To stop the carousel, set the field value to none.'),
+      '#default_value' => $this->options['available_breakpoints'],
+      '#description' => $this->t('Choose a breakpoint for the carousel. This defines the width at which the carousel will adjust its layout.'),
       '#required' => TRUE,
     ];
 
@@ -105,21 +96,6 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
         '1000' => $this->t('1000 px'),
       ],
       '#default_value' => $this->options['max_width'],
-      '#description' => $this->t('Choose a breakpoint for the carousel. This defines the width at which the carousel will adjust its layout.'),
-      '#required' => TRUE,
-    ];
-
-    $form['available_breakpoints'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Available Breakpoints'),
-      '#options' => [
-        'vvjc__576' => $this->t('576px / 36rem'),
-        'vvjc__768' => $this->t('768px / 48rem'),
-        'vvjc__992' => $this->t('992px / 62rem'),
-        'vvjc__1200' => $this->t('1200px / 75rem'),
-        'vvjc__1400' => $this->t('1400px / 87.5rem'),
-      ],
-      '#default_value' => $this->options['available_breakpoints'],
       '#description' => $this->t('Choose a breakpoint for the carousel. This defines the width at which the carousel will adjust its layout.'),
       '#required' => TRUE,
     ];
@@ -160,6 +136,30 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       ],
       '#default_value' => $this->options['small_screen_height'],
       '#description' => $this->t('The selected breakpoint will determine the height applied uniformly to all carousel items.'),
+      '#required' => TRUE,
+    ];
+
+    $form['time_in_seconds'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Time In Seconds'),
+      '#options' => [
+        '0' => $this->t('None'),
+        '3000' => $this->t('3 s'),
+        '4000' => $this->t('4 s'),
+        '5000' => $this->t('5 s'),
+        '6000' => $this->t('6 s'),
+        '7000' => $this->t('7 s'),
+        '8000' => $this->t('8 s'),
+        '9000' => $this->t('9 s'),
+        '10000' => $this->t('10 s'),
+        '11000' => $this->t('11 s'),
+        '12000' => $this->t('12 s'),
+        '13000' => $this->t('13 s'),
+        '14000' => $this->t('14 s'),
+        '15000' => $this->t('15 s'),
+      ],
+      '#default_value' => $this->options['time_in_seconds'],
+      '#description' => $this->t('By default, the 3D carousel scrolls every 5 seconds. You can modify this interval. If set between 3-15 seconds, a play/pause button appears and the carousel pauses on mouse hover. To stop the carousel, set the field value to none.'),
       '#required' => TRUE,
     ];
 

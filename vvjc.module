@@ -109,6 +109,10 @@ function template_preprocess_views_view_vvjc(array &$variables) {
     $list_attributes['data-unique-id'] = $handler->options['unique_id'];
   }
 
+  if (!empty($handler->options['disable_background'])) {
+    $list_attributes['data-disable-background'] = $handler->options['disable_background'] ? 'true' : 'false';
+  }
+
   // Calculate and pass the background_rgb variable to the template.
   if (!empty($handler->options['background_color'])) {
     $rgb = _vvjc_hex_to_rgb($handler->options['background_color']);
