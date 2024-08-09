@@ -39,13 +39,13 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $options = parent::defineOptions();
     $options['max_width'] = ['default' => '500'];
     $options['time_in_seconds'] = ['default' => 5000];
-    $options['large_screen_height'] = ['default' => 300];
-    $options['small_screen_height'] = ['default' => 200];
+    $options['large_screen_height'] = ['default' => 400];
+    $options['small_screen_height'] = ['default' => 350];
     $options['available_breakpoints'] = ['default' => 'vvjc__992'];
     $options['perspective'] = ['default' => ''];
     $options['unique_id'] = ['default' => $this->generateUniqueId()];
-    $options['background_color'] = ['default' => ''];
-    $options['background_color_opacity'] = ['default' => 1];
+    $options['background_color'] = ['default' => '#000000'];
+    $options['background_color_opacity'] = ['default' => 0.5];
     $options['disable_background'] = ['default' => FALSE];
     return $options;
   }
