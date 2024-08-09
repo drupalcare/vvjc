@@ -60,6 +60,12 @@
   display: none;
 }
 
+.vvjc-nav button svg {
+  height: 40px;
+  width: 40px;
+  fill: gray;
+}
+
 .vvjc.height-large-100 > .vvjc-inner,
 .vvjc.height-large-100 > .vvjc-inner > .vvjc-items {
   height: 10rem; /* 160px / 16px */

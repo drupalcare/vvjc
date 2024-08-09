@@ -22,6 +22,16 @@
       let n = 0;
       let isPaused = false;
 
+      const playIconSVG = `
+        <svg class="svg-play" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="inherit">
+          <path d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+        </svg>`;
+
+      const pauseIconSVG = `
+        <svg class="svg-pause" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="inherit">
+          <path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+        </svg>`;
+
       // Utility function to update tabindex based on parent element's attributes
       const updateTabIndexForElements = (parentElement) => {
         const focusableElements = parentElement.querySelectorAll('button, a');
@@ -211,7 +221,7 @@
 
       let nextBtn = (carouselId) => {
         let cTimeId = carouselId.split('-')[2];
-        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId} > .time-in-seconds`).textContent);
+        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId}`).getAttribute('data-time'), 10);
         navigateCarousel(carouselId, forward);
         manageAutoSlideInterval(carouselId, 'clear');
         if (!isPaused) {
@@ -221,7 +231,7 @@
 
       let prevBtn = (carouselId) => {
         let cTimeId = carouselId.split('-')[2];
-        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId} > .time-in-seconds`).textContent);
+        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId}`).getAttribute('data-time'), 10);
         navigateCarousel(carouselId, backward);
         manageAutoSlideInterval(carouselId, 'clear');
         if (!isPaused) {
@@ -269,9 +279,8 @@
       carousels.forEach(carouselC => {
         let carouselId = carouselC.id;
         let cTimeId = carouselId.split('-')[2];
-        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId} > .time-in-seconds`).textContent);
+        let cTime = parseInt(context.querySelector(`#vvjc-nav-${cTimeId}`).getAttribute('data-time'), 10);
 
-        cTime = parseInt(cTime);
         if (cTime != 0) {
           let intervalId = setAutoPlayInterval(carouselId, cTime); // Create and store interval
 
@@ -293,14 +302,14 @@
 
           playPause.addEventListener('click', function() {
             if (this.classList.contains('play')) {
-              this.classList.replace('play', 'pb__pause');
-              this.innerHTML = '&#9654;';
+              this.classList.replace('play', 'pause');
+              this.innerHTML = playIconSVG;
               isPaused = true;
               manageAutoSlideInterval(carouselId, 'clear');
             }
             else {
-              this.classList.replace('pb__pause', 'play');
-              this.innerHTML = '&#10073;&nbsp;&#10073;';
+              this.classList.replace('pause', 'play');
+              this.innerHTML = pauseIconSVG;
               isPaused = false;
               manageAutoSlideInterval(carouselId, 'start', cTime);
             }
@@ -331,14 +340,20 @@
       once('init-next-arrow', '.vvjc-nav .next-arrow', context)
         .forEach(element => {
           element.addEventListener('click', function(event) {
-            nextBtn(getThisId(event.target.id));
+            const buttonElement = event.target.closest('button');
+            if (buttonElement) {
+              nextBtn(getThisId(buttonElement.id));
+            }
           });
         });
 
       once('init-prev-arrow', '.vvjc-nav .prev-arrow', context)
         .forEach(element => {
           element.addEventListener('click', function(event) {
-            prevBtn(getThisId(event.target.id));
+            const buttonElement = event.target.closest('button');
+            if (buttonElement) {
+              prevBtn(getThisId(buttonElement.id));
+            }
           });
         });
 
