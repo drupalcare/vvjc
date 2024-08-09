@@ -39,8 +39,8 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $options = parent::defineOptions();
     $options['max_width'] = ['default' => '500'];
     $options['time_in_seconds'] = ['default' => 5000];
-    $options['large_screen_height'] = ['default' => 500];
-    $options['small_screen_height'] = ['default' => 400];
+    $options['large_screen_height'] = ['default' => 400];
+    $options['small_screen_height'] = ['default' => 350];
     $options['available_breakpoints'] = ['default' => 'vvjc__992'];
     $options['perspective'] = ['default' => ''];
     $options['unique_id'] = ['default' => $this->generateUniqueId()];
@@ -240,6 +240,11 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       $rows[] = $this->view->rowPlugin->render($row);
     }
 
+    $libraries = [
+      'vvjc/vvjc',
+      'vvjc/' . $this->options['available_breakpoints']
+    ];
+
     return [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
@@ -247,9 +252,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#rows' => $rows,
       '#unique_id' => $this->options['unique_id'],
       '#attached' => [
-        'library' => [
-          'vvjc/vvjc',
-        ],
+        'library' => $libraries,
       ],
     ];
   }
