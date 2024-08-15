@@ -3,6 +3,7 @@
 namespace Drupal\vvjc\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 
 /**
@@ -41,7 +42,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $options['time_in_seconds'] = ['default' => 5000];
     $options['large_screen_height'] = ['default' => 400];
     $options['small_screen_height'] = ['default' => 350];
-    $options['available_breakpoints'] = ['default' => 'vvjc__992'];
+    $options['available_breakpoints'] = ['default' => '992'];
     $options['perspective'] = ['default' => ''];
     $options['unique_id'] = ['default' => $this->generateUniqueId()];
     $options['background_color'] = ['default' => '#000000'];
@@ -64,18 +65,22 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     // Add a warning message at the top of the settings form.
     $form['warning_message'] = [
       '#type' => 'markup',
-      '#markup' => '<div class="messages messages--warning">' . $this->t('Note: It is recommended to limit the number of items to 30 for optimal performance.') . '</div>',
+      '#markup' => '<div class="messages messages--warning">' . $this->t(
+        'Note: It is recommended to limit the number of items to 30 for optimal performance. To see an example, check the vvjc_example view by clicking <a href="@url">here</a> to edit it.', [
+          '@url' => Url::fromRoute('entity.view.edit_form', ['view' => 'vvjc_example'])->toString(),
+        ]
+      ) . '</div>',
     ];
 
     $form['available_breakpoints'] = [
       '#type' => 'select',
       '#title' => $this->t('Available Breakpoints'),
       '#options' => [
-        'vvjc__576' => $this->t('576px / 36rem'),
-        'vvjc__768' => $this->t('768px / 48rem'),
-        'vvjc__992' => $this->t('992px / 62rem'),
-        'vvjc__1200' => $this->t('1200px / 75rem'),
-        'vvjc__1400' => $this->t('1400px / 87.5rem'),
+        '576' => $this->t('576px / 36rem'),
+        '768' => $this->t('768px / 48rem'),
+        '992' => $this->t('992px / 62rem'),
+        '1200' => $this->t('1200px / 75rem'),
+        '1400' => $this->t('1400px / 87.5rem'),
       ],
       '#default_value' => $this->options['available_breakpoints'],
       '#description' => $this->t('Choose a breakpoint for the carousel. This defines the width at which the carousel will adjust its layout.'),
@@ -242,7 +247,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
 
     $libraries = [
       'vvjc/vvjc',
-      'vvjc/' . $this->options['available_breakpoints']
+      'vvjc/vvjc__' . $this->options['available_breakpoints'],
     ];
 
     return [

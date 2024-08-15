@@ -104,6 +104,10 @@
 
   .vvjc .vvjc-items > .vvjc-item {
     padding: 0 16px;
+    width: 100%;
+    left: 0;
+    right: 0;
+    transform-style: flat;
   }
 
 }

@@ -42,7 +42,6 @@ function vvjc_views_data_alter(array &$data): void {
         'type' => 'string',
         'label' => t('Unique ID for the view display'),
       ],
-      // New fields for background color, opacity, and disable background.
       'background_color' => [
         'type' => 'string',
         'label' => t('Background Color'),

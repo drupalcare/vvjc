@@ -8,6 +8,18 @@
  */
 
 /* 3d_carousel */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}
+
 .vvjc,
 .vvjc * {
   box-sizing: border-box;
@@ -48,12 +60,12 @@
   top: 0;
   left: 12px;
   right: 12px;
-  transition: transform 1s, opacity 1s;
+  transition: transform 1s ease, opacity 1s ease;
   overflow-y: auto;
 }
 
 .vvjc .vvjc-nav {
-  min-height: 48px;
+  min-height: 3rem;
   width: 100%;
 }
 
@@ -62,8 +74,8 @@
 }
 
 .vvjc-nav button svg {
-  height: 40px;
-  width: 40px;
+  height: 2.5rem;
+  width: 2.5rem;
   fill: gray;
 }
 
@@ -157,12 +169,6 @@
   height: 34.375rem;
 }
 
-
-
-
-
-
-
 .vvjc > .vvjc-inner.max-width-300 {
   max-width: 18.75rem;
   perspective: 22rem;
@@ -175,32 +181,32 @@
 
 .vvjc > .vvjc-inner.max-width-500 {
   max-width: 31.25rem;
-  perspective: 26rem;
+  perspective: 28rem;
 }
 
 .vvjc > .vvjc-inner.max-width-600 {
   max-width: 37.5rem;
-  perspective: 28rem;
+  perspective: 32rem;
 }
 
 .vvjc > .vvjc-inner.max-width-700 {
   max-width: 43.75rem;
-  perspective: 30rem;
+  perspective: 36rem;
 }
 
 .vvjc > .vvjc-inner.max-width-800 {
   max-width: 50rem;
-  perspective: 32rem;
+  perspective: 40rem;
 }
 
 .vvjc > .vvjc-inner.max-width-900 {
   max-width: 56.25rem;
-  perspective: 34rem;
+  perspective: 45rem;
 }
 
 .vvjc > .vvjc-inner.max-width-1000 {
   max-width: 62.5rem !important;
-  perspective: 40rem;
+  perspective: 50rem;
 }
 
 .vvjc .vvjc-item:hover * {
@@ -215,7 +221,7 @@
 
 .vvjc .vvjc-nav .next-arrow,
 .vvjc .vvjc-nav .prev-arrow {
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 
 .vvjc .vvjc-nav .vvjc-nav-inner {
@@ -223,7 +229,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 12px;
+  gap: 0.375rem;
 }
 
 .vvjc .vvjc-nav > .time-in-seconds {
@@ -232,7 +238,7 @@
   padding: 0;
   margin: 0;
   width: 0;
-  font-size: 8px;
+  font-size: 0.5rem;
   line-height: 0;
 }
 
@@ -240,15 +246,15 @@
   transition: opacity 0.5s, visibility 0.5s;
   opacity: 1;
   visibility: visible;
-  padding: 12px;
-  font-size: 18px;
+  padding: 0.75rem;
+  font-size: 1.125rem;
   margin: 0;
 }
 
 .vvjc .vvjc-nav .button,
 .vvjc .vvjc-nav .current-slide-number {
-  min-width: 48px;
-  min-height: 48px;
+  min-width: 3rem;
+  min-height: 3rem;
   font-weight: normal;
   transition: width 0.2s ease-in-out;
   border: none;
@@ -260,7 +266,7 @@
 }
 
 .vvjc .vvjc-nav .current-slide-number {
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: default;
 }
 
