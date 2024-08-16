@@ -1,7 +1,11 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - field.storage.node.field_image
+    - image.style.medium
   module:
+    - image
     - node
     - vvjc
 id: vvjc_example
@@ -20,14 +24,15 @@ display:
     display_options:
       title: 'VVJC View'
       fields:
-        title:
-          id: title
-          table: node_field_data
-          field: title
+        field_image:
+          id: field_image
+          table: node__field_image
+          field: field_image
           relationship: none
           group_type: group
           admin_label: ''
-          label: Title
+          plugin_id: field
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -37,26 +42,144 @@ display:
             absolute: false
             external: false
             replace_spaces: false
-            path_case: '0'
+            path_case: none
             trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: image
+          settings:
+            image_link: content
+            image_style: medium
+            image_loading:
+              attribute: lazy
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
             link_target: ''
             link_popup: ''
             link_popup_width: ''
             link_popup_height: ''
           element_type: ''
           element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: 1
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: 0
           element_style: ''
           element_id: ''
           link_to_entity: true
           link_to_entity_class: ''
           link_to_entity_rel: ''
       pager:
-        type: some
+        type: mini
         options:
-          items_per_page: 10
+          offset: 0
+          pagination_heading_level: h4
+          items_per_page: 12
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
       exposed_form:
         type: basic
         options: {  }
@@ -78,12 +201,15 @@ display:
         type: views_vvjc
         options:
           grouping: {  }
-          time_in_seconds: '5000'
+          available_breakpoints: '768'
           max_width: '500'
-          available_breakpoints: vvjc__992
-          large_screen_height: '300'
-          small_screen_height: '200'
+          large_screen_height: '450'
+          small_screen_height: '350'
+          time_in_seconds: '5000'
           perspective: ''
+          background_color: '#e0f0ff'
+          background_color_opacity: '0.6'
+          disable_background: 0
       row:
         type: fields
         options:
@@ -110,5 +236,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - 'user.node_grants:view'
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_image'
