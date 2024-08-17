@@ -73,6 +73,10 @@
   display: none;
 }
 
+.vvjc .vvjc-items > .vvjc-item a {
+  height: auto;
+}
+
 .vvjc-nav button svg {
   height: 2.5rem;
   width: 2.5rem;
@@ -251,10 +255,9 @@
   margin: 0;
 }
 
-.vvjc .vvjc-nav .button,
-.vvjc .vvjc-nav .current-slide-number {
-  min-width: 3rem;
-  min-height: 3rem;
+.vvjc .vvjc-nav .button {
+  min-width: 2rem;
+  min-height: 2rem;
   font-weight: normal;
   transition: width 0.2s ease-in-out;
   border: none;
@@ -265,9 +268,16 @@
   align-items: center;
 }
 
-.vvjc .vvjc-nav .current-slide-number {
+.vvjc .vvjc-nav span.current-slide-number {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
   font-size: 0.875rem;
-  cursor: default;
+  font-weight: normal;
+  transition: width 0.2s ease-in-out;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .vvjc .vvjc-nav .next-arrow.hidden,
