@@ -76,11 +76,9 @@
         carousel.style.transition = 'transform 0.8s ease-in-out';
         carousel.style.transform = `translateZ(${-radius}px) rotateY(${angle}deg)`;
 
-        // Ensure index wraps correctly
         if (n >= cellCount) n = 0;
         if (n < 0) n = cellCount - 1;
 
-        // Update aria-hidden and tabindex for each cell
         cells.forEach((cell, index) => {
           if (index === n) {
             cell.setAttribute('aria-hidden', 'false');
@@ -90,16 +88,33 @@
             cell.setAttribute('tabindex', '-1');
           }
 
-          // Update tabindex for children
           updateTabIndexForElements(cell);
         });
 
-        // Update the aria-label for the current slide number
         const slideNumberElement = context.querySelector(`#index-${carouselId.split('-')[2]}`);
         if (slideNumberElement) {
+          slideNumberElement.classList.add('rotating');
           slideNumberElement.setAttribute('aria-label', `Slide ${n + 1} of ${cellCount}`);
+
+          if (!isNaN(n)) {
+            const numberElement = slideNumberElement.querySelector('.number');
+            if (numberElement) {
+              setTimeout(() => {
+                numberElement.innerHTML = n + 1;
+              }, 200);
+            }
+          } else {
+            console.error('Invalid slide index:', n);
+            slideNumberElement.innerHTML = '<span class="number">1</span>';
+          }
+
+          setTimeout(() => {
+            // .vvjc .vvjc-nav span.current-slide-number.rotating
+            slideNumberElement.classList.remove('rotating');
+          }, 400);
         }
       };
+
 
       let buildCarousel = (carouselId) => {
         let [_, cells, cellCount, , theta, radius, rawNo] = getCarInfo(carouselId);
@@ -361,4 +376,3 @@
     }
   };
 })(Drupal, drupalSettings, once);
-
