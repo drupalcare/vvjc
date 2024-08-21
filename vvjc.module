@@ -14,6 +14,7 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\vvjc\Plugin\views\style\ViewsVanillaJavascriptCarousel;
 
 /**
  * Implements hook_help().
@@ -141,6 +142,16 @@ function template_preprocess_views_view_vvjc(array &$variables) {
 
   // Ensure unformatted preprocess function is called.
   template_preprocess_views_view_unformatted($variables);
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function vvjc_preprocess_views_view(&$variables) {
+  if ($variables['view']->style_plugin instanceof ViewsVanillaJavascriptCarousel) {
+    // Add the custom class to the view wrapper.
+    $variables['attributes']['class'][] = 'vvj-carousel';
+  }
 }
 
 /**

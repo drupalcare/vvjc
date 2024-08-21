@@ -12,7 +12,7 @@
   Drupal.behaviors.VVJCarousel = {
     attach: function(context, settings) {
       let intervalIds = new Map();
-      const carousels = once('VVJCarousel', '.vvjc-items', context);
+      const carousels = once('vvjCarousel', '.vvjc-items', context);
       if (!carousels.length) {
         return;
       }
