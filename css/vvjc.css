@@ -8,7 +8,7 @@
  */
 
 /* 3d_carousel */
-.visually-hidden {
+.vvj-carousel .visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -20,9 +20,16 @@
   white-space: nowrap;
 }
 
-.vvjc,
-.vvjc * {
+.vvj-carousel,
+.vvj-carousel * {
   box-sizing: border-box;
+}
+
+.vvj-carousel,
+.vvj-carousel .view-content {
+  width: 100%;
+  min-width: 100%;
+  display: block!important;
 }
 
 .vvjc {
