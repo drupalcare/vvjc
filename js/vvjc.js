@@ -104,7 +104,6 @@
               }, 200);
             }
           } else {
-            console.error('Invalid slide index:', n);
             slideNumberElement.innerHTML = '<span class="number">1</span>';
           }
 

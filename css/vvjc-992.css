@@ -7,101 +7,101 @@
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 @media (max-width:62rem) {
-  .vvjc.height-small-100 > .vvjc-inner,
-  .vvjc.height-small-100 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-100 > .vvjc-inner,
+  .vvjc.br-992.height-small-100 > .vvjc-inner > .vvjc-items {
     height: 7.25rem;
   }
 
-  .vvjc.height-small-100 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-100 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 6.25rem;
   }
 
-  .vvjc.height-small-150 > .vvjc-inner,
-  .vvjc.height-small-150 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-150 > .vvjc-inner,
+  .vvjc.br-992.height-small-150 > .vvjc-inner > .vvjc-items {
     height: 10.375rem;
   }
 
-  .vvjc.height-small-150 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-150 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 9.375rem;
   }
 
-  .vvjc.height-small-200 > .vvjc-inner,
-  .vvjc.height-small-200 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-200 > .vvjc-inner,
+  .vvjc.br-992.height-small-200 > .vvjc-inner > .vvjc-items {
     height: 13.5rem;
   }
 
-  .vvjc.height-small-200 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-200 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 12.5rem;
   }
 
-  .vvjc.height-small-250 > .vvjc-inner,
-  .vvjc.height-small-250 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-250 > .vvjc-inner,
+  .vvjc.br-992.height-small-250 > .vvjc-inner > .vvjc-items {
     height: 16.625rem;
   }
 
-  .vvjc.height-small-250 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-250 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 15.625rem;
   }
 
-  .vvjc.height-small-300 > .vvjc-inner,
-  .vvjc.height-small-300 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-300 > .vvjc-inner,
+  .vvjc.br-992.height-small-300 > .vvjc-inner > .vvjc-items {
     height: 19.75rem;
   }
 
-  .vvjc.height-small-300 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-300 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 18.75rem;
   }
 
-  .vvjc.height-small-350 > .vvjc-inner,
-  .vvjc.height-small-350 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-350 > .vvjc-inner,
+  .vvjc.br-992.height-small-350 > .vvjc-inner > .vvjc-items {
     height: 22.875rem;
   }
 
-  .vvjc.height-small-350 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-350 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 21.875rem;
   }
 
-  .vvjc.height-small-400 > .vvjc-inner,
-  .vvjc.height-small-400 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-400 > .vvjc-inner,
+  .vvjc.br-992.height-small-400 > .vvjc-inner > .vvjc-items {
     height: 26rem;
   }
 
-  .vvjc.height-small-400 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-400 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 25rem;
   }
 
-  .vvjc.height-small-450 > .vvjc-inner,
-  .vvjc.height-small-450 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-450 > .vvjc-inner,
+  .vvjc.br-992.height-small-450 > .vvjc-inner > .vvjc-items {
     height: 29.125rem;
   }
 
-  .vvjc.height-small-450 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-450 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 28.125rem;
   }
 
-  .vvjc.height-small-500 > .vvjc-inner,
-  .vvjc.height-small-500 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-500 > .vvjc-inner,
+  .vvjc.br-992.height-small-500 > .vvjc-inner > .vvjc-items {
     height: 32.25rem;
   }
 
-  .vvjc.height-small-500 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-500 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 31.25rem;
   }
 
-  .vvjc.height-small-550 > .vvjc-inner,
-  .vvjc.height-small-550 > .vvjc-inner > .vvjc-items {
+  .vvjc.br-992.height-small-550 > .vvjc-inner,
+  .vvjc.br-992.height-small-550 > .vvjc-inner > .vvjc-items {
     height: 35.375rem;
   }
 
-  .vvjc.height-small-550 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-992.height-small-550 > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: 34.375rem;
   }
 
-  .vvjc > .vvjc-inner {
+  .vvjc.br-992 > .vvjc-inner {
     overflow: hidden;
   }
 
-  .vvjc .vvjc-items > .vvjc-item {
+  .vvjc.br-992 .vvjc-items > .vvjc-item {
     padding: 0 16px;
     width: 100%;
     left: 0;

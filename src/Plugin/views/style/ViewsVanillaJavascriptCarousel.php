@@ -45,8 +45,8 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $options['available_breakpoints'] = ['default' => '992'];
     $options['perspective'] = ['default' => ''];
     $options['unique_id'] = ['default' => $this->generateUniqueId()];
-    $options['background_color'] = ['default' => '#000000'];
-    $options['background_color_opacity'] = ['default' => 0.4];
+    $options['background_color'] = ['default' => '#ffffff'];
+    $options['background_color_opacity'] = ['default' => 0.7];
     $options['disable_background'] = ['default' => FALSE];
     return $options;
   }
