@@ -170,12 +170,12 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
 
     $form['perspective'] = [
       '#type' => 'number',
-      '#title' => $this->t('Perspective'),
+      '#title' => $this->t('Perspective (px)'),
       '#default_value' => $this->options['perspective'],
       '#min' => 0,
       '#step' => 10,
-      '#description' => $this->t('The details of perspective may change based on the quantity of items in the 3D carousel. By default, this setting adjusts with each width selection. You can modify this value in pixels if the carousel circle appears too broad.'),
-      '#required' => FALSE,
+      '#description' => $this->t('The details of perspective may change based on the quantity of items in the 3D carousel. By default, this setting adjusts with each width selection. You can modify this value in pixels if the carousel circle appears too broad. Zero use the default.'),
+      '#required' => TRUE,
     ];
 
     // Add the background color field.

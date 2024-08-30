@@ -29,7 +29,7 @@
 .vvj-carousel .view-content {
   width: 100%;
   min-width: 100%;
-  display: block!important;
+  display: block !important;
 }
 
 .vvjc {
@@ -41,7 +41,7 @@
 
 .vvjc > .vvjc-inner {
   max-height: 38.125rem;
-  perspective: 40rem;
+  perspective: calc(var(--perspective, 640) * 1px);
   position: relative;
   width: 100%;
   z-index: 0;
@@ -181,43 +181,43 @@
 }
 
 .vvjc > .vvjc-inner.max-width-300 {
-  max-width: 18.75rem;
-  perspective: 22rem;
+  max-width: 300px;
+  perspective: calc(var(--perspective, 360) * 1px);
 }
 
 .vvjc > .vvjc-inner.max-width-400 {
-  max-width: 25rem;
-  perspective: 24rem;
+  max-width: 400px;
+  perspective: calc(var(--perspective, 400) * 1px);
 }
 
 .vvjc > .vvjc-inner.max-width-500 {
-  max-width: 31.25rem;
-  perspective: 28rem;
+  max-width: 500px;
+  perspective: calc(var(--perspective, 520) * 1px);
 }
 
 .vvjc > .vvjc-inner.max-width-600 {
-  max-width: 37.5rem;
-  perspective: 32rem;
+  max-width: 600px;
+  perspective: calc(var(--perspective, 640) * 1px);
 }
 
 .vvjc > .vvjc-inner.max-width-700 {
-  max-width: 43.75rem;
-  perspective: 36rem;
+  max-width: 700px;
+  perspective: calc(var(--perspective, 780) * 1px);
 }
 
 .vvjc > .vvjc-inner.max-width-800 {
-  max-width: 50rem;
-  perspective: 40rem;
+  max-width: 800px;
+  perspective: calc(var(--perspective, 900) * 1px);
 }
 
 .vvjc > .vvjc-inner.max-width-900 {
-  max-width: 56.25rem;
-  perspective: 45rem;
+  max-width: 900px;
+  perspective: calc(var(--perspective, 1100) * 1px);
 }
 
 .vvjc > .vvjc-inner.max-width-1000 {
-  max-width: 62.5rem !important;
-  perspective: 50rem;
+  max-width: 1000px !important;
+  perspective: calc(var(--perspective, 1200) * 1px);
 }
 
 .vvjc .vvjc-item:hover * {
@@ -321,7 +321,9 @@
   0% {
     transform: rotateY(0deg);
   }
+
   100% {
     transform: rotateY(180deg);
   }
+
 }
