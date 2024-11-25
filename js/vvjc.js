@@ -58,7 +58,7 @@
       };
 
       const getCarInfo = (carouselId) => {
-        const carousel = context.getElementById(carouselId);
+        const carousel = context.querySelector(`#${carouselId}`);
         const cells = carousel.querySelectorAll(`#${carouselId}>.vvjc-item`);
         const cellCount = cells.length;
         const cellWidth = carousel.offsetWidth;
@@ -117,9 +117,9 @@
 
       let buildCarousel = (carouselId) => {
         let [_, cells, cellCount, , theta, radius, rawNo] = getCarInfo(carouselId);
-        let indexNo = context.getElementById('index-' + rawNo);
-        let prevBtnId = context.getElementById('prev-' + rawNo);
-        let nextBtnId = context.getElementById('next-' + rawNo);
+        let indexNo = context.querySelector(`#index-${rawNo}`);
+        let prevBtnId = context.querySelector(`#prev-${rawNo}`);
+        let nextBtnId = context.querySelector(`#next-${rawNo}`);
         for (let i = 0; i < cellCount; i++) {
           cells[i].style.opacity = i < cellCount ? 1 : 0;
           cells[i].style.transform = i < cellCount ? `rotateY(${theta * i}deg) translateZ(${radius}px)` : "none";
@@ -137,9 +137,9 @@
         const cells = context.querySelectorAll(`#${carouselId}>.vvjc-item`);
         const cellCount = cells.length;
         const btnId = carouselId.split('-')[2];
-        const prevBtnId = context.getElementById(`prev-${btnId}`);
-        const nextBtnId = context.getElementById(`next-${btnId}`);
-        const indexNo = context.getElementById(`index-${btnId}`);
+        const prevBtnId = context.querySelector(`#prev-${btnId}`);
+        const nextBtnId = context.querySelector(`#next-${btnId}`);
+        const indexNo = context.querySelector(`#index-${btnId}`);
         for (let i = 0; i < cellCount; i++) {
           if (!cells[i].classList.contains('active')) continue;
           if (i === 0) {
@@ -172,20 +172,20 @@
         }
       };
 
-      let forward = (carouselId) => {
-        let cells = context.querySelectorAll(`#${carouselId}>.vvjc-item`);
-        let cellCount = cells.length;
-        let btnId = carouselId.split('-')[2];
-        let prevBtnId = context.getElementById(`prev-${btnId}`);
-        let nextBtnId = context.getElementById(`next-${btnId}`);
-        let indexNo = context.getElementById(`index-${btnId}`);
+      const forward = (carouselId) => {
+        const cells = context.querySelectorAll(`#${carouselId}>.vvjc-item`);
+        const cellCount = cells.length;
+        const btnId = carouselId.split('-')[2];
+        const prevBtnId = context.querySelector(`#prev-${btnId}`);
+        const nextBtnId = context.querySelector(`#next-${btnId}`);
+        const indexNo = context.querySelector(`#index-${btnId}`);
         for (let i = 0; i < cellCount; i++) {
           if (cells[i].classList.contains('active')) {
             if (i == cellCount - 1) {
-              let prevOn = parseInt(`${btnId}00`);
-              let prevOff = parseInt(`${btnId}01`);
-              let nextOn = parseInt(`${btnId}11`);
-              let nextOff = parseInt(`${btnId}10`);
+              const prevOn = parseInt(`${btnId}00`);
+              const prevOff = parseInt(`${btnId}01`);
+              const nextOn = parseInt(`${btnId}11`);
+              const nextOff = parseInt(`${btnId}10`);
               if (autoHelper.includes(nextOn)) {
                 autoHelper = autoHelper.map(item => {
                   if (item == nextOn) {
@@ -296,8 +296,8 @@
         if (cTime != 0) {
           let intervalId = setAutoPlayInterval(carouselId, cTime); // Create and store interval
 
-          let stopOnHover = context.getElementById(carouselId);
-          let playPause = context.getElementById(`btn-${cTimeId}`);
+          let stopOnHover = context.querySelector(`#${carouselId}`);
+          let playPause = context.querySelector(`#btn-${cTimeId}`);
           playPause.style.display = 'flex';
 
           stopOnHover.addEventListener('mouseover', function() {
