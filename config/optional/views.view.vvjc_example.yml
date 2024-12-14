@@ -206,7 +206,7 @@ display:
           large_screen_height: '450'
           small_screen_height: '350'
           time_in_seconds: '5000'
-          perspective: ''
+          perspective: '0'
           background_color: '#e0f0ff'
           background_color_opacity: '0.6'
           disable_background: 0

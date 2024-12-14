@@ -43,7 +43,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $options['large_screen_height'] = ['default' => 400];
     $options['small_screen_height'] = ['default' => 350];
     $options['available_breakpoints'] = ['default' => '992'];
-    $options['perspective'] = ['default' => ''];
+    $options['perspective'] = ['default' => '0'];
     $options['unique_id'] = ['default' => $this->generateUniqueId()];
     $options['background_color'] = ['default' => '#ffffff'];
     $options['background_color_opacity'] = ['default' => 0.7];
