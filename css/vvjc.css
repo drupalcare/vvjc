@@ -220,14 +220,16 @@
   perspective: calc(var(--perspective, 1200) * 1px);
 }
 
-.vvjc .vvjc-item:hover * {
+.vvjc .vvjc-item,
+.vvjc .vvjc-item:not(.active) * {
   cursor: default;
   pointer-events: none;
 }
 
-.vvjc .vvjc-item.active:hover a {
+.vvjc .vvjc-item.active a,
+.vvjc .vvjc-item.active button {
   cursor: pointer;
-  pointer-events: initial;
+  pointer-events: auto;
 }
 
 .vvjc .vvjc-nav .next-arrow,
@@ -253,27 +255,25 @@
   line-height: 0;
 }
 
-.vvjc .vvjc-nav .button {
-  transition: opacity 0.5s, visibility 0.5s;
+.vvjc .vvjc-nav button {
+  transition: opacity 0.5s, visibility 0.5s, width 0.2s ease-in-out;
   opacity: 1;
   visibility: visible;
-  padding: 0.75rem;
+  padding: 6px 12px;
   font-size: 1.125rem;
   margin: 0;
-}
-
-.vvjc .vvjc-nav .button {
   min-width: 2rem;
   min-height: 2rem;
   font-weight: normal;
-  transition: width 0.2s ease-in-out;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  line-height: 0.8;
 }
+
 
 .vvjc .vvjc-nav .next-arrow.hidden,
 .vvjc .vvjc-nav .prev-arrow.hidden {
@@ -303,7 +303,6 @@
   justify-content: center;
   align-items: center;
   background-color: transparent;
-  color: currentColor;
   position: relative;
   transform-origin: center;
   transition: transform 0.6s ease;
