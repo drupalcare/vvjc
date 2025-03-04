@@ -149,6 +149,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#title' => $this->t('Time In Seconds'),
       '#options' => [
         '0' => $this->t('None'),
+        '2000' => $this->t('2 s'),
         '3000' => $this->t('3 s'),
         '4000' => $this->t('4 s'),
         '5000' => $this->t('5 s'),
