@@ -242,7 +242,8 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 0.375rem;
+  gap: 16px;
+  transition: all 0.3s ease;
 }
 
 .vvjc .vvjc-nav > .time-in-seconds {
@@ -254,12 +255,14 @@
   font-size: 0.5rem;
   line-height: 0;
 }
-
+.current-slide-number {
+  padding-left: 0;
+  padding-right: 0;
+}
 .vvjc .vvjc-nav button {
-  transition: opacity 0.5s, visibility 0.5s, width 0.2s ease-in-out;
   opacity: 1;
   visibility: visible;
-  padding: 6px 12px;
+  padding: 6px 0;
   font-size: 1.125rem;
   margin: 0;
   min-width: 2rem;
@@ -274,12 +277,20 @@
   line-height: 0.8;
 }
 
+.button.prev-arrow,
+.button.next-arrow {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
 
-.vvjc .vvjc-nav .next-arrow.hidden,
-.vvjc .vvjc-nav .prev-arrow.hidden {
+.button.prev-arrow.vvjc-hidden,
+.button.next-arrow.vvjc-hidden {
   opacity: 0;
+  transform: translateX(-20px);
   visibility: hidden;
-  transition: opacity 0.5s, visibility 0s 0.5s;
+  pointer-events: none;
 }
 
 @keyframes fadeIn {

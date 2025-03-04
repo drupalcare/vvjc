@@ -173,19 +173,19 @@
     } = state;
     if (prevButton) {
       if (currentIndex === 0) {
-        prevButton.classList.add('hidden');
+        prevButton.classList.add('vvjc-hidden');
         prevButton.setAttribute('tabindex', '-1');
       } else {
-        prevButton.classList.remove('hidden');
+        prevButton.classList.remove('vvjc-hidden');
         prevButton.setAttribute('tabindex', '0');
       }
     }
     if (nextButton) {
       if (currentIndex === cells.length - 1) {
-        nextButton.classList.add('hidden');
+        nextButton.classList.add('vvjc-hidden');
         nextButton.setAttribute('tabindex', '-1');
       } else {
-        nextButton.classList.remove('hidden');
+        nextButton.classList.remove('vvjc-hidden');
         nextButton.setAttribute('tabindex', '0');
       }
     }
