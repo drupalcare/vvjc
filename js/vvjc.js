@@ -9,8 +9,23 @@
 ((Drupal, drupalSettings, once) => {
   'use strict';
   const carouselStates = new Map();
+  const previousVisibility = new Map();
   let lastKnownWidth = window.innerWidth;
   let resizeTimeout;
+
+  function debounce(func, delay) {
+    let timer;
+    return function() {
+      clearTimeout(timer);
+      timer = setTimeout(func, delay);
+    };
+  }
+  const playIconSVG = `
+    <svg class="svg-play" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor">
+      <path d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path>
+    </svg>`;
+  const pauseIconSVG = `
+    <svg class="svg-pause" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor"><path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path></svg>`;
   Drupal.behaviors.VVJCarousel = {
     attach(context) {
       once('VVJCarousel', '.vvjc-items', context).forEach(initCarousel);
@@ -20,12 +35,6 @@
       }
     }
   };
-  const playIconSVG = `
-    <svg class="svg-play" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor">
-      <path d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path>
-    </svg>`;
-  const pauseIconSVG = `
-    <svg class="svg-pause" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor"><path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path></svg>`;
 
   function initCarousel(carousel) {
     const container = carousel.closest('.vvjc');
@@ -43,6 +52,8 @@
       nextButton: container.querySelector(`#next-${uniqueId}`),
       playPauseButton: container.querySelector(`#btn-${uniqueId}`)
     };
+    const initiallyVisible = isMostlyVisible(state.container);
+    previousVisibility.set(carousel.id, initiallyVisible);
     carouselStates.set(carousel.id, state);
     if (state.rotationDelay <= 0) {
       state.isPaused = true;
@@ -52,7 +63,9 @@
     setupControls(state);
     setupTouchEvents(state);
     updateSlide(state);
-    startAutoPlay(state);
+    if (initiallyVisible && !state.isPaused) {
+      startAutoPlay(state);
+    }
   }
 
   function buildCarousel(state) {
@@ -253,12 +266,11 @@
   }
 
   function handleVisibilityChange() {
-    carouselStates.forEach((state) => {
-      if (document.hidden) {
-        pauseAutoPlay(state);
-      } else {
-        updateSlide(state);
-        startAutoPlay(state);
+    carouselStates.forEach((state, id) => {
+      const currentlyVisible = !document.hidden && isMostlyVisible(state.container);
+      if (currentlyVisible !== previousVisibility.get(id)) {
+        previousVisibility.set(id, currentlyVisible);
+        currentlyVisible ? startAutoPlay(state) : pauseAutoPlay(state);
       }
     });
   }
@@ -267,7 +279,6 @@
     pauseAutoPlay(state);
     startAutoPlay(state);
   }
-
   const resetCarousel = () => {
     carouselStates.forEach((state) => {
       state.currentIndex = 0;
@@ -277,7 +288,26 @@
       restartAutoPlay(state);
     });
   };
+  const isMostlyVisible = (element) => {
+    const rect = element.getBoundingClientRect();
+    const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+    return visibleHeight / rect.height > 0.2;
+  };
 
+  function handleCarouselVisibility() {
+    carouselStates.forEach((state, carouselId) => {
+      const currentlyVisible = isMostlyVisible(state.container);
+      const wasVisible = previousVisibility.get(carouselId) ?? false;
+      if (currentlyVisible !== wasVisible) {
+        previousVisibility.set(carouselId, currentlyVisible);
+        if (currentlyVisible && !state.isPaused) {
+          startAutoPlay(state);
+        } else {
+          pauseAutoPlay(state);
+        }
+      }
+    });
+  }
   const handleResizeOrRotate = () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
@@ -288,8 +318,10 @@
       }
     }, 200);
   };
-
-  window.addEventListener('resize', handleResizeOrRotate);
-  window.addEventListener('orientationchange', handleResizeOrRotate);
-
+  document.addEventListener('scroll', debounce(handleCarouselVisibility, 200));
+  window.addEventListener('orientationchange', debounce(handleResizeOrRotate, 200));
+  window.addEventListener('resize', debounce(() => {
+    handleCarouselVisibility();
+    handleResizeOrRotate();
+  }, 200));
 })(Drupal, drupalSettings, once);
