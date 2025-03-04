@@ -11,7 +11,6 @@
   const carouselStates = new Map();
   let lastKnownWidth = window.innerWidth;
   let resizeTimeout;
-
   Drupal.behaviors.VVJCarousel = {
     attach(context) {
       once('VVJCarousel', '.vvjc-items', context).forEach(initCarousel);
@@ -31,7 +30,6 @@
   function initCarousel(carousel) {
     const container = carousel.closest('.vvjc');
     const uniqueId = carousel.id.split('-')[2];
-
     const state = {
       container: carousel,
       cells: carousel.querySelectorAll('.vvjc-item'),
@@ -45,14 +43,11 @@
       nextButton: container.querySelector(`#next-${uniqueId}`),
       playPauseButton: container.querySelector(`#btn-${uniqueId}`)
     };
-
     carouselStates.set(carousel.id, state);
-
     if (state.rotationDelay <= 0) {
       state.isPaused = true;
       updatePlayPauseButton(state, true);
     }
-
     buildCarousel(state);
     setupControls(state);
     setupTouchEvents(state);
@@ -61,12 +56,13 @@
   }
 
   function buildCarousel(state) {
-    const { cells, container } = state;
+    const {
+      cells,
+      container
+    } = state;
     const theta = 360 / cells.length;
     const radius = Math.round(container.offsetWidth / 2 / Math.tan(Math.PI / cells.length));
-
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     cells.forEach((cell, i) => {
       cell.style.opacity = '1';
       cell.style.transform = `rotateY(${theta * i}deg) translateZ(${radius}px)`;
@@ -74,11 +70,9 @@
         cell.style.transition = 'none';
       }
     });
-
     if (reducedMotion) {
       container.style.transition = 'none';
     }
-
     cells[0].classList.add('active');
     updateNavVisibility(state);
   }
@@ -107,7 +101,6 @@
         manualAdvance(state, -1);
       }
     });
-
     state.container.addEventListener('mouseenter', () => pauseAutoPlay(state));
     state.container.addEventListener('mouseleave', () => resumeAutoPlay(state));
   }
@@ -274,7 +267,6 @@
     pauseAutoPlay(state);
     startAutoPlay(state);
   }
-
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
@@ -288,5 +280,4 @@
       }
     }, 200);
   });
-
 })(Drupal, drupalSettings, once);
