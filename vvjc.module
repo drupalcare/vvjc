@@ -12,6 +12,8 @@
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 
+use Drupal\Core\Render\Markup;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\vvjc\Plugin\views\style\ViewsVanillaJavascriptCarousel;
@@ -176,4 +178,69 @@ function _vvjc_hex_to_rgb(string $hex): array {
     'g' => hexdec(substr($hex, 2, 2)),
     'b' => hexdec(substr($hex, 4, 2)),
   ];
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function vvjc_token_info() {
+  return [
+    'tokens' => [
+      'view' => [
+        'vvjc' => [
+          'name' => t('VVJC field output'),
+          'description' => t("Use these tokens when you enable 'Use replacement tokens from the first row' in Views text areas such as the header, footer, or empty text. Use [vvjc:field_name] for rendered output, or [vvjc:field_name:plain] to strip HTML and return plain text. These tokens pull values from the first row of the View result."),
+        ],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function vvjc_tokens($type, $tokens, array $data = [], array $options = []) {
+  $replacements = [];
+
+  if (in_array($type, ['vvjc', 'global']) && isset($data['view']) && $data['view'] instanceof ViewExecutable) {
+    $view = $data['view'];
+
+    if (!empty($view->result)) {
+      $first_row = $view->result[0];
+      $field_handlers = $view->display_handler->getHandlers('field');
+
+      foreach ($tokens as $token => $name) {
+        $plain = FALSE;
+        $field_id = $token;
+
+        if (str_ends_with($token, ':plain')) {
+          $plain = TRUE;
+          $field_id = substr($token, 0, -6);
+        }
+
+        if (!isset($field_handlers[$field_id])) {
+          continue;
+        }
+
+        $handler = $field_handlers[$field_id];
+        try {
+          // Safely use plain or fallback.
+          if ($plain && method_exists($handler, 'advancedRenderText')) {
+            $value = $handler->advancedRenderText($first_row);
+          }
+          else {
+            $value = $handler->advancedRender($first_row);
+          }
+
+          $replacements["[vvjc:$token]"] = Markup::create((string) $value);
+        }
+        catch (\Throwable $e) {
+          // Avoid breaking token replacement.
+          $replacements["[vvjc:$token]"] = '';
+        }
+      }
+    }
+  }
+
+  return $replacements;
 }

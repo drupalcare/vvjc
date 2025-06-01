@@ -57,12 +57,33 @@ editing views.
 - **Available Breakpoints:** Choose the breakpoints to ensure the carousel is 
   responsive (e.g., 576px, 768px, 992px, etc.).
 
+
+## Token Support in Views Text Areas
+
+In Views headers, footers, or empty text areas—when using *Global: Text area* or
+*Global: Unfiltered text*—there is an option called **"Use replacement tokens
+from the first row."**
+
+The default Twig-style tokens (e.g., `{{ title }}` or `{{ field_image }}`)
+**will not work** with the VVJC style. Instead, use the custom tokens provided
+by VVJC:
+
+**Examples:**
+
+- `{{ title }}` → `[vvjc:title]`  
+- `{{ field_image }}` → `[vvjc:field_image]`
+
+To strip any HTML from the output, you can append `:plain` to the token:
+
+- `[vvjc:title:plain]`
+
+These tokens pull data from the **first row** of the View result and are
+designed to work seamlessly with the VVJC rendering system.
 ## Important Note on Pagination
 
-**Pagination does not work for the 3D Carousel display style.** To ensure the 
-best performance and user experience, it is recommended to set a fixed number 
-of items to display. The ideal number is up to 30 items. Exceeding this number 
-may affect the carousel's performance and load times.
+To ensure the best performance and user experience, it is recommended to set a 
+ fixed number of items to display. The ideal number is up to 30 items.
+  Exceeding this number may affect the carousel's performance and load times.
 
 ## Troubleshooting
 
