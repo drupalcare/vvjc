@@ -12,6 +12,7 @@
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Markup;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -209,6 +210,9 @@ function vvjc_tokens($type, $tokens, array $data = [], array $options = []) {
       $first_row = $view->result[0];
       $field_handlers = $view->display_handler->getHandlers('field');
 
+      /** @var \Drupal\Core\Render\RendererInterface $renderer */
+      $renderer = \Drupal::service('renderer');
+
       foreach ($tokens as $token => $name) {
         $plain = FALSE;
         $field_id = $token;
@@ -222,20 +226,25 @@ function vvjc_tokens($type, $tokens, array $data = [], array $options = []) {
           continue;
         }
 
-        $handler = $field_handlers[$field_id];
         try {
-          // Safely use plain or fallback.
-          if ($plain && method_exists($handler, 'advancedRenderText')) {
-            $value = $handler->advancedRenderText($first_row);
+          $handler = $field_handlers[$field_id];
+          $value = $plain && method_exists($handler, 'advancedRenderText')
+            ? $handler->advancedRenderText($first_row)
+            : $handler->advancedRender($first_row);
+
+          if (is_array($value)) {
+            // Render safely using renderPlain to avoid LogicException.
+            $rendered = $renderer->renderPlain($value);
           }
           else {
-            $value = $handler->advancedRender($first_row);
+            $rendered = (string) $value;
           }
 
-          $replacements["[vvjc:$token]"] = Markup::create((string) $value);
+          $replacements["[vvjc:$token]"] = $plain
+            ? Html::decodeEntities(strip_tags($rendered))
+            : Markup::create($rendered);
         }
         catch (\Throwable $e) {
-          // Avoid breaking token replacement.
           $replacements["[vvjc:$token]"] = '';
         }
       }
