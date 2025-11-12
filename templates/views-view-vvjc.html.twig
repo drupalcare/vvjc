@@ -11,10 +11,20 @@
  *   - small_screen_height: Height of the carousel for small screens.
  *   - available_breakpoints: Breakpoints for the carousel.
  *   - perspective: Perspective value for the carousel.
+ *   - show_navigation_arrows: Display navigation arrows.
+ *   - show_play_pause: Display play/pause button.
+ *   - show_slide_counter: Display slide counter.
+ *   - show_progress_bar: Display progress bar.
+ *   - show_dots_navigation: Display dots navigation.
+ *   - enable_keyboard_nav: Enable keyboard navigation.
+ *   - enable_touch_swipe: Enable touch/swipe gestures.
+ *   - enable_pause_on_hover: Pause on hover.
+ *   - enable_screen_reader: Enable screen reader announcements.
+ *   - pause_on_reduced_motion: Respect reduced motion preference.
  * - rows: The view result rows to be rendered.
  * - unique_id: A unique identifier for the view instance.
  *
- * @see template_preprocess_views_view_3d_carousel()
+ * @see template_preprocess_views_view_vvjc()
  *
  * @ingroup themeable
  */
@@ -23,24 +33,59 @@
 {# Set unique IDs for the carousel and container #}
 {% set unique_id = options.unique_id %}
 {% set time_in_seconds = options.time_in_seconds %}
-{% set perspective = options.perspective > 0 ? options.perspective : null %}
+{% set perspective = options.perspective > 0 ? options.perspective : 640 %}
+{% set height_large = options.large_screen_height ?? 400 %}
+{% set height_small = options.small_screen_height ?? 350 %}
+{% set max_width = options.max_width ?? 600 %}
+{% set breakpoint = options.available_breakpoints ?? 992 %}
+
+{% set show_navigation_arrows = options.show_navigation_arrows ?? true %}
+{% set show_play_pause = options.show_play_pause ?? true %}
+{% set show_slide_counter = options.show_slide_counter ?? true %}
+{% set show_progress_bar = options.show_progress_bar ?? false %}
+{% set show_dots_navigation = options.show_dots_navigation ?? false %}
+{% set enable_keyboard_nav = options.enable_keyboard_nav ?? true %}
+{% set enable_touch_swipe = options.enable_touch_swipe ?? true %}
+{% set enable_pause_on_hover = options.enable_pause_on_hover ?? true %}
+{% set enable_screen_reader = options.enable_screen_reader ?? true %}
+{% set pause_on_reduced_motion = options.pause_on_reduced_motion ?? true %}
+
 {% set vvjc_id = 'vvjc-' ~ unique_id %}
 {% set carousel_id = 'vvjc-items-' ~ unique_id %}
 {% set bottom_nav_id = 'vvjc-nav-' ~ unique_id %}
-{# Set the classes for the view #}
+
+{# Simplified classes - no more height/width variants #}
 {% set classes = [
   'vvjc',
-  vvjc_id,
-  'br-' ~ options.available_breakpoints,
-  'height-large-' ~ options.large_screen_height,
-  'height-small-' ~ options.small_screen_height,
+  'vvjc-' ~ unique_id,
+  'br-' ~ breakpoint,
 ] %}
-{% set classes_inner = 'vvjc-inner ' ~ 'max-width-' ~ options.max_width %}
 
-<div {{ attributes.addClass(classes).setAttribute('id', vvjc_id) }} role="region" aria-label="{{ 'Carousel'|t }}">
-  <span id="vvjc-hover-info-{{ unique_id }}" class="visually-hidden">{{ 'Carousel pauses when you hover over it.'|t }}</span>
-  <div class="{{ classes_inner }}"{% if perspective > 0 %} style="--perspective:{{ perspective }}"{% endif %}>
-    <div id="{{ carousel_id }}" class="vvjc-items" role="region" aria-roledescription="carousel" aria-labelledby="index-{{ unique_id }}">
+{# Build inline styles with CSS custom properties #}
+{% set carousel_styles = '--height-small: ' ~ height_small ~ '; --height-large: ' ~ height_large ~ ';' %}
+
+{% set inner_styles = '--max-width: ' ~ max_width ~ '; --perspective: ' ~ perspective ~ ';' %}
+
+<div {{ attributes.addClass(classes).setAttribute('id', vvjc_id).setAttribute('style', carousel_styles) }} role="region" aria-label="{{ 'Carousel'|t }}">
+  {% if enable_pause_on_hover %}
+    <span id="vvjc-hover-info-{{ unique_id }}" class="visually-hidden">{{ 'Carousel pauses when you hover over it.'|t }}</span>
+  {% endif %}
+
+  <div class="vvjc-inner" style="{{ inner_styles }}">
+    <div id="{{ carousel_id }}" class="vvjc-items"
+      role="region"
+      aria-roledescription="carousel"
+      aria-labelledby="index-{{ unique_id }}"
+      data-show-navigation-arrows="{{ show_navigation_arrows ? 'true' : 'false' }}"
+      data-show-play-pause="{{ show_play_pause ? 'true' : 'false' }}"
+      data-show-slide-counter="{{ show_slide_counter ? 'true' : 'false' }}"
+      data-show-progress-bar="{{ show_progress_bar ? 'true' : 'false' }}"
+      data-show-dots-navigation="{{ show_dots_navigation ? 'true' : 'false' }}"
+      data-enable-keyboard-nav="{{ enable_keyboard_nav ? 'true' : 'false' }}"
+      data-enable-touch-swipe="{{ enable_touch_swipe ? 'true' : 'false' }}"
+      data-enable-pause-on-hover="{{ enable_pause_on_hover ? 'true' : 'false' }}"
+      data-enable-screen-reader="{{ enable_screen_reader ? 'true' : 'false' }}"
+      data-pause-on-reduced-motion="{{ pause_on_reduced_motion ? 'true' : 'false' }}">
       {% for row in rows %}
         {% set row_id = 'item-' ~ unique_id ~ '-' ~ loop.index %}
         <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="tabpanel" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="{{ loop.first ? '0' : '-1' }}" aria-labelledby="label-{{ row_id }}" {% if background_rgb and not options.disable_background %} style="background-color:{{ background_rgb }}"{% endif %}>
@@ -49,28 +94,58 @@
         </div>
       {% endfor %}
     </div>
+
+    {% if enable_screen_reader %}
+      <div class="announcer visually-hidden" aria-live="polite" aria-atomic="true"></div>
+    {% endif %}
   </div>
 
   <div id="{{ bottom_nav_id }}" class="vvjc-nav" data-time="{{ time_in_seconds }}" aria-label="{{ 'Carousel Controls'|t }}">
     <div class="vvjc-nav-inner">
-      {% if time_in_seconds > 0 %}
-        <button id="btn-{{ unique_id }}" class="button display-{{ time_in_seconds }}{% if time_in_seconds > 0 %} pause{% else %} play{% endif %}" aria-controls="{{ carousel_id }}" aria-pressed="{{ time_in_seconds > 0 ? 'true' : 'false' }}" aria-label="{{ time_in_seconds > 0 ? 'Pause Slideshow' : 'Play Slideshow' }}">
 
+      {% if show_navigation_arrows %}
+        <button id="prev-{{ unique_id }}" role="button" class="button prev-arrow" aria-controls="{{ carousel_id }}" aria-label="{{ 'Previous Slide'|t }}">
+          <span class="visually-hidden">{{ 'Previous Slide'|t }}</span>
+          {{ include('@vvjc/svg/svg-prev.svg') }}
+        </button>
+      {% endif %}
+
+      {% if show_play_pause and time_in_seconds > 0 %}
+        <button id="btn-{{ unique_id }}" class="button display-{{ time_in_seconds }}{% if time_in_seconds > 0 %} pause{% else %} play{% endif %}" aria-controls="{{ carousel_id }}" aria-pressed="{{ time_in_seconds > 0 ? 'true' : 'false' }}" aria-label="{{ time_in_seconds > 0 ? 'Pause Slideshow' : 'Play Slideshow' }}">
           <span class="visually-hidden">{{ 'Play Pause 3D Carousel'|t }}</span>
           {{ include('@vvjc/svg/svg-pause.svg') }}
         </button>
       {% endif %}
-      <button id="prev-{{ unique_id }}" role="button" class="button prev-arrow" aria-controls="{{ carousel_id }}" aria-label="{{ 'Previous Slide'|t }}">
-        <span class="visually-hidden">{{ 'Previous Slide'|t }}</span>
-        {{ include('@vvjc/svg/svg-prev.svg') }}
-      </button>
-      <span id="index-{{ unique_id }}" class="current-slide-number" aria-live="polite" aria-label="{{ 'Slide @index of @count'|t({'@index': 1, '@count': rows|length}) }}"></span>
 
-      <button id="next-{{ unique_id }}" role="button" class="button next-arrow" aria-controls="{{ carousel_id }}" aria-label="{{ 'Next Slide'|t }}">
-        <span class="visually-hidden">{{ 'Next Slide'|t }}</span>
-        {{ include('@vvjc/svg/svg-next.svg') }}
-      </button>
+      {% if show_progress_bar and time_in_seconds > 0 %}
+        <div class="echo-animation">
+          <div class="progressbar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="{{ 'Slide progress'|t }}" aria-live="polite" data-total-time="{{ time_in_seconds }}" data-current-progress="0" style="--progress: 0%;"></div>
+        </div>
+      {% endif %}
+
+      {% if show_slide_counter %}
+        <div class="echo-total">
+          <span id="index-{{ unique_id }}" class="current-slide" aria-live="polite">1</span><span class="vvjc-counter-separator"> {{ 'of'|t }}</span><span class="total-slides">{{ rows|length }}</span>
+        </div>
+      {% endif %}
+
+      {% if show_dots_navigation %}
+        <div class="vvjc-dots-nav" role="tablist" aria-label="{{ 'Slide navigation'|t }}">
+          {% for row in rows %}
+            <button class="dots-numbers-button{{ loop.first ? ' active' : '' }}" role="tab" aria-selected="{{ loop.first ? 'true' : 'false' }}" aria-controls="item-{{ unique_id }}-{{ loop.index }}" aria-label="{{ 'Go to slide @index'|t({'@index': loop.index}) }}" tabindex="{{ loop.first ? '0' : '-1' }}">
+              <span class="visually-hidden">{{ 'Slide @index'|t({'@index': loop.index}) }}</span>
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if show_navigation_arrows %}
+        <button id="next-{{ unique_id }}" role="button" class="button next-arrow" aria-controls="{{ carousel_id }}" aria-label="{{ 'Next Slide'|t }}">
+          <span class="visually-hidden">{{ 'Next Slide'|t }}</span>
+          {{ include('@vvjc/svg/svg-next.svg') }}
+        </button>
+      {% endif %}
+
     </div>
   </div>
 </div>
-

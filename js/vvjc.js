@@ -39,30 +39,73 @@
   function initCarousel(carousel) {
     const container = carousel.closest('.vvjc');
     const uniqueId = carousel.id.split('-')[2];
+    
+    // Read configuration from data attributes (security: data attributes are sanitized by Drupal/Twig).
+    const config = {
+      showProgressBar: carousel.getAttribute('data-show-progress-bar') === 'true',
+      showDotsNavigation: carousel.getAttribute('data-show-dots-navigation') === 'true',
+      enableKeyboardNav: carousel.getAttribute('data-enable-keyboard-nav') === 'true',
+      enableTouchSwipe: carousel.getAttribute('data-enable-touch-swipe') === 'true',
+      enablePauseOnHover: carousel.getAttribute('data-enable-pause-on-hover') === 'true',
+      enableScreenReader: carousel.getAttribute('data-enable-screen-reader') === 'true',
+      pauseOnReducedMotion: carousel.getAttribute('data-pause-on-reduced-motion') === 'true',
+      showNavigationArrows: carousel.getAttribute('data-show-navigation-arrows') === 'true',
+      showPlayPause: carousel.getAttribute('data-show-play-pause') === 'true',
+      showSlideCounter: carousel.getAttribute('data-show-slide-counter') === 'true',
+    };
+    
     const state = {
       container: carousel,
       cells: carousel.querySelectorAll('.vvjc-item'),
       currentIndex: 0,
       isPaused: false,
       intervalId: null,
+      progressIntervalId: null,
       direction: 1,
       rotationDelay: parseInt(container.querySelector('.vvjc-nav')?.getAttribute('data-time') || '0', 10),
       slideNumberElement: container.querySelector(`#index-${uniqueId}`),
+      totalSlidesElement: container.querySelector('.total-slides'),
       prevButton: container.querySelector(`#prev-${uniqueId}`),
       nextButton: container.querySelector(`#next-${uniqueId}`),
-      playPauseButton: container.querySelector(`#btn-${uniqueId}`)
+      playPauseButton: container.querySelector(`#btn-${uniqueId}`),
+      progressBar: container.querySelector('.progressbar'),
+      announcer: container.querySelector('.announcer'),
+      dotsContainer: container.querySelector('.vvjc-dots-nav'),
+      config: config,
+      uniqueId: uniqueId,
     };
+    
     const initiallyVisible = isMostlyVisible(state.container);
     previousVisibility.set(carousel.id, initiallyVisible);
     carouselStates.set(carousel.id, state);
+    
     if (state.rotationDelay <= 0) {
       state.isPaused = true;
       updatePlayPauseButton(state, true);
     }
+    
+    // Check for reduced motion preference.
+    if (config.pauseOnReducedMotion && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      state.isPaused = true;
+      updatePlayPauseButton(state, true);
+      if (config.enableScreenReader && state.announcer) {
+        announceMessage(state, 'Carousel paused due to reduced motion preference');
+      }
+    }
+    
     buildCarousel(state);
     setupControls(state);
-    setupTouchEvents(state);
+    
+    if (config.enableTouchSwipe) {
+      setupTouchEvents(state);
+    }
+    
+    if (config.showDotsNavigation && state.dotsContainer) {
+      setupDotsNavigation(state);
+    }
+    
     updateSlide(state);
+    
     if (initiallyVisible && !state.isPaused) {
       startAutoPlay(state);
     }
@@ -71,11 +114,12 @@
   function buildCarousel(state) {
     const {
       cells,
-      container
+      container,
+      config
     } = state;
     const theta = 360 / cells.length;
     const radius = Math.round(container.offsetWidth / 2 / Math.tan(Math.PI / cells.length));
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reducedMotion = config.pauseOnReducedMotion && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     cells.forEach((cell, i) => {
       cell.style.opacity = '1';
       cell.style.transform = `rotateY(${theta * i}deg) translateZ(${radius}px)`;
@@ -85,19 +129,27 @@
     });
     if (reducedMotion) {
       container.style.transition = 'none';
+      container.classList.add('reduced-motion');
     }
     cells[0].classList.add('active');
     updateNavVisibility(state);
   }
 
   function setupControls(state) {
-    if (state.nextButton) {
-      state.nextButton.addEventListener('click', () => manualAdvance(state, 1));
+    const {config} = state;
+    
+    // Navigation arrows - conditional based on config.
+    if (config.showNavigationArrows) {
+      if (state.nextButton) {
+        state.nextButton.addEventListener('click', () => manualAdvance(state, 1));
+      }
+      if (state.prevButton) {
+        state.prevButton.addEventListener('click', () => manualAdvance(state, -1));
+      }
     }
-    if (state.prevButton) {
-      state.prevButton.addEventListener('click', () => manualAdvance(state, -1));
-    }
-    if (state.playPauseButton) {
+    
+    // Play/pause button - conditional based on config.
+    if (config.showPlayPause && state.playPauseButton) {
       state.playPauseButton.style.display = 'flex';
       state.playPauseButton.addEventListener('click', () => togglePlayPause(state));
       state.playPauseButton.addEventListener('keydown', (event) => {
@@ -107,21 +159,83 @@
         }
       });
     }
-    state.container.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') {
-        manualAdvance(state, 1);
-      } else if (event.key === 'ArrowLeft') {
-        manualAdvance(state, -1);
-      }
-    });
-    state.container.addEventListener('mouseenter', () => pauseAutoPlay(state));
-    state.container.addEventListener('mouseleave', () => resumeAutoPlay(state));
+    
+    // Enhanced keyboard navigation - conditional based on config.
+    if (config.enableKeyboardNav) {
+      state.container.addEventListener('keydown', (event) => {
+        // Skip if focus is in an input element.
+        if (event.target.closest('input, textarea, [contenteditable="true"]')) {
+          return;
+        }
+        
+        switch (event.key) {
+          case 'ArrowRight':
+            event.preventDefault();
+            manualAdvance(state, 1);
+            break;
+          case 'ArrowLeft':
+            event.preventDefault();
+            manualAdvance(state, -1);
+            break;
+          case ' ':
+          case 'Spacebar':
+            if (config.showPlayPause) {
+              event.preventDefault();
+              togglePlayPause(state);
+            }
+            break;
+          case 'Home':
+            event.preventDefault();
+            goToSlide(state, 0);
+            restartAutoPlay(state);
+            break;
+          case 'End':
+            event.preventDefault();
+            goToSlide(state, state.cells.length - 1);
+            restartAutoPlay(state);
+            break;
+        }
+      });
+    }
+    
+    // Pause on hover - conditional based on config.
+    if (config.enablePauseOnHover) {
+      state.container.addEventListener('mouseenter', () => {
+        pauseAutoPlay(state);
+        if (config.showProgressBar) {
+          pauseProgress(state);
+        }
+      });
+      state.container.addEventListener('mouseleave', () => {
+        resumeAutoPlay(state);
+      });
+    }
   }
 
   function manualAdvance(state, direction) {
     state.direction = direction;
     advanceSlide(state);
     restartAutoPlay(state);
+  }
+
+  function goToSlide(state, targetIndex) {
+    // Security: Validate index bounds.
+    const cellCount = state.cells.length;
+    if (targetIndex < 0 || targetIndex >= cellCount) {
+      return;
+    }
+    
+    state.currentIndex = targetIndex;
+    
+    // Determine direction based on distance (for natural rotation direction).
+    const currentIndex = state.currentIndex;
+    if (targetIndex > currentIndex) {
+      state.direction = 1;
+    } else if (targetIndex < currentIndex) {
+      state.direction = -1;
+    }
+    
+    updateSlide(state);
   }
 
   function advanceSlide(state) {
@@ -147,13 +261,15 @@
       cells,
       currentIndex,
       slideNumberElement,
-      container
+      container,
+      config
     } = state;
     const theta = 360 / cells.length;
     const radius = Math.round(container.offsetWidth / 2 / Math.tan(Math.PI / cells.length));
     const angle = theta * currentIndex * -1;
     container.style.transition = 'transform 0.8s ease-in-out';
     container.style.transform = `translateZ(${-radius}px) rotateY(${angle}deg)`;
+    
     cells.forEach((cell, index) => {
       const isActive = index === currentIndex;
       cell.setAttribute('aria-hidden', !isActive);
@@ -164,10 +280,27 @@
         cell.classList.remove('active');
       }
     });
-    if (slideNumberElement) {
-      slideNumberElement.setAttribute('aria-label', `Slide ${currentIndex + 1} of ${cells.length}`);
+    
+    // Update slide counter - conditional based on config.
+    if (config.showSlideCounter && slideNumberElement) {
       slideNumberElement.textContent = currentIndex + 1;
     }
+    
+    // Update dots navigation - conditional based on config.
+    if (config.showDotsNavigation) {
+      updateDotsNavigation(state);
+    }
+    
+    // Announce to screen readers - conditional based on config.
+    if (config.enableScreenReader && state.announcer) {
+      announceSlide(state);
+    }
+    
+    // Restart progress bar - conditional based on config.
+    if (config.showProgressBar && state.rotationDelay > 0 && !state.isPaused) {
+      startProgress(state);
+    }
+    
     updateNavVisibility(state);
   }
 
@@ -182,8 +315,15 @@
       currentIndex,
       prevButton,
       nextButton,
-      cells
+      cells,
+      config
     } = state;
+    
+    // Only update arrow visibility if arrows are enabled.
+    if (!config.showNavigationArrows) {
+      return;
+    }
+    
     if (prevButton) {
       if (currentIndex === 0) {
         prevButton.classList.add('vvjc-hidden');
@@ -207,8 +347,12 @@
   function togglePlayPause(state) {
     state.isPaused = !state.isPaused;
     updatePlayPauseButton(state, state.isPaused);
+    
     if (state.isPaused) {
       pauseAutoPlay(state);
+      if (state.config.showProgressBar) {
+        pauseProgress(state);
+      }
     } else {
       restartAutoPlay(state);
     }
@@ -226,24 +370,31 @@
   function setupTouchEvents(state) {
     let touchStartX = 0;
     let touchEndX = 0;
+    
+    // Security: Use passive listeners for better performance.
     state.container.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
-    });
+    }, {passive: true});
+    
     state.container.addEventListener('touchmove', (e) => {
       touchEndX = e.touches[0].clientX;
-    });
+    }, {passive: true});
+    
     state.container.addEventListener('touchend', () => {
       handleSwipe(state, touchStartX, touchEndX);
-    });
+    }, {passive: true});
   }
 
   function handleSwipe(state, startX, endX) {
-    const swipeThreshold = 50; // Minimum distance to count as a swipe.
+    // Security: Validate numeric inputs.
+    if (typeof startX !== 'number' || typeof endX !== 'number') {
+      return;
+    }
+    
+    const swipeThreshold = 50;
     if (startX - endX > swipeThreshold) {
-      // Swiped left = next slide.
       manualAdvance(state, 1);
     } else if (endX - startX > swipeThreshold) {
-      // Swiped right = previous slide.
       manualAdvance(state, -1);
     }
   }
@@ -252,11 +403,21 @@
     clearInterval(state.intervalId);
     if (state.rotationDelay > 0 && !state.isPaused) {
       state.intervalId = setInterval(() => advanceSlide(state), state.rotationDelay);
+      
+      // Start progress bar if enabled.
+      if (state.config.showProgressBar) {
+        startProgress(state);
+      }
     }
   }
 
   function pauseAutoPlay(state) {
     clearInterval(state.intervalId);
+    
+    // Also pause progress bar if enabled.
+    if (state.config.showProgressBar) {
+      pauseProgress(state);
+    }
   }
 
   function resumeAutoPlay(state) {
@@ -288,11 +449,123 @@
       restartAutoPlay(state);
     });
   };
+  
   const isMostlyVisible = (element) => {
     const rect = element.getBoundingClientRect();
     const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
     return visibleHeight / rect.height > 0.2;
   };
+
+  /**
+   * Setup dots navigation click handlers.
+   */
+  function setupDotsNavigation(state) {
+    if (!state.dotsContainer) {
+      return;
+    }
+    
+    const dotButtons = state.dotsContainer.querySelectorAll('.dots-numbers-button');
+    dotButtons.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        goToSlide(state, index);
+        restartAutoPlay(state);
+      });
+    });
+  }
+
+  /**
+   * Update dots navigation active state.
+   */
+  function updateDotsNavigation(state) {
+    if (!state.dotsContainer) {
+      return;
+    }
+    
+    const dotButtons = state.dotsContainer.querySelectorAll('.dots-numbers-button');
+    dotButtons.forEach((dot, index) => {
+      const isActive = index === state.currentIndex;
+      dot.classList.toggle('active', isActive);
+      dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      dot.setAttribute('tabindex', isActive ? '0' : '-1');
+    });
+  }
+
+  /**
+   * Announce slide change to screen readers.
+   */
+  function announceSlide(state) {
+    if (!state.announcer) {
+      return;
+    }
+    
+    const currentSlide = state.currentIndex + 1;
+    const totalSlides = state.cells.length;
+    state.announcer.textContent = `Slide ${currentSlide} of ${totalSlides}`;
+  }
+
+  /**
+   * Announce custom message to screen readers.
+   */
+  function announceMessage(state, message) {
+    if (!state.announcer) {
+      return;
+    }
+    
+    // Security: Use textContent to prevent XSS.
+    const originalText = state.announcer.textContent;
+    state.announcer.textContent = message;
+    
+    // Restore original text after brief delay.
+    setTimeout(() => {
+      state.announcer.textContent = originalText;
+    }, 1000);
+  }
+
+  /**
+   * Start progress bar animation.
+   */
+  function startProgress(state) {
+    if (!state.progressBar || state.rotationDelay <= 0) {
+      return;
+    }
+    
+    // Clear any existing progress interval.
+    clearInterval(state.progressIntervalId);
+    
+    // Reset progress bar.
+    state.progressBar.style.setProperty('--progress', '0%');
+    state.progressBar.setAttribute('aria-valuenow', '0');
+    
+    const startTime = Date.now();
+    
+    // Performance: Use 50ms interval for smooth animation without excessive CPU.
+    state.progressIntervalId = setInterval(() => {
+      if (state.isPaused) {
+        clearInterval(state.progressIntervalId);
+        return;
+      }
+      
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(100, (elapsed / state.rotationDelay) * 100);
+      
+      state.progressBar.style.setProperty('--progress', `${progress}%`);
+      state.progressBar.setAttribute('aria-valuenow', Math.round(progress));
+      
+      if (progress >= 100) {
+        clearInterval(state.progressIntervalId);
+      }
+    }, 50);
+  }
+
+  /**
+   * Pause progress bar animation.
+   */
+  function pauseProgress(state) {
+    if (state.progressIntervalId) {
+      clearInterval(state.progressIntervalId);
+      state.progressIntervalId = null;
+    }
+  }
 
   function handleCarouselVisibility() {
     carouselStates.forEach((state, carouselId) => {
@@ -308,6 +581,7 @@
       }
     });
   }
+  
   const handleResizeOrRotate = () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
@@ -318,6 +592,8 @@
       }
     }, 200);
   };
+  
+  // Performance: Use debounced event listeners to prevent excessive calls.
   document.addEventListener('scroll', debounce(handleCarouselVisibility, 200));
   window.addEventListener('orientationchange', debounce(handleResizeOrRotate, 200));
   window.addEventListener('resize', debounce(() => {

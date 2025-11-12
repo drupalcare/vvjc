@@ -1,0 +1,34 @@
+views.style.views_vvjc:
+  type: views_style
+  label: 'Views Vanilla JavaScript 3D Carousel'
+  mapping:
+    max_width:
+      type: string
+      label: 'Maximum width for carousel items'
+    time_in_seconds:
+      type: string
+      label: 'Auto-rotate interval in milliseconds'
+    large_screen_height:
+      type: string
+      label: 'Height on large screens'
+    small_screen_height:
+      type: string
+      label: 'Height on small screens'
+    available_breakpoints:
+      type: string
+      label: 'Responsive breakpoint'
+    perspective:
+      type: integer
+      label: '3D perspective depth in pixels'
+    unique_id:
+      type: integer
+      label: 'Unique identifier for carousel instance'
+    background_color:
+      type: string
+      label: 'Background color in hex format'
+    background_color_opacity:
+      type: float
+      label: 'Background color opacity'
+    disable_background:
+      type: boolean
+      label: 'Disable background color'

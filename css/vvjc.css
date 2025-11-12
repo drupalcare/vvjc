@@ -6,8 +6,21 @@
  * Website:      https://www.flashwebcenter.com
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
+:root {
+  --vvjb-progress-size: 32px;
+  --vvjb-progress-thickness: 6px;  /* Colors */
+  --vvjb-progress-color: #3b82f6;              /* Active progress color */
+  --vvjb-progress-track: rgba(255, 255, 255, 0.3);  /* Background track */
+  --vvjb-progress-inner-bg: #fff;              /* Inner circle background */
+  --vvjb-progress-text-color: #3b82f6;         /* Percentage text color */
+  --vvjb-progress-complete-color: #22c55e;     /* Color at 100% */
+  --vvjb-progress-complete-text: #22c55e;      /* Text color at 100% */
+  --vvjb-progress-font-size: 0.625rem;
+}
+/* ==========================================================================
+   Base Styles & Accessibility
+   ========================================================================== */
 
-/* 3d_carousel */
 .vvj-carousel .visually-hidden {
   position: absolute;
   width: 1px;
@@ -32,16 +45,36 @@
   display: block !important;
 }
 
+/* ==========================================================================
+   Dynamic 3D Carousel Container
+   ========================================================================== */
 .vvjc {
+
+  /* CSS Custom Properties with sensible defaults */
+  --height-large: 400; /* Default large screen height (100-550 range) */
+  --height-small: 350; /* Default small screen height (100-550 range) */
   display: grid;
   overflow: hidden;
   opacity: 0;
   animation: fadeIn 1s ease-in 0.4s forwards;
 }
 
+/* ==========================================================================
+ Inner Container - Dynamic Width & Perspective
+ ========================================================================== */
 .vvjc > .vvjc-inner {
-  max-height: 38.125rem;
-  perspective: calc(var(--perspective, 640) * 1px);
+
+  /* CSS Custom Properties with defaults */
+  --max-width: 600; /* Default max-width in pixels (300-1000 range) */
+  --perspective: 640; /* Default perspective value */
+
+  /* Dynamic height based on --height-large variable */
+  height: calc(var(--height-large) * 0.0625rem); /* Converts 400 -> 25rem */
+  max-height: 38.125rem; /* ~610px safety cap */
+
+  /* Dynamic max-width and perspective */
+  max-width: calc(var(--max-width) * 1px);
+  perspective: calc(var(--perspective) * 1px);
   position: relative;
   width: 100%;
   z-index: 0;
@@ -50,27 +83,46 @@
   margin: 0 auto;
 }
 
+/* ==========================================================================
+ 3D Items Container
+ ========================================================================== */
 .vvjc .vvjc-items {
   width: 100%;
-  height: 100%;
+  height: 100%; /* Inherits from parent */
   margin: 0 auto;
   transform-style: preserve-3d;
   transition: transform 1s;
+  will-change: transform;
 }
 
+/* ==========================================================================
+ Individual Carousel Items
+ ========================================================================== */
 .vvjc .vvjc-items > .vvjc-item {
-  max-width: 71.875rem;
-  max-height: 34.375rem;
+
+  /* Dynamic height - slightly smaller than container */
+  height: calc((var(--height-large) - 16) * 0.0625rem);
+  max-width: 71.875rem; /* ~1150px - max readable content width */
+  max-height: 34.375rem; /* ~550px - optimal carousel height */
   position: absolute;
   transform-style: preserve-3d;
-  width: calc(100% - 24px);
+  width: calc(100% - 24px); /* 12px padding on each side */
   top: 0;
   left: 12px;
   right: 12px;
   transition: transform 1s ease, opacity 1s ease;
   overflow-y: auto;
+  backface-visibility: hidden; /* Prevents flickering in 3D transforms */
+  will-change: transform, opacity;
 }
 
+.vvjc .vvjc-items > .vvjc-item a {
+  height: auto;
+}
+
+/* ==========================================================================
+ Navigation Controls
+ ========================================================================== */
 .vvjc .vvjc-nav {
   min-height: 3rem;
   width: 100%;
@@ -80,146 +132,79 @@
   display: none;
 }
 
-.vvjc .vvjc-items > .vvjc-item a {
-  height: auto;
+.vvjc .vvjc-nav .vvjc-nav-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  transition: all 0.3s ease;
 }
 
-.vvjc-nav button svg {
-  height: 2.5rem;
-  width: 2.5rem;
-  fill: gray;
+.vvjc .vvjc-nav-inner button {
+  all: unset;
+  width: 34px;
+  height: 34px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s ease;
+  color: #fff;
+  backdrop-filter: blur(4px);
 }
 
-.vvjc.height-large-100 > .vvjc-inner,
-.vvjc.height-large-100 > .vvjc-inner > .vvjc-items {
-  height: 7.25rem;
+.vvjc .vvjc-nav-inner button:hover{
+  background: rgba(0, 0, 0, 0.8);
+  border-color: #fff;
+  transform: scale(1.05);
 }
 
-.vvjc.height-large-100 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 6.25rem;
+.vvjc .vvjc-nav-inner button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
 }
 
-.vvjc.height-large-150 > .vvjc-inner,
-.vvjc.height-large-150 > .vvjc-inner > .vvjc-items {
-  height: 10.375rem;
+.vvjc .vvjc-nav-inner button:active {
+  transform: scale(0.95);
 }
 
-.vvjc.height-large-150 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 9.375rem;
+.vvjc .vvjc-nav-inner button svg {
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
 }
 
-.vvjc.height-large-200 > .vvjc-inner,
-.vvjc.height-large-200 > .vvjc-inner > .vvjc-items {
-  height: 13.5rem;
+.vvjc .vvjc-nav-inner .button.prev-arrow,
+.vvjc .vvjc-nav-inner .button.next-arrow {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
 }
 
-.vvjc.height-large-200 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 12.5rem;
+.vvjc .vvjc-nav-inner .button.prev-arrow.vvjc-hidden,
+.vvjc .vvjc-nav-inner .button.next-arrow.vvjc-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-.vvjc.height-large-250 > .vvjc-inner,
-.vvjc.height-large-250 > .vvjc-inner > .vvjc-items {
-  height: 16.625rem;
+.vvjc .vvjc-nav-inner .button.prev-arrow.vvjc-hidden {
+  transform: translateX(-20px);
 }
 
-.vvjc.height-large-250 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 15.625rem;
+.vvjc .vvjc-nav-inner .button.next-arrow.vvjc-hidden {
+  transform: translateX(20px);
 }
 
-.vvjc.height-large-300 > .vvjc-inner,
-.vvjc.height-large-300 > .vvjc-inner > .vvjc-items {
-  height: 19.75rem;
-}
-
-.vvjc.height-large-300 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 18.75rem;
-}
-
-.vvjc.height-large-350 > .vvjc-inner,
-.vvjc.height-large-350 > .vvjc-inner > .vvjc-items {
-  height: 22.875rem;
-}
-
-.vvjc.height-large-350 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 21.875rem;
-}
-
-.vvjc.height-large-400 > .vvjc-inner,
-.vvjc.height-large-400 > .vvjc-inner > .vvjc-items {
-  height: 26rem;
-}
-
-.vvjc.height-large-400 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 25rem;
-}
-
-.vvjc.height-large-450 > .vvjc-inner,
-.vvjc.height-large-450 > .vvjc-inner > .vvjc-items {
-  height: 29.125rem;
-}
-
-.vvjc.height-large-450 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 28.125rem;
-}
-
-.vvjc.height-large-500 > .vvjc-inner,
-.vvjc.height-large-500 > .vvjc-inner > .vvjc-items {
-  height: 32.25rem;
-}
-
-.vvjc.height-large-500 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 31.25rem;
-}
-
-.vvjc.height-large-550 > .vvjc-inner,
-.vvjc.height-large-550 > .vvjc-inner > .vvjc-items {
-  height: 35.375rem;
-}
-
-.vvjc.height-large-550 > .vvjc-inner > .vvjc-items > .vvjc-item {
-  height: 34.375rem;
-}
-
-.vvjc > .vvjc-inner.max-width-300 {
-  max-width: 300px;
-  perspective: calc(var(--perspective, 360) * 1px);
-}
-
-.vvjc > .vvjc-inner.max-width-400 {
-  max-width: 400px;
-  perspective: calc(var(--perspective, 400) * 1px);
-}
-
-.vvjc > .vvjc-inner.max-width-500 {
-  max-width: 500px;
-  perspective: calc(var(--perspective, 520) * 1px);
-}
-
-.vvjc > .vvjc-inner.max-width-600 {
-  max-width: 600px;
-  perspective: calc(var(--perspective, 640) * 1px);
-}
-
-.vvjc > .vvjc-inner.max-width-700 {
-  max-width: 700px;
-  perspective: calc(var(--perspective, 780) * 1px);
-}
-
-.vvjc > .vvjc-inner.max-width-800 {
-  max-width: 800px;
-  perspective: calc(var(--perspective, 900) * 1px);
-}
-
-.vvjc > .vvjc-inner.max-width-900 {
-  max-width: 900px;
-  perspective: calc(var(--perspective, 1100) * 1px);
-}
-
-.vvjc > .vvjc-inner.max-width-1000 {
-  max-width: 1000px !important;
-  perspective: calc(var(--perspective, 1200) * 1px);
-}
-
+/* ==========================================================================
+ Pointer Events & Interaction
+ ========================================================================== */
 .vvjc .vvjc-item,
 .vvjc .vvjc-item:not(.active) * {
   cursor: default;
@@ -232,67 +217,9 @@
   pointer-events: auto;
 }
 
-.vvjc .vvjc-nav .next-arrow,
-.vvjc .vvjc-nav .prev-arrow {
-  font-size: 1.5rem;
-}
-
-.vvjc .vvjc-nav .vvjc-nav-inner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  gap: 16px;
-  transition: all 0.3s ease;
-}
-
-.vvjc .vvjc-nav > .time-in-seconds {
-  opacity: 0;
-  height: 0;
-  padding: 0;
-  margin: 0;
-  width: 0;
-  font-size: 0.5rem;
-  line-height: 0;
-}
-.current-slide-number {
-  padding-left: 0;
-  padding-right: 0;
-}
-.vvjc .vvjc-nav button {
-  opacity: 1;
-  visibility: visible;
-  padding: 6px 0;
-  font-size: 1.125rem;
-  margin: 0;
-  min-width: 2rem;
-  min-height: 2rem;
-  font-weight: normal;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 0.8;
-}
-
-.button.prev-arrow,
-.button.next-arrow {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
-}
-
-.button.prev-arrow.vvjc-hidden,
-.button.next-arrow.vvjc-hidden {
-  opacity: 0;
-  transform: translateX(-20px);
-  visibility: hidden;
-  pointer-events: none;
-}
-
+/* ==========================================================================
+ Animations
+ ========================================================================== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -304,29 +231,6 @@
 
 }
 
-.vvjc .vvjc-nav span.current-slide-number {
-  min-width: 2.5rem;
-  min-height: 2.5rem;
-  font-size: 0.875rem;
-  font-weight: normal;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  position: relative;
-  transform-origin: center;
-  transition: transform 0.6s ease;
-}
-
-.vvjc .vvjc-nav span.current-slide-number .number {
-  display: block;
-}
-
-.vvjc .vvjc-nav span.current-slide-number.rotating {
-  animation: flip 1s ease forwards;
-}
-
 @keyframes flip {
   0% {
     transform: rotateY(0deg);
@@ -336,4 +240,266 @@
     transform: rotateY(180deg);
   }
 
+}
+
+/* ==========================================================================
+ Progress Bar
+ ========================================================================== */
+.vvjc .echo-animation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  position: relative;
+  margin: 0;
+}
+
+/* Circular Progress Indicator */
+.vvjc .progressbar {
+  grid-area: 1 / 1;
+  align-self: end;
+  justify-self: end;
+  width: var(--vvjb-progress-size, 32px);
+  height: var(--vvjb-progress-size, 32px);
+  border-radius: 50%;
+  background: conic-gradient(var(--vvjb-progress-color, #3b82f6) var(--progress, 0%), var(--vvjb-progress-track, rgba(255, 255, 255, 0.3)) 0%);
+  display: grid;
+  place-items: center;
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transition: background 0.05s linear, opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  z-index: 10;
+}
+
+/* Inner circle with percentage text */
+.vvjc .progressbar::after {
+  content: attr(aria-valuenow) "%";
+  width: calc(100% - var(--vvjb-progress-thickness, 6px));
+  height: calc(100% - var(--vvjb-progress-thickness, 6px));
+  border-radius: inherit;
+  background: var(--vvjb-progress-inner-bg, #fff);
+  display: grid;
+  place-items: center;
+  font-size: var(--vvjb-progress-font-size, 0.625rem);
+  font-weight: bold;
+  color: var(--vvjb-progress-text-color, #3b82f6);
+  position: absolute;
+  transition: color 0.3s ease;
+}
+
+/* Completion state - Scale up and change color */
+.vvjc .progressbar[aria-valuenow="100"] {
+  background: conic-gradient(var(--vvjb-progress-complete-color, #22c55e) 100%, var(--vvjb-progress-complete-color, #22c55e) 0%);
+  transform: scale(1.05);
+}
+
+.vvjc .progressbar[aria-valuenow="100"]::after {
+  color: var(--vvjb-progress-complete-text, #22c55e);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion:reduce) {
+  .vvjc .progressbar {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .vvjc .progressbar[aria-valuenow="100"] {
+    transform: none;
+  }
+
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion:reduce) {
+  .vvjc .progressbar::before {
+    transition: none;
+  }
+
+}
+
+/* ==========================================================================
+ Slide Counter (Current/Total Format)
+ ========================================================================== */
+.vvjc .echo-total {
+  padding: 0 0.75rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  transition: all 0.3s ease;
+  height: 32px;
+}
+.vvjc .echo-total > * {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
+.vvjc .echo-total .current-slide {
+  font-weight: 700;
+}
+
+.vvjc .vvjc-counter-separator {
+  opacity: 0.7;
+  padding: 0 0.125rem;
+}
+
+.vvjc .echo-total .total-slides {
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+ Dots Navigation
+ ========================================================================== */
+.vvjc .vvjc-dots-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 8px;
+}
+
+.vvjc .vvjc-dots-nav .dots-numbers-button {
+  all: unset;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  font-size: 0;
+  line-height: initial;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+  border-width: 2px;
+  border-style: solid;
+  border-color: currentColor;
+  background-color: transparent;
+}
+
+.vvjc .vvjc-dots-nav .dots-numbers-button:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.vvjc .vvjc-dots-nav .dots-numbers-button.active {
+  width: calc(2 * 10px);
+  border-radius: 50%;
+  border-width: 2px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  animation: activePulse 1.5s infinite alternate;
+  pointer-events: none;
+  cursor: default;
+}
+
+@keyframes activePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  }
+
+  100% {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  }
+
+}
+
+/* ==========================================================================
+ Screen Reader Announcer
+ ========================================================================== */
+.vvjc .announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+ Accessibility - Reduced Motion Support
+ ========================================================================== */
+@media (prefers-reduced-motion:reduce) {
+  .vvjc {
+    animation: none;
+    opacity: 1;
+  }
+
+  .vvjc .vvjc-items {
+    transition: none;
+  }
+
+  .vvjc .vvjc-items > .vvjc-item {
+    transition: none;
+  }
+
+  .vvjc .vvjc-nav span.current-slide-number {
+    transition: none;
+  }
+
+  .vvjc .vvjc-nav span.current-slide-number.rotating {
+    animation: none;
+  }
+
+  .vvjc .vvjc-dots-nav .dots-numbers-button {
+    transition: none;
+  }
+
+  .vvjc .vvjc-dots-nav .dots-numbers-button.active {
+    animation: none;
+  }
+
+  .vvjc .progressbar {
+    transition: none;
+  }
+
+  .vvjc.reduced-motion {
+
+  }
+
+}
+
+/* ==========================================================================
+   High Contrast Mode Support
+   ========================================================================== */
+@media (prefers-contrast:high) {
+  .vvjc-nav button {
+    border: 2px solid currentColor;
+  }
+
+  .vvjc .vvjc-nav span.current-slide-number {
+    border: 2px solid currentColor;
+  }
+
+  .vvjc .progressbar {
+    border: 2px solid currentColor;
+  }
+
+  .vvjc .vvjc-dots-nav .dots-numbers-button {
+    border-width: 3px;
+  }
+
+}
+
+/* ==========================================================================
+   Focus Styles - Keyboard Navigation Accessibility
+   ========================================================================== */
+.vvjc .vvjc-nav button:focus-visible,
+.vvjc .vvjc-dots-nav .dots-numbers-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }

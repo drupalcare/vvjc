@@ -12,17 +12,20 @@
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Markup;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\vvjc\Plugin\views\style\ViewsVanillaJavascriptCarousel;
+use Drupal\vvjc\VvjcConstants;
 
 /**
  * Implements hook_help().
  */
-function vvjc_help($route_name, RouteMatchInterface $route_match): ?string {
+function vvjc_help(string $route_name, RouteMatchInterface $route_match): ?string {
   if ($route_name === 'help.page.vvjc') {
     return _vvjc_helper_render_readme();
   }
@@ -40,14 +43,13 @@ function _vvjc_helper_render_readme(): string {
   $text = file_get_contents($readme_path);
 
   if ($text === FALSE) {
-    return t('README.md file not found.');
+    return (string) t('README.md file not found.');
   }
 
   if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
     return '<pre>' . htmlspecialchars($text) . '</pre>';
   }
 
-  // Use the Markdown filter to render the README.
   $filter_manager = \Drupal::service('plugin.manager.filter');
   $settings = \Drupal::config('markdown.settings')->getRawData();
   $filter = $filter_manager->createInstance('markdown', ['settings' => $settings]);
@@ -57,7 +59,7 @@ function _vvjc_helper_render_readme(): string {
 /**
  * Implements hook_theme().
  */
-function vvjc_theme($existing, $type, $theme, $path) {
+function vvjc_theme(array $existing, string $type, string $theme, string $path): array {
   return [
     'views_view_vvjc' => [
       'variables' => [
@@ -74,50 +76,32 @@ function vvjc_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_preprocess_HOOK() for views_view_vvjc.
  */
-function template_preprocess_views_view_vvjc(array &$variables) {
-  // Load necessary views theme functions.
-  \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
+function template_preprocess_views_view_vvjc(array &$variables): void {
+  static $views_theme_loaded = FALSE;
+  if (!$views_theme_loaded) {
+    \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
+    $views_theme_loaded = TRUE;
+  }
 
-  // Access the style plugin handler.
+  /** @var \Drupal\vvjc\Plugin\views\style\ViewsVanillaJavascriptCarousel $handler */
   $handler = $variables['view']->style_plugin;
-
-  // Initialize list attributes array.
   $list_attributes = [];
 
-  // Add options as data attributes.
-  if (!empty($handler->options['time_in_seconds'])) {
-    $list_attributes['data-time-in-seconds'] = $handler->options['time_in_seconds'];
+  // Use VvjcConstants::DATA_ATTRIBUTE_MAP for consistent attribute mapping.
+  foreach (VvjcConstants::DATA_ATTRIBUTE_MAP as $option_key => $data_key) {
+    if (isset($handler->options[$option_key])) {
+      $value = $handler->options[$option_key];
+
+      // Convert boolean values to 'true'/'false' strings.
+      if (is_bool($value)) {
+        $value = $value ? 'true' : 'false';
+      }
+
+      $list_attributes['data-' . $data_key] = (string) $value;
+    }
   }
 
-  if (!empty($handler->options['max_width'])) {
-    $list_attributes['data-max-width'] = $handler->options['max_width'];
-  }
-
-  if (!empty($handler->options['large_screen_height'])) {
-    $list_attributes['data-large-screen-height'] = $handler->options['large_screen_height'];
-  }
-
-  if (!empty($handler->options['small_screen_height'])) {
-    $list_attributes['data-small-screen-height'] = $handler->options['small_screen_height'];
-  }
-
-  if (!empty($handler->options['available_breakpoints'])) {
-    $list_attributes['data-available-breakpoints'] = $handler->options['available_breakpoints'];
-  }
-
-  if (!empty($handler->options['perspective'])) {
-    $list_attributes['data-perspective'] = $handler->options['perspective'];
-  }
-
-  if (!empty($handler->options['unique_id'])) {
-    $list_attributes['data-unique-id'] = $handler->options['unique_id'];
-  }
-
-  if (!empty($handler->options['disable_background'])) {
-    $list_attributes['data-disable-background'] = $handler->options['disable_background'] ? 'true' : 'false';
-  }
-
-  // Calculate and pass the background_rgb variable to the template.
+  // Process background color separately (not a data attribute).
   if (!empty($handler->options['background_color'])) {
     $rgb = _vvjc_hex_to_rgb($handler->options['background_color']);
     $opacity = $handler->options['background_color_opacity'] ?? 1;
@@ -125,34 +109,40 @@ function template_preprocess_views_view_vvjc(array &$variables) {
     $variables['background_rgb'] = $background_rgb;
   }
   else {
-    // Explicitly set to null if no color is chosen.
     $variables['background_rgb'] = NULL;
   }
 
-  // Create an Attribute object for the list.
   $variables['list_attributes'] = new Attribute($list_attributes);
 
-  // Pass additional settings to the template as a JSON object for JavaScript.
+  // Pass settings to template with default fallbacks.
   $variables['settings'] = [
-    'time_in_seconds' => $handler->options['time_in_seconds'],
-    'max_width' => $handler->options['max_width'],
-    'large_screen_height' => $handler->options['large_screen_height'],
-    'small_screen_height' => $handler->options['small_screen_height'],
-    'available_breakpoints' => $handler->options['available_breakpoints'],
-    'perspective' => $handler->options['perspective'],
+    'time_in_seconds' => $handler->options['time_in_seconds'] ?? VvjcConstants::DEFAULT_TIME,
+    'max_width' => $handler->options['max_width'] ?? VvjcConstants::DEFAULT_MAX_WIDTH,
+    'large_screen_height' => $handler->options['large_screen_height'] ?? VvjcConstants::DEFAULT_LARGE_SCREEN_HEIGHT,
+    'small_screen_height' => $handler->options['small_screen_height'] ?? VvjcConstants::DEFAULT_SMALL_SCREEN_HEIGHT,
+    'available_breakpoints' => $handler->options['available_breakpoints'] ?? VvjcConstants::DEFAULT_BREAKPOINT,
+    'perspective' => $handler->options['perspective'] ?? VvjcConstants::DEFAULT_PERSPECTIVE,
     'unique_id' => $handler->options['unique_id'],
+    'show_navigation_arrows' => $handler->options['show_navigation_arrows'] ?? TRUE,
+    'show_play_pause' => $handler->options['show_play_pause'] ?? TRUE,
+    'show_slide_counter' => $handler->options['show_slide_counter'] ?? TRUE,
+    'show_progress_bar' => $handler->options['show_progress_bar'] ?? FALSE,
+    'show_dots_navigation' => $handler->options['show_dots_navigation'] ?? FALSE,
+    'enable_keyboard_nav' => $handler->options['enable_keyboard_nav'] ?? TRUE,
+    'enable_touch_swipe' => $handler->options['enable_touch_swipe'] ?? TRUE,
+    'enable_pause_on_hover' => $handler->options['enable_pause_on_hover'] ?? TRUE,
+    'enable_screen_reader' => $handler->options['enable_screen_reader'] ?? TRUE,
+    'pause_on_reduced_motion' => $handler->options['pause_on_reduced_motion'] ?? TRUE,
   ];
 
-  // Ensure unformatted preprocess function is called.
   template_preprocess_views_view_unformatted($variables);
 }
 
 /**
  * Implements hook_preprocess_views_view().
  */
-function vvjc_preprocess_views_view(&$variables) {
+function vvjc_preprocess_views_view(array &$variables): void {
   if ($variables['view']->style_plugin instanceof ViewsVanillaJavascriptCarousel) {
-    // Add the custom class to the view wrapper.
     $variables['attributes']['class'][] = 'vvj-carousel';
   }
 }
@@ -169,7 +159,6 @@ function vvjc_preprocess_views_view(&$variables) {
 function _vvjc_hex_to_rgb(string $hex): array {
   $hex = ltrim($hex, '#');
 
-  // Handle short hex format (e.g., #123)
   if (strlen($hex) === 3) {
     $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
   }
@@ -184,7 +173,7 @@ function _vvjc_hex_to_rgb(string $hex): array {
 /**
  * Implements hook_token_info().
  */
-function vvjc_token_info() {
+function vvjc_token_info(): array {
   return [
     'tokens' => [
       'view' => [
@@ -200,56 +189,181 @@ function vvjc_token_info() {
 /**
  * Implements hook_tokens().
  */
-function vvjc_tokens($type, $tokens, array $data = [], array $options = []) {
+function vvjc_tokens(string $type, array $tokens, array $data = [], array $options = []): array {
   $replacements = [];
 
-  if (in_array($type, ['vvjc', 'global']) && isset($data['view']) && $data['view'] instanceof ViewExecutable) {
-    $view = $data['view'];
+  if (!in_array($type, ['vvjc', 'global'])) {
+    return $replacements;
+  }
 
-    if (!empty($view->result)) {
-      $first_row = $view->result[0];
-      $field_handlers = $view->display_handler->getHandlers('field');
+  if (!isset($data['view']) || !($data['view'] instanceof ViewExecutable)) {
+    return $replacements;
+  }
 
-      /** @var \Drupal\Core\Render\RendererInterface $renderer */
-      $renderer = \Drupal::service('renderer');
+  $view = $data['view'];
 
-      foreach ($tokens as $token => $name) {
-        $plain = FALSE;
-        $field_id = $token;
+  if (!($view->style_plugin instanceof ViewsVanillaJavascriptCarousel)) {
+    return $replacements;
+  }
 
-        if (str_ends_with($token, ':plain')) {
-          $plain = TRUE;
-          $field_id = substr($token, 0, -6);
-        }
+  if (empty($view->result)) {
+    return $replacements;
+  }
 
-        if (!isset($field_handlers[$field_id])) {
-          continue;
-        }
+  $first_row = $view->result[0];
+  $field_handlers = $view->display_handler->getHandlers('field');
 
-        try {
-          $handler = $field_handlers[$field_id];
-          $value = $plain && method_exists($handler, 'advancedRenderText')
-            ? $handler->advancedRenderText($first_row)
-            : $handler->advancedRender($first_row);
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  $renderer = \Drupal::service('renderer');
 
-          if (is_array($value)) {
-            // Render safely using renderPlain to avoid LogicException.
-            $rendered = $renderer->renderPlain($value);
-          }
-          else {
-            $rendered = (string) $value;
-          }
+  foreach ($tokens as $token => $name) {
+    if (!preg_match(VvjcConstants::TOKEN_PATTERN, $token)) {
+      \Drupal::logger('vvjc')->warning('Invalid token format: @token', ['@token' => $token]);
+      continue;
+    }
 
-          $replacements["[vvjc:$token]"] = $plain
-            ? Html::decodeEntities(strip_tags($rendered))
-            : Markup::create($rendered);
-        }
-        catch (\Throwable $e) {
-          $replacements["[vvjc:$token]"] = '';
-        }
+    $plain = FALSE;
+    $field_id = $token;
+
+    if (str_ends_with($token, VvjcConstants::TOKEN_PLAIN_SUFFIX)) {
+      $plain = TRUE;
+      $field_id = substr($token, 0, -strlen(VvjcConstants::TOKEN_PLAIN_SUFFIX));
+    }
+
+    if (!isset($field_handlers[$field_id])) {
+      continue;
+    }
+
+    try {
+      $handler = $field_handlers[$field_id];
+      $value = $plain && method_exists($handler, 'advancedRenderText')
+        ? $handler->advancedRenderText($first_row)
+        : $handler->advancedRender($first_row);
+
+      if (is_array($value)) {
+        $rendered = $renderer->renderPlain($value);
       }
+      else {
+        $rendered = (string) $value;
+      }
+
+      $replacements['[' . VvjcConstants::TOKEN_NAMESPACE . ':' . $token . ']'] = $plain
+        ? Html::decodeEntities(strip_tags($rendered))
+        : Markup::create($rendered);
+    }
+    catch (\Throwable $e) {
+      \Drupal::logger('vvjc')->error('Token replacement failed for @token: @message', [
+        '@token' => $token,
+        '@message' => $e->getMessage(),
+      ]);
+      $replacements['[' . VvjcConstants::TOKEN_NAMESPACE . ':' . $token . ']'] = '';
     }
   }
 
   return $replacements;
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function vvjc_views_data_alter(array &$data): void {
+  $data['views_style_plugin']['views_vvjc'] = [
+    'type' => 'views_style',
+    'label' => t('3D Carousel'),
+    'mapping' => [
+      'max_width' => [
+        'type' => VvjcConstants::VIEWS_TYPE_STRING,
+        'label' => t('Max Width'),
+      ],
+      'time_in_seconds' => [
+        'type' => VvjcConstants::VIEWS_TYPE_INTEGER,
+        'label' => t('Time In Seconds'),
+      ],
+      'large_screen_height' => [
+        'type' => VvjcConstants::VIEWS_TYPE_INTEGER,
+        'label' => t('Large Screen Height'),
+      ],
+      'small_screen_height' => [
+        'type' => VvjcConstants::VIEWS_TYPE_INTEGER,
+        'label' => t('Small Screen Height'),
+      ],
+      'available_breakpoints' => [
+        'type' => VvjcConstants::VIEWS_TYPE_STRING,
+        'label' => t('Available Breakpoints'),
+      ],
+      'perspective' => [
+        'type' => VvjcConstants::VIEWS_TYPE_INTEGER,
+        'label' => t('Perspective'),
+      ],
+      'unique_id' => [
+        'type' => VvjcConstants::VIEWS_TYPE_STRING,
+        'label' => t('Unique ID for the view display'),
+      ],
+      'background_color' => [
+        'type' => VvjcConstants::VIEWS_TYPE_STRING,
+        'label' => t('Background Color'),
+        'description' => t('The hex code of the background color for carousel items.'),
+      ],
+      'background_color_opacity' => [
+        'type' => VvjcConstants::VIEWS_TYPE_FLOAT,
+        'label' => t('Background Color Opacity'),
+        'description' => t('The opacity level for the background color of carousel items, ranging from 0 to 1.'),
+      ],
+      'disable_background' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Disable Background Color'),
+        'description' => t('A flag to disable the background color of carousel items.'),
+      ],
+      'show_navigation_arrows' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Show Navigation Arrows'),
+        'description' => t('Display previous and next arrow buttons for manual navigation.'),
+      ],
+      'show_play_pause' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Show Play/Pause Button'),
+        'description' => t('Display a button to control carousel auto-rotation.'),
+      ],
+      'show_slide_counter' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Show Slide Counter'),
+        'description' => t('Display current slide number.'),
+      ],
+      'show_progress_bar' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Show Progress Bar'),
+        'description' => t('Display a visual progress indicator showing time until next slide.'),
+      ],
+      'show_dots_navigation' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Show Dots Navigation'),
+        'description' => t('Display clickable dot indicators for each slide.'),
+      ],
+      'enable_keyboard_nav' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Enable Keyboard Navigation'),
+        'description' => t('Enable keyboard controls for carousel navigation.'),
+      ],
+      'enable_touch_swipe' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Enable Touch/Swipe Gestures'),
+        'description' => t('Allow users to navigate the carousel by swiping on touch devices.'),
+      ],
+      'enable_pause_on_hover' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Pause on Hover'),
+        'description' => t('Pause the carousel rotation when the user hovers over it.'),
+      ],
+      'enable_screen_reader' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Enable Screen Reader Announcements'),
+        'description' => t('Announce slide changes to screen reader users via ARIA live regions.'),
+      ],
+      'pause_on_reduced_motion' => [
+        'type' => VvjcConstants::VIEWS_TYPE_BOOLEAN,
+        'label' => t('Respect Reduced Motion Preference'),
+        'description' => t('Automatically pause carousel rotation for users who prefer reduced motion.'),
+      ],
+    ],
+  ];
 }
