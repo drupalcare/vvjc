@@ -68,6 +68,8 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $options['enable_pause_on_hover'] = ['default' => TRUE];
     $options['enable_screen_reader'] = ['default' => TRUE];
     $options['pause_on_reduced_motion'] = ['default' => TRUE];
+    $options['enable_deeplink'] = ['default' => FALSE];
+    $options['deeplink_identifier'] = ['default' => ''];
     return $options;
   }
 
@@ -80,12 +82,14 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $this->setDefaultElementWeights($form);
     $this->buildWarningMessage($form);
     $this->buildDimensionsSection($form);
+    $this->buildDeepLinkingSection($form);
     $this->buildBehaviorSection($form);
     $this->buildControlsSection($form);
     $this->buildAccessibilitySection($form);
     $this->buildStyleSection($form);
     $this->buildResponsiveSection($form);
     $this->buildTokenDocumentation($form);
+    $this->attachFormAssets($form);
   }
 
   /**
@@ -313,7 +317,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Show Dots Navigation'),
       '#default_value' => $this->options['show_dots_navigation'],
-      '#description' => $this->t('Display clickable dot indicators for each slide, allowing direct navigation to any slide.'),
+      '#description' => $this->t('Display clickable dot indicators for each slide, allowing direct navigation to any slide.<strong> Note: This feature required by Deep Linking.</strong>'),
     ];
   }
 
@@ -324,7 +328,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $form['accessibility_section'] = [
       '#type' => 'details',
       '#title' => $this->t('Accessibility Options'),
-      '#open' => FALSE,
+      '#open' => TRUE,
       '#weight' => -22,
     ];
 
@@ -392,6 +396,130 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#default_value' => $this->options['disable_background'],
       '#description' => $this->t('Check this to disable background color completely.'),
     ];
+  }
+
+  /**
+   * Build deep linking configuration section.
+   *
+   * @param array $form
+   *   The form array (passed by reference).
+   */
+  protected function buildDeepLinkingSection(array &$form): void {
+    $form['deeplink_section'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Deep Linking Settings'),
+      '#open' => TRUE,
+      '#weight' => -35,
+      '#attributes' => [
+        'data-vvjc-deeplink-section' => 'true',
+      ],
+    ];
+
+    $form['deeplink_section']['enable_deeplink'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable Deep Linking'),
+      '#description' => $this->t('Enable deep linking to create shareable URLs for specific slides. <strong>Note: This feature requires Dots Navigation to be enabled.</strong>'),
+      '#default_value' => $this->options['enable_deeplink'],
+      '#attributes' => [
+        'data-vvjc-deeplink-toggle' => 'true',
+      ],
+    ];
+
+    $form['deeplink_section']['deeplink_identifier'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('URL Identifier'),
+      '#description' => $this->t('Short identifier used in slide links. Example: "gallery" creates links like #carousel3d-gallery-3. Will be automatically cleaned: converted to lowercase, spaces become hyphens, special characters removed.'),
+      '#default_value' => $this->options['deeplink_identifier'],
+      '#maxlength' => VvjcConstants::DEEPLINK_IDENTIFIER_MAX_LENGTH,
+      '#size' => 20,
+      '#placeholder' => 'gallery',
+      '#wrapper_attributes' => [
+        'class' => ['deeplink-identifier-wrapper'],
+        'data-vvjc-deeplink-field' => 'true',
+      ],
+      '#element_validate' => [[$this, 'validateDeeplinkIdentifier']],
+    ];
+  }
+
+  /**
+   * Validates and sanitizes the deep link identifier field.
+   *
+   * @param array $element
+   *   The form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function validateDeeplinkIdentifier(array $element, FormStateInterface $form_state): void {
+    // Get deep link values.
+    $deeplink_values = $form_state->getValue(['style_options', 'deeplink_section']) ?? [];
+    $enable_deeplink = !empty($deeplink_values['enable_deeplink']);
+    $identifier = (string) ($deeplink_values['deeplink_identifier'] ?? '');
+
+    // Get dots navigation setting.
+    $controls_values = $form_state->getValue(['style_options', 'controls_section']) ?? [];
+    $show_dots_navigation = !empty($controls_values['show_dots_navigation']);
+
+    // 1. If deep linking is disabled, ignore identifier and exit early.
+    if (!$enable_deeplink) {
+      // Optional: clear any stale identifier so config stays clean.
+      $form_state->setValue(['style_options', 'deeplink_section', 'deeplink_identifier'], '');
+      return;
+    }
+
+    // 2. Deep linking is enabled → require dots navigation to be enabled.
+    if (!$show_dots_navigation) {
+      $form_state->setError(
+        $element,
+        $this->t('Deep Linking requires Dots Navigation to be enabled. Please enable "Show Dots Navigation" in the Controls & Navigation section, or disable Deep Linking.')
+      );
+      return;
+    }
+
+    // Required when deep linking is enabled.
+    if ($identifier === '') {
+      $form_state->setError($element, $this->t('URL Identifier is required when Deep Linking is enabled.'));
+      return;
+    }
+
+    // Transliterate and clean similar to URL aliases.
+    $transliteration = \Drupal::transliteration();
+    $clean = $transliteration->transliterate($identifier, 'en');
+
+    // Convert to lowercase.
+    $clean = strtolower($clean);
+
+    // Replace spaces and underscores with hyphens.
+    $clean = preg_replace('/[\s_]+/', '-', $clean);
+
+    // Remove all characters except letters, numbers, and hyphens.
+    $clean = preg_replace('/[^a-z0-9-]/', '', $clean);
+
+    // Remove consecutive hyphens.
+    $clean = preg_replace('/-+/', '-', $clean);
+
+    // Remove leading/trailing hyphens.
+    $clean = trim($clean, '-');
+
+    // Ensure it starts with a letter.
+    $clean = preg_replace('/^[0-9-]+/', '', $clean);
+
+    // If empty after cleaning, show error.
+    if ($clean === '') {
+      $form_state->setError($element, $this->t('URL Identifier must contain at least one letter.'));
+      return;
+    }
+
+    // Check reserved words.
+    if (in_array($clean, VvjcConstants::DEEPLINK_RESERVED_WORDS, TRUE)) {
+      $form_state->setError(
+        $element,
+        $this->t('Please choose a more specific identifier. "@identifier" is a reserved word.', ['@identifier' => $clean])
+      );
+      return;
+    }
+
+    // Set the cleaned value back to form state.
+    $form_state->setValue(['style_options', 'deeplink_section', 'deeplink_identifier'], $clean);
   }
 
   /**
@@ -473,6 +601,11 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       $flattened['perspective'] = $values['dimensions_section']['perspective'] ?? VvjcConstants::DEFAULT_PERSPECTIVE;
     }
 
+    if (isset($values['deeplink_section'])) {
+      $flattened['enable_deeplink'] = $values['deeplink_section']['enable_deeplink'] ?? FALSE;
+      $flattened['deeplink_identifier'] = $values['deeplink_section']['deeplink_identifier'] ?? '';
+    }
+
     if (isset($values['behavior_section'])) {
       $flattened['time_in_seconds'] = $values['behavior_section']['time_in_seconds'] ?? VvjcConstants::DEFAULT_TIME;
       $flattened['enable_pause_on_hover'] = $values['behavior_section']['enable_pause_on_hover'] ?? TRUE;
@@ -506,6 +639,17 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $flattened['unique_id'] = $this->options['unique_id'] ?? $this->generateUniqueId();
 
     return $flattened;
+  }
+
+  /**
+   * Attach form assets.
+   *
+   * @param array $form
+   *   The form array (passed by reference).
+   */
+  protected function attachFormAssets(array &$form): void {
+    $form['#attached']['library'][] = 'core/drupal.ajax';
+    $form['#attached']['library'][] = 'vvjc/vvjc-admin';
   }
 
   /**

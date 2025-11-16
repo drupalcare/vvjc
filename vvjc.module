@@ -133,6 +133,8 @@ function template_preprocess_views_view_vvjc(array &$variables): void {
     'enable_pause_on_hover' => $handler->options['enable_pause_on_hover'] ?? TRUE,
     'enable_screen_reader' => $handler->options['enable_screen_reader'] ?? TRUE,
     'pause_on_reduced_motion' => $handler->options['pause_on_reduced_motion'] ?? TRUE,
+    'enable_deeplink' => $handler->options['enable_deeplink'] ?? FALSE,
+    'deeplink_identifier' => $handler->options['deeplink_identifier'] ?? '',
   ];
 
   template_preprocess_views_view_unformatted($variables);

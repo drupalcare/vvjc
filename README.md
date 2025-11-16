@@ -79,6 +79,167 @@ To strip any HTML from the output, you can append `:plain` to the token:
 
 These tokens pull data from the **first row** of the View result and are
 designed to work seamlessly with the VVJC rendering system.
+
+## Deep Linking
+
+Enable deep linking to create shareable URLs that link directly to specific 
+slides in your 3D carousel.
+
+### Setup
+
+1. Navigate to your view's **Format Settings**
+2. Expand the **Deep Linking Settings** section
+3. Check **Enable Deep Linking**
+4. Enter a **URL Identifier** (e.g., "products", "gallery", "team")
+   - The identifier will be automatically cleaned: converted to lowercase, 
+     spaces replaced with hyphens, special characters removed
+   - Must start with a letter and contain only lowercase letters, numbers, and 
+     hyphens
+5. Ensure **Show Dots Navigation** is enabled in the Controls & Navigation 
+   section (required for deep linking)
+
+### URL Format
+
+When deep linking is enabled, URLs are generated in the following format:
+
+```
+#carousel3d-identifier-N
+```
+
+**Examples:**
+- `#carousel3d-products-1` (first slide)
+- `#carousel3d-gallery-5` (fifth slide)
+- `#carousel3d-team-3` (third slide)
+
+### Features
+
+- **Shareable Links**: Users can copy the URL to share a specific slide
+- **Browser Navigation**: Back/forward buttons work with slide navigation
+- **Initial Load**: Page loads directly to the specified slide when URL hash is 
+  present
+- **Multiple Carousels**: Each carousel on a page can have its own unique 
+  identifier
+
+## JavaScript API
+
+Control VVJC carousels programmatically from your own JavaScript code.
+
+### Navigation Methods
+
+```javascript
+// Navigate to a specific slide (1-based index)
+Drupal.vvjc.goToSlide('products', 3);
+
+// Navigate to next slide
+Drupal.vvjc.nextSlide('products');
+
+// Navigate to previous slide
+Drupal.vvjc.prevSlide('products');
+```
+
+### Information Methods
+
+```javascript
+// Get current slide number (1-based)
+const current = Drupal.vvjc.getCurrentSlide('products');
+// Returns: 3
+
+// Get total number of slides
+const total = Drupal.vvjc.getTotalSlides('products');
+// Returns: 10
+```
+
+### Playback Control
+
+```javascript
+// Pause auto-rotation
+Drupal.vvjc.pause('products');
+
+// Resume auto-rotation
+Drupal.vvjc.resume('products');
+
+// Pause all carousels on the page
+Drupal.vvjc.pauseAll();
+
+// Resume all carousels on the page
+Drupal.vvjc.resumeAll();
+```
+
+### Instance Access
+
+```javascript
+// Get carousel instance by identifier or selector
+const carousel = Drupal.vvjc.getInstance('products');
+// or
+const carousel = Drupal.vvjc.getInstance('.vvjc-items');
+
+// Get all active carousel instances on the page
+const allCarousels = Drupal.vvjc.getAllInstances();
+```
+
+### Complete Example: Custom Thumbnail Navigation
+
+```html
+<!-- Custom thumbnail navigation -->
+<div class="custom-thumbs">
+  <button onclick="Drupal.vvjc.goToSlide('products', 1)">
+    <img src="thumb1.jpg" alt="Product 1">
+  </button>
+  <button onclick="Drupal.vvjc.goToSlide('products', 2)">
+    <img src="thumb2.jpg" alt="Product 2">
+  </button>
+  <button onclick="Drupal.vvjc.goToSlide('products', 3)">
+    <img src="thumb3.jpg" alt="Product 3">
+  </button>
+</div>
+
+<script>
+(function(Drupal) {
+  'use strict';
+  
+  Drupal.behaviors.customCarouselControls = {
+    attach: function(context, settings) {
+      // Custom external controls
+      const carousel = Drupal.vvjc.getInstance('products');
+      
+      if (carousel) {
+        console.log('Total slides:', Drupal.vvjc.getTotalSlides('products'));
+        
+        // Pause on custom button click
+        document.querySelector('.custom-pause').addEventListener('click', function() {
+          Drupal.vvjc.pause('products');
+        });
+        
+        // Go to random slide
+        document.querySelector('.random-slide').addEventListener('click', function() {
+          const total = Drupal.vvjc.getTotalSlides('products');
+          const random = Math.floor(Math.random() * total) + 1;
+          Drupal.vvjc.goToSlide('products', random);
+        });
+      }
+    }
+  };
+})(Drupal);
+</script>
+```
+
+### Using with Deep Link Identifiers
+
+The API methods accept either:
+- **Deep link identifier**: `'products'`, `'gallery'`, `'team'`
+- **CSS selector**: `'.vvjc-items'`, `'#vvjc-items-12345678'`
+
+When using deep link identifiers, make sure the identifier matches what you 
+configured in the View's Format Settings.
+
+### Return Values
+
+- Navigation methods (`goToSlide`, `nextSlide`, `prevSlide`, `pause`, `resume`) 
+  return `true` on success, `false` on failure
+- Information methods (`getCurrentSlide`, `getTotalSlides`) return the requested 
+  value or `null` if carousel not found
+- All methods provide helpful console warnings for debugging when errors occur
+
 ## Important Note on Pagination
 
 To ensure the best performance and user experience, it is recommended to set a 

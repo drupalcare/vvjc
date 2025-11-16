@@ -50,6 +50,12 @@
 {% set enable_screen_reader = options.enable_screen_reader ?? true %}
 {% set pause_on_reduced_motion = options.pause_on_reduced_motion ?? true %}
 
+{# Deep linking configuration #}
+{% set deeplink_config = {
+  enabled: options.enable_deeplink|default(false),
+  identifier: options.deeplink_identifier|default(''),
+} %}
+
 {% set vvjc_id = 'vvjc-' ~ unique_id %}
 {% set carousel_id = 'vvjc-items-' ~ unique_id %}
 {% set bottom_nav_id = 'vvjc-nav-' ~ unique_id %}
@@ -85,7 +91,11 @@
       data-enable-touch-swipe="{{ enable_touch_swipe ? 'true' : 'false' }}"
       data-enable-pause-on-hover="{{ enable_pause_on_hover ? 'true' : 'false' }}"
       data-enable-screen-reader="{{ enable_screen_reader ? 'true' : 'false' }}"
-      data-pause-on-reduced-motion="{{ pause_on_reduced_motion ? 'true' : 'false' }}">
+      data-pause-on-reduced-motion="{{ pause_on_reduced_motion ? 'true' : 'false' }}"
+      {% if deeplink_config.enabled and deeplink_config.identifier and show_dots_navigation %}
+      data-deeplink-enabled="true"
+      data-deeplink-id="{{ deeplink_config.identifier }}"
+      {% endif %}>
       {% for row in rows %}
         {% set row_id = 'item-' ~ unique_id ~ '-' ~ loop.index %}
         <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="tabpanel" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="{{ loop.first ? '0' : '-1' }}" aria-labelledby="label-{{ row_id }}" {% if background_rgb and not options.disable_background %} style="background-color:{{ background_rgb }}"{% endif %}>
@@ -132,9 +142,24 @@
       {% if show_dots_navigation %}
         <div class="vvjc-dots-nav" role="tablist" aria-label="{{ 'Slide navigation'|t }}">
           {% for row in rows %}
-            <button class="dots-numbers-button{{ loop.first ? ' active' : '' }}" role="tab" aria-selected="{{ loop.first ? 'true' : 'false' }}" aria-controls="item-{{ unique_id }}-{{ loop.index }}" aria-label="{{ 'Go to slide @index'|t({'@index': loop.index}) }}" tabindex="{{ loop.first ? '0' : '-1' }}">
-              <span class="visually-hidden">{{ 'Slide @index'|t({'@index': loop.index}) }}</span>
-            </button>
+            {% if deeplink_config.enabled and deeplink_config.identifier %}
+              {# Deep linking enabled - use anchor links #}
+              {% set slide_link = '#carousel3d-' ~ deeplink_config.identifier ~ '-' ~ loop.index %}
+              <a href="{{ slide_link }}"
+                 class="dots-numbers-button{{ loop.first ? ' active' : '' }}"
+                 role="tab"
+                 aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                 aria-controls="item-{{ unique_id }}-{{ loop.index }}"
+                 aria-label="{{ loop.first ? 'Slide @index selected'|t({'@index': loop.index}) : 'Go to slide @index'|t({'@index': loop.index}) }}"
+                 tabindex="{{ loop.first ? '0' : '-1' }}">
+                <span class="visually-hidden">{{ 'Slide @index'|t({'@index': loop.index}) }}</span>
+              </a>
+            {% else %}
+              {# Default buttons #}
+              <button class="dots-numbers-button{{ loop.first ? ' active' : '' }}" role="tab" aria-selected="{{ loop.first ? 'true' : 'false' }}" aria-controls="item-{{ unique_id }}-{{ loop.index }}" aria-label="{{ 'Go to slide @index'|t({'@index': loop.index}) }}" tabindex="{{ loop.first ? '0' : '-1' }}">
+                <span class="visually-hidden">{{ 'Slide @index'|t({'@index': loop.index}) }}</span>
+              </button>
+            {% endif %}
           {% endfor %}
         </div>
       {% endif %}

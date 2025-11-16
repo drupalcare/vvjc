@@ -10,6 +10,18 @@ vvjc:
     - core/drupalSettings
     - core/once
 
+vvjc-admin:
+  css:
+    theme:
+      css/vvjc-admin.css: { }
+  js:
+    js/vvjc-admin.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.ajax
+    - core/drupalSettings
+    - core/once
+
 vvjc__576:
   css:
     theme:

@@ -96,6 +96,9 @@
     buildCarousel(state);
     setupControls(state);
     
+    // Initialize deep linking if enabled
+    initializeDeepLinking(state);
+    
     if (config.enableTouchSwipe) {
       setupTouchEvents(state);
     }
@@ -299,6 +302,11 @@
     // Restart progress bar - conditional based on config.
     if (config.showProgressBar && state.rotationDelay > 0 && !state.isPaused) {
       startProgress(state);
+    }
+    
+    // Update deep linking hash if enabled
+    if (state.updateHash) {
+      state.updateHash(currentIndex);
     }
     
     updateNavVisibility(state);
@@ -600,4 +608,268 @@
     handleCarouselVisibility();
     handleResizeOrRotate();
   }, 200));
+
+  /**
+   * Deep linking functionality
+   */
+  function initializeDeepLinking(state) {
+    const container = state.container;
+    const deeplinkEnabled = container.getAttribute('data-deeplink-enabled') === 'true';
+    const deeplinkId = container.getAttribute('data-deeplink-id');
+
+    if (!deeplinkEnabled || !deeplinkId) {
+      return;
+    }
+
+    // Check URL hash on page load
+    const hash = window.location.hash;
+    if (hash && hash.startsWith(`#carousel3d-${deeplinkId}-`)) {
+      const slideNumber = parseInt(hash.split('-').pop(), 10);
+      if (slideNumber >= 1 && slideNumber <= state.cells.length) {
+        // Navigate to the slide (0-indexed)
+        goToSlide(state, slideNumber - 1);
+      }
+    }
+
+    // Update URL hash when navigating
+    state.updateHash = (slideIndex) => {
+      const newHash = `#carousel3d-${deeplinkId}-${slideIndex + 1}`;
+      // Use replaceState to avoid cluttering browser history
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', newHash);
+      } else {
+        window.location.hash = newHash;
+      }
+    };
+
+    // Listen for hash changes (browser back/forward)
+    window.addEventListener('hashchange', () => {
+      const currentHash = window.location.hash;
+      if (currentHash && currentHash.startsWith(`#carousel3d-${deeplinkId}-`)) {
+        const slideNumber = parseInt(currentHash.split('-').pop(), 10);
+        if (slideNumber >= 1 && slideNumber <= state.cells.length) {
+          goToSlide(state, slideNumber - 1);
+        }
+      }
+    });
+  }
+
+  /**
+   * Global utility functions for external access
+   */
+  Drupal.vvjc = Drupal.vvjc || {};
+
+  /**
+   * Get carousel instance by container element or selector.
+   */
+  Drupal.vvjc.getInstance = function(containerOrSelector) {
+    let container;
+
+    if (typeof containerOrSelector === 'string') {
+      container = document.querySelector(containerOrSelector);
+    } else {
+      container = containerOrSelector;
+    }
+
+    if (!container) {
+      return null;
+    }
+
+    // Find the .vvjc-items element
+    const carouselItems = container.classList.contains('vvjc-items') 
+      ? container 
+      : container.querySelector('.vvjc-items');
+
+    if (!carouselItems) {
+      return null;
+    }
+
+    return carouselStates.get(carouselItems.id) || null;
+  };
+
+  /**
+   * Get all active carousel instances.
+   */
+  Drupal.vvjc.getAllInstances = function() {
+    return Array.from(carouselStates.values());
+  };
+
+  /**
+   * Helper function to get carousel container by identifier.
+   */
+  function getContainerByIdentifier(identifier) {
+    let container;
+
+    // Try deep link identifier first (if not a CSS selector)
+    if (!identifier.startsWith('.') && !identifier.startsWith('#')) {
+      container = document.querySelector(`[data-deeplink-id="${identifier}"]`);
+    }
+
+    // Fallback to CSS selector
+    if (!container) {
+      container = document.querySelector(identifier);
+    }
+
+    return container;
+  }
+
+  /**
+   * Helper function to get carousel state from identifier.
+   */
+  function getStateByIdentifier(identifier) {
+    const container = getContainerByIdentifier(identifier);
+
+    if (!container) {
+      return null;
+    }
+
+    // Get the carousel items container
+    const carouselItems = container.classList.contains('vvjc-items')
+      ? container
+      : container.querySelector('.vvjc-items');
+
+    if (!carouselItems) {
+      return null;
+    }
+
+    return carouselStates.get(carouselItems.id) || null;
+  }
+
+  /**
+   * Navigate to a specific slide by identifier.
+   */
+  Drupal.vvjc.goToSlide = function(identifier, slideIndex) {
+    const state = getStateByIdentifier(identifier);
+
+    if (!state) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`VVJC: Carousel "${identifier}" not found`);
+      }
+      return false;
+    }
+
+    if (slideIndex < 1 || slideIndex > state.cells.length) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`VVJC: Invalid slide index ${slideIndex}. Must be between 1 and ${state.cells.length}`);
+      }
+      return false;
+    }
+
+    goToSlide(state, slideIndex - 1);
+    if (!state.isPaused && state.rotationDelay > 0) {
+      startAutoPlay(state);
+    }
+    return true;
+  };
+
+  /**
+   * Get the current slide index for a carousel.
+   */
+  Drupal.vvjc.getCurrentSlide = function(identifier) {
+    const state = getStateByIdentifier(identifier);
+    return state ? state.currentIndex + 1 : null;
+  };
+
+  /**
+   * Get total number of slides in a carousel.
+   */
+  Drupal.vvjc.getTotalSlides = function(identifier) {
+    const state = getStateByIdentifier(identifier);
+    return state ? state.cells.length : null;
+  };
+
+  /**
+   * Navigate to next slide.
+   */
+  Drupal.vvjc.nextSlide = function(identifier) {
+    const state = getStateByIdentifier(identifier);
+
+    if (state) {
+      const nextIndex = (state.currentIndex + 1) % state.cells.length;
+      goToSlide(state, nextIndex);
+      if (!state.isPaused && state.rotationDelay > 0) {
+        startAutoPlay(state);
+      }
+      return true;
+    }
+
+    return false;
+  };
+
+  /**
+   * Navigate to previous slide.
+   */
+  Drupal.vvjc.prevSlide = function(identifier) {
+    const state = getStateByIdentifier(identifier);
+
+    if (state) {
+      const prevIndex = (state.currentIndex - 1 + state.cells.length) % state.cells.length;
+      goToSlide(state, prevIndex);
+      if (!state.isPaused && state.rotationDelay > 0) {
+        startAutoPlay(state);
+      }
+      return true;
+    }
+
+    return false;
+  };
+
+  /**
+   * Pause a specific carousel.
+   */
+  Drupal.vvjc.pause = function(identifier) {
+    const state = getStateByIdentifier(identifier);
+
+    if (state && !state.isPaused) {
+      state.isPaused = true;
+      pauseAutoPlay(state);
+      updatePlayPauseButton(state, true);
+      return true;
+    }
+
+    return false;
+  };
+
+  /**
+   * Resume a specific carousel.
+   */
+  Drupal.vvjc.resume = function(identifier) {
+    const state = getStateByIdentifier(identifier);
+
+    if (state && state.isPaused && state.rotationDelay > 0) {
+      state.isPaused = false;
+      startAutoPlay(state);
+      updatePlayPauseButton(state, false);
+      return true;
+    }
+
+    return false;
+  };
+
+  /**
+   * Pause all carousels on the page.
+   */
+  Drupal.vvjc.pauseAll = function() {
+    carouselStates.forEach(state => {
+      if (!state.isPaused) {
+        state.isPaused = true;
+        pauseAutoPlay(state);
+        updatePlayPauseButton(state, true);
+      }
+    });
+  };
+
+  /**
+   * Resume all carousels on the page.
+   */
+  Drupal.vvjc.resumeAll = function() {
+    carouselStates.forEach(state => {
+      if (state.isPaused && state.rotationDelay > 0) {
+        state.isPaused = false;
+        startAutoPlay(state);
+        updatePlayPauseButton(state, false);
+      }
+    });
+  };
+
 })(Drupal, drupalSettings, once);

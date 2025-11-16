@@ -1,0 +1,17 @@
+/**
+ * @file
+ * Admin styles for VVJC Views configuration form.
+ *
+ * Filename:     vvjc-admin.css
+ * Website:      https://www.flashwebcenter.com
+ * Developer:    Alaa Haddad https://www.alaahaddad.com.
+ */
+
+/* Hide deep link identifier field by default */
+[data-vvjc-deeplink-field="true"] {
+  display: none;
+}
+
+[data-vvjc-deeplink-field="true"]:not(.hidden-element) {
+  display: block;
+}

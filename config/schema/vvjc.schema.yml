@@ -32,3 +32,15 @@ views.style.views_vvjc:
     disable_background:
       type: boolean
       label: 'Disable background color'
+    enable_deeplink:
+      type: boolean
+      label: 'Enable deep linking'
+    deeplink_identifier:
+      type: string
+      label: 'Deep link URL identifier'
+      constraints:
+        Regex:
+          pattern: '/^[a-z][a-z0-9-]*[a-z0-9]$/'
+          message: 'Must start with letter, contain only lowercase letters, numbers, and hyphens'
+        Length:
+          max: 20

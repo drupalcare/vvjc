@@ -78,6 +78,13 @@ final class VvjcConstants {
   public const HEX_COLOR_PATTERN = '/^#[0-9A-Fa-f]{6}$/';
   public const SHORT_HEX_COLOR_PATTERN = '/^#[0-9A-Fa-f]{3}$/';
 
+  /**
+   * Deep linking constants.
+   */
+  public const DEEPLINK_IDENTIFIER_MAX_LENGTH = 20;
+  public const DEEPLINK_IDENTIFIER_PATTERN = '/^[a-z][a-z0-9-]*[a-z0-9]$/';
+  public const DEEPLINK_RESERVED_WORDS = ['carousel3d', 'carousel', 'slide', 'vvjc', 'vvj'];
+
   public const DATA_ATTRIBUTE_MAP = [
     'time_in_seconds' => 'time-in-seconds',
     'max_width' => 'max-width',
