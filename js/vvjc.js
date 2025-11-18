@@ -20,6 +20,28 @@
       timer = setTimeout(func, delay);
     };
   }
+
+  /**
+   * Detect if element is in RTL context.
+   *
+   * @param {HTMLElement} element
+   *   The element to check.
+   *
+   * @return {boolean}
+   *   True if RTL, false otherwise.
+   */
+  function isRTL(element) {
+    // Check for dir attribute on element or ancestors.
+    const dirAttr = element.closest('[dir]');
+    if (dirAttr) {
+      return dirAttr.getAttribute('dir') === 'rtl';
+    }
+
+    // Fallback to computed style.
+    const computed = window.getComputedStyle(element);
+    return computed.direction === 'rtl';
+  }
+
   const playIconSVG = `
     <svg class="svg-play" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor">
       <path d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path>
@@ -73,6 +95,7 @@
       dotsContainer: container.querySelector('.vvjc-dots-nav'),
       config: config,
       uniqueId: uniqueId,
+      isRTL: isRTL(container),
     };
     
     const initiallyVisible = isMostlyVisible(state.container);
@@ -174,11 +197,13 @@
         switch (event.key) {
           case 'ArrowRight':
             event.preventDefault();
-            manualAdvance(state, 1);
+            // RTL: ArrowRight goes backward (previous)
+            manualAdvance(state, state.isRTL ? -1 : 1);
             break;
           case 'ArrowLeft':
             event.preventDefault();
-            manualAdvance(state, -1);
+            // RTL: ArrowLeft goes forward (next)
+            manualAdvance(state, state.isRTL ? 1 : -1);
             break;
           case ' ':
           case 'Spacebar':
@@ -400,10 +425,15 @@
     }
     
     const swipeThreshold = 50;
-    if (startX - endX > swipeThreshold) {
-      manualAdvance(state, 1);
-    } else if (endX - startX > swipeThreshold) {
-      manualAdvance(state, -1);
+    const swipeLeft = startX - endX > swipeThreshold;
+    const swipeRight = endX - startX > swipeThreshold;
+    
+    if (swipeLeft) {
+      // Swipe left: next in LTR, previous in RTL
+      manualAdvance(state, state.isRTL ? -1 : 1);
+    } else if (swipeRight) {
+      // Swipe right: previous in LTR, next in RTL
+      manualAdvance(state, state.isRTL ? 1 : -1);
     }
   }
 
