@@ -139,6 +139,7 @@
   width: 100%;
   gap: 16px;
   transition: all 0.3s ease;
+  flex-wrap: wrap;
 }
 
 .vvjc .vvjc-nav-inner button {

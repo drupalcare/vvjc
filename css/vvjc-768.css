@@ -28,4 +28,8 @@
     transform-style: flat;
   }
 
+  .vvjc .vvjc-nav .vvjc-nav-inner {
+    justify-content: space-evenly;
+  }
+
 }
