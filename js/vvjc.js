@@ -93,6 +93,7 @@
       progressBar: container.querySelector('.progressbar'),
       announcer: container.querySelector('.announcer'),
       dotsContainer: container.querySelector('.vvjc-dots-nav'),
+      scrollableDotsWidth: parseInt(container.querySelector('.vvjc-dots-nav')?.getAttribute('data-scrollable-dots-width') || '0', 10),
       config: config,
       uniqueId: uniqueId,
       isRTL: isRTL(container),
@@ -128,6 +129,11 @@
     
     if (config.showDotsNavigation && state.dotsContainer) {
       setupDotsNavigation(state);
+
+      // Initialize scrollable dots if width is set.
+      if (state.scrollableDotsWidth > 0) {
+        initScrollableDots(state);
+      }
     }
     
     updateSlide(state);
@@ -518,13 +524,67 @@
     if (!state.dotsContainer) {
       return;
     }
-    
+
     const dotButtons = state.dotsContainer.querySelectorAll('.dots-numbers-button');
     dotButtons.forEach((dot, index) => {
       const isActive = index === state.currentIndex;
       dot.classList.toggle('active', isActive);
       dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
       dot.setAttribute('tabindex', isActive ? '0' : '-1');
+    });
+
+    // Center active dot in scrollable container.
+    if (state.scrollableDotsWidth > 0) {
+      centerActiveDot(state);
+    }
+  }
+
+  /**
+   * Initialize scrollable dots container.
+   */
+  function initScrollableDots(state) {
+    if (!state.dotsContainer || state.scrollableDotsWidth <= 0) {
+      return;
+    }
+
+    // Apply max-width from configuration.
+    state.dotsContainer.style.maxWidth = `${state.scrollableDotsWidth}px`;
+    state.dotsContainer.style.justifyContent = 'flex-start';
+
+    // Center the active dot initially.
+    requestAnimationFrame(() => {
+      centerActiveDot(state);
+    });
+  }
+
+  /**
+   * Center the active dot in the scrollable container.
+   */
+  function centerActiveDot(state) {
+    if (!state.dotsContainer || state.scrollableDotsWidth <= 0) {
+      return;
+    }
+
+    const activeDot = state.dotsContainer.querySelector('.dots-numbers-button.active');
+    if (!activeDot) {
+      return;
+    }
+
+    const containerWidth = state.dotsContainer.offsetWidth;
+    const dotOffsetLeft = activeDot.offsetLeft;
+    const dotWidth = activeDot.offsetWidth;
+
+    // Calculate scroll position to center the active dot.
+    const scrollTarget = dotOffsetLeft - (containerWidth / 2) + (dotWidth / 2);
+
+    // Clamp scroll position to valid range.
+    const maxScroll = state.dotsContainer.scrollWidth - containerWidth;
+    const clampedScroll = Math.max(0, Math.min(scrollTarget, maxScroll));
+
+    // Smooth scroll to the target position.
+    state.dotsContainer.scrollTo({
+      left: clampedScroll,
+      behavior: 'smooth'
     });
   }
 

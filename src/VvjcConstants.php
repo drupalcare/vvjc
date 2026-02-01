@@ -85,6 +85,13 @@ final class VvjcConstants {
   public const DEEPLINK_IDENTIFIER_PATTERN = '/^[a-z][a-z0-9-]*[a-z0-9]$/';
   public const DEEPLINK_RESERVED_WORDS = ['carousel3d', 'carousel', 'slide', 'vvjc', 'vvj'];
 
+  /**
+   * Scrollable dots configuration constants.
+   */
+  public const DEFAULT_SCROLLABLE_DOTS_WIDTH = 0;
+  public const MIN_SCROLLABLE_DOTS_WIDTH = 120;
+  public const MAX_SCROLLABLE_DOTS_WIDTH = 700;
+
   public const DATA_ATTRIBUTE_MAP = [
     'time_in_seconds' => 'time-in-seconds',
     'max_width' => 'max-width',
@@ -104,6 +111,7 @@ final class VvjcConstants {
     'enable_pause_on_hover' => 'enable-pause-on-hover',
     'enable_screen_reader' => 'enable-screen-reader',
     'pause_on_reduced_motion' => 'pause-on-reduced-motion',
+    'scrollable_dots_width' => 'scrollable-dots-width',
   ];
 
   public const VIEWS_TYPE_INTEGER = 'integer';

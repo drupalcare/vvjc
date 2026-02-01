@@ -44,6 +44,7 @@
 {% set show_slide_counter = options.show_slide_counter ?? true %}
 {% set show_progress_bar = options.show_progress_bar ?? false %}
 {% set show_dots_navigation = options.show_dots_navigation ?? false %}
+{% set scrollable_dots_width = options.scrollable_dots_width ?? 0 %}
 {% set enable_keyboard_nav = options.enable_keyboard_nav ?? true %}
 {% set enable_touch_swipe = options.enable_touch_swipe ?? true %}
 {% set enable_pause_on_hover = options.enable_pause_on_hover ?? true %}
@@ -140,7 +141,12 @@
       {% endif %}
 
       {% if show_dots_navigation %}
-        <div class="vvjc-dots-nav" role="tablist" aria-label="{{ 'Slide navigation'|t }}">
+        <div class="vvjc-dots-nav{{ scrollable_dots_width > 0 ? ' vvjc-scrollable-dots' : '' }}"
+             role="tablist"
+             aria-label="{{ 'Slide navigation'|t }}"
+             {% if scrollable_dots_width > 0 %}
+             data-scrollable-dots-width="{{ scrollable_dots_width }}"
+             {% endif %}>
           {% for row in rows %}
             {% if deeplink_config.enabled and deeplink_config.identifier %}
               {# Deep linking enabled - use anchor links #}

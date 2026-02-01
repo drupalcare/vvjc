@@ -7,7 +7,7 @@
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 :root {
-  --vvjb-progress-size: 32px;
+  --vvjb-progress-size: 30px;
   --vvjb-progress-thickness: 6px;  /* Colors */
   --vvjb-progress-color: #3b82f6;              /* Active progress color */
   --vvjb-progress-track: rgba(255, 255, 255, 0.3);  /* Background track */
@@ -276,6 +276,7 @@
 
 /* Inner circle with percentage text */
 .vvjc .progressbar::after {
+ font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace!important;
   content: attr(aria-valuenow) "%";
   width: calc(100% - var(--vvjb-progress-thickness, 6px));
   height: calc(100% - var(--vvjb-progress-thickness, 6px));
@@ -287,6 +288,7 @@
   font-weight: bold;
   color: var(--vvjb-progress-text-color, #3b82f6);
   position: absolute;
+  line-height: 1;
   transition: color 0.3s ease;
 }
 
@@ -365,9 +367,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
-  margin: 0 8px;
+  margin: 0 12px;
 }
 
 .vvjc .vvjc-dots-nav .dots-numbers-button {
@@ -508,4 +510,29 @@
 html[dir="rtl"] .vvjc-nav-inner .prev-arrow svg,
 html[dir="rtl"] .vvjc-nav-inner .next-arrow svg {
   transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   Scrollable Dots Navigation
+   ========================================================================== */
+.vvjc .vvjc-dots-nav.vvjc-scrollable-dots {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  min-height: 60px;
+  padding:18px 32px;
+  margin: 0;
+}
+
+.vvjc .vvjc-dots-nav.vvjc-scrollable-dots::-webkit-scrollbar {
+  display: none;
+}
+
+.vvjc .vvjc-dots-nav.vvjc-scrollable-dots .dots-numbers-button {
+  flex-shrink: 0;
 }

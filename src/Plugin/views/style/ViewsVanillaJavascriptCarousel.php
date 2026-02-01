@@ -70,6 +70,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
     $options['pause_on_reduced_motion'] = ['default' => TRUE];
     $options['enable_deeplink'] = ['default' => FALSE];
     $options['deeplink_identifier'] = ['default' => ''];
+    $options['scrollable_dots_width'] = ['default' => VvjcConstants::DEFAULT_SCROLLABLE_DOTS_WIDTH];
     return $options;
   }
 
@@ -318,6 +319,25 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       '#title' => $this->t('Show Dots Navigation'),
       '#default_value' => $this->options['show_dots_navigation'],
       '#description' => $this->t('Display clickable dot indicators for each slide, allowing direct navigation to any slide.<strong> Note: This feature required by Deep Linking.</strong>'),
+    ];
+
+    $form['controls_section']['scrollable_dots_width'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Scrollable dots width (px)'),
+      '#default_value' => $this->options['scrollable_dots_width'] ?? VvjcConstants::DEFAULT_SCROLLABLE_DOTS_WIDTH,
+      '#min' => 0,
+      '#max' => VvjcConstants::MAX_SCROLLABLE_DOTS_WIDTH,
+      '#step' => 1,
+      '#field_suffix' => 'px',
+      '#description' => $this->t('Set a maximum width for the dots navigation to make it scrollable. Set to 0 to disable. Range: @min-@max px.', [
+        '@min' => VvjcConstants::MIN_SCROLLABLE_DOTS_WIDTH,
+        '@max' => VvjcConstants::MAX_SCROLLABLE_DOTS_WIDTH,
+      ]),
+      '#states' => [
+        'visible' => [
+          ':input[name="style_options[controls_section][show_dots_navigation]"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
   }
 
@@ -619,6 +639,7 @@ class ViewsVanillaJavascriptCarousel extends StylePluginBase {
       $flattened['show_slide_counter'] = $values['controls_section']['show_slide_counter'] ?? TRUE;
       $flattened['show_progress_bar'] = $values['controls_section']['show_progress_bar'] ?? FALSE;
       $flattened['show_dots_navigation'] = $values['controls_section']['show_dots_navigation'] ?? FALSE;
+      $flattened['scrollable_dots_width'] = $values['controls_section']['scrollable_dots_width'] ?? VvjcConstants::DEFAULT_SCROLLABLE_DOTS_WIDTH;
     }
 
     if (isset($values['accessibility_section'])) {

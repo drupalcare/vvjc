@@ -44,3 +44,40 @@ views.style.views_vvjc:
           message: 'Must start with letter, contain only lowercase letters, numbers, and hyphens'
         Length:
           max: 20
+    show_navigation_arrows:
+      type: boolean
+      label: 'Show navigation arrows'
+    show_play_pause:
+      type: boolean
+      label: 'Show play/pause button'
+    show_slide_counter:
+      type: boolean
+      label: 'Show slide counter'
+    show_progress_bar:
+      type: boolean
+      label: 'Show progress bar'
+    show_dots_navigation:
+      type: boolean
+      label: 'Show dots navigation'
+    enable_keyboard_nav:
+      type: boolean
+      label: 'Enable keyboard navigation'
+    enable_touch_swipe:
+      type: boolean
+      label: 'Enable touch/swipe gestures'
+    enable_pause_on_hover:
+      type: boolean
+      label: 'Pause on hover'
+    enable_screen_reader:
+      type: boolean
+      label: 'Enable screen reader announcements'
+    pause_on_reduced_motion:
+      type: boolean
+      label: 'Respect reduced motion preference'
+    scrollable_dots_width:
+      type: integer
+      label: 'Scrollable dots navigation width in pixels'
+      constraints:
+        Range:
+          min: 0
+          max: 700
