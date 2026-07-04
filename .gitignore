@@ -61,3 +61,6 @@
 /drupal.phar
 /drupal
 .DS_Store
+
+# Local drupal.org project page draft — not shipped with the module.
+drupal-org-project-page.html
