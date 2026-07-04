@@ -53,6 +53,7 @@
   /* CSS Custom Properties with sensible defaults */
   --height-large: 400; /* Default large screen height (100-550 range) */
   --height-small: 350; /* Default small screen height (100-550 range) */
+
   display: grid;
   overflow: hidden;
   opacity: 0;
@@ -108,8 +109,8 @@
   transform-style: preserve-3d;
   width: calc(100% - 24px); /* 12px padding on each side */
   top: 0;
-  left: 12px;
-  right: 12px;
+  inset-inline-start: 12px;
+  inset-inline-end: 12px;
   transition: transform 1s ease, opacity 1s ease;
   overflow-y: auto;
   backface-visibility: hidden; /* Prevents flickering in 3D transforms */
@@ -167,7 +168,7 @@
 }
 
 .vvjc .vvjc-nav-inner button:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid currentcolor;
   outline-offset: 4px;
 }
 
@@ -340,6 +341,7 @@
   transition: all 0.3s ease;
   height: 32px;
 }
+
 .vvjc .echo-total > * {
   display: inline-flex;
   justify-content: center;
@@ -386,7 +388,7 @@
   transition: width 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
   border-width: 2px;
   border-style: solid;
-  border-color: currentColor;
+  border-color: currentcolor;
   background-color: transparent;
 }
 
@@ -470,10 +472,6 @@
     transition: none;
   }
 
-  .vvjc.reduced-motion {
-
-  }
-
 }
 
 /* ==========================================================================
@@ -481,15 +479,15 @@
    ========================================================================== */
 @media (prefers-contrast:high) {
   .vvjc-nav button {
-    border: 2px solid currentColor;
+    border: 2px solid currentcolor;
   }
 
   .vvjc .vvjc-nav span.current-slide-number {
-    border: 2px solid currentColor;
+    border: 2px solid currentcolor;
   }
 
   .vvjc .progressbar {
-    border: 2px solid currentColor;
+    border: 2px solid currentcolor;
   }
 
   .vvjc .vvjc-dots-nav .dots-numbers-button {
@@ -503,7 +501,7 @@
    ========================================================================== */
 .vvjc .vvjc-nav button:focus-visible,
 .vvjc .vvjc-dots-nav .dots-numbers-button:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid currentcolor;
   outline-offset: 2px;
 }
 

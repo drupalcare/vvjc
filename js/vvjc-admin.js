@@ -7,6 +7,10 @@
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 
+// phpcs:disable Drupal.NamingConventions.UpperCaseConstant
+// phpcs:disable Generic.PHP.UpperCaseConstant
+// phpcs:disable Squiz.WhiteSpace.OperatorSpacing
+
 (function (Drupal, once) {
   'use strict';
 
@@ -21,7 +25,7 @@
         return;
       }
 
-      toggleCheckbox.forEach(function(checkbox) {
+      toggleCheckbox.forEach(function (checkbox) {
         const wrapper = context.querySelector('[data-vvjc-deeplink-field="true"]');
 
         if (!wrapper) {
@@ -37,7 +41,7 @@
         /**
          * Update field visibility and required state.
          */
-        const updateVisibility = function(isEnabled) {
+        const updateVisibility = function (isEnabled) {
           const input = wrapper.querySelector('input[type="text"]');
 
           if (isEnabled) {
@@ -64,7 +68,7 @@
         updateVisibility(checkbox.checked);
 
         // Listen for changes
-        checkbox.addEventListener('change', function() {
+        checkbox.addEventListener('change', function () {
           updateVisibility(this.checked);
         });
       });

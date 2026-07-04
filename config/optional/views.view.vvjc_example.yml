@@ -156,10 +156,10 @@ display:
           large_screen_height: '400'
           small_screen_height: '350'
           available_breakpoints: '992'
-          perspective: '0'
+          perspective: 0
           background_color: '#ffffff'
-          background_color_opacity: '0.7'
-          disable_background: 0
+          background_color_opacity: 0.7
+          disable_background: false
       row:
         type: 'entity:node'
         options:
@@ -185,3 +185,54 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
+  page_1:
+    id: page_1
+    display_title: 'Demo Page'
+    display_plugin: page
+    position: 1
+    display_options:
+      title: 'VVJC 3D Carousel Demo'
+      display_extenders: {  }
+      path: vvjc-example
+      defaults:
+        access: false
+      access:
+        type: perm
+        options:
+          perm: 'access administration pages'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:node.type.article'
+  block_1:
+    id: block_1
+    display_title: '3D Carousel Block'
+    display_plugin: block
+    position: 2
+    display_options:
+      title: 'Featured Articles'
+      display_extenders: {  }
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 3
+      defaults:
+        title: false
+        pager: false
+      block_description: 'VVJC Articles 3D Carousel Block'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:node.type.article'

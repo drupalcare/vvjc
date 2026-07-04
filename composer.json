@@ -1,9 +1,10 @@
 {
     "name": "drupal/vvjc",
-    "description": "Provides a Vanilla Javascript 3D Carousel format for Views.",
+    "description": "Provides a Vanilla Javascript 3D Carousel format for Views. v2 builds on the vvj_core foundation.",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Alaa Haddad (alaahaddad.com)",
@@ -13,7 +14,9 @@
     ],
     "homepage": "https://drupal.org/project/vvjc",
     "require": {
-        "drupal/core": "*"
+        "php": ">=8.3",
+        "drupal/core": "^11.3 || ^12",
+        "drupal/vvj_core": "^2.0"
     },
     "support": {
         "issues": "https://drupal.org/project/issues/vvjc",

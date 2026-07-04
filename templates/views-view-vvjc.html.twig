@@ -73,7 +73,8 @@
 
 {% set inner_styles = '--max-width: ' ~ max_width ~ '; --perspective: ' ~ perspective ~ ';' %}
 
-<div {{ attributes.addClass(classes).setAttribute('id', vvjc_id).setAttribute('style', carousel_styles) }} role="region" aria-label="{{ 'Carousel'|t }}">
+<vvjc-carousel {{ attributes.addClass(classes).setAttribute('id', vvjc_id).setAttribute('style', carousel_styles) }} role="region" aria-label="{{ 'Carousel'|t }}"
+  {%- if deeplink_config.enabled and deeplink_config.identifier and show_dots_navigation %} data-deeplink-id="{{ deeplink_config.identifier }}"{% endif %}>
   {% if enable_pause_on_hover %}
     <span id="vvjc-hover-info-{{ unique_id }}" class="visually-hidden">{{ 'Carousel pauses when you hover over it.'|t }}</span>
   {% endif %}
@@ -179,4 +180,4 @@
 
     </div>
   </div>
-</div>
+</vvjc-carousel>
