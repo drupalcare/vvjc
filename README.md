@@ -106,6 +106,29 @@ preserves:
 Outer rendered tag changed from `<div>` to `<vvjc-carousel>`. Theme selectors
 targeting `.vvjc` keep matching.
 
+## Running the tests
+
+This module ships no `phpunit.xml` of its own, deliberately: its suites are
+Kernel, Functional and FunctionalJavascript, which need a real Drupal, so a
+module-local config would have to hard-code a relative path to `core` and would
+break the moment the module is not physically inside a docroot (a symlinked
+checkout, for instance). Drupal core's runner already does the job.
+
+Run the fast suites from the docroot:
+
+```bash
+cd /path/to/drupal/web
+export SIMPLETEST_DB="mysql://user:pass@localhost/dbname"
+../vendor/bin/phpunit -c core modules/contrib/vvjc/tests/src/Unit
+../vendor/bin/phpunit -c core modules/contrib/vvjc/tests/src/Kernel
+```
+
+The **Functional** and **FunctionalJavascript** suites additionally need
+`SIMPLETEST_BASE_URL` pointing at a running web server, and the JavaScript ones
+need chromedriver. Without those they error rather than fail, and the errors
+name missing infrastructure rather than anything about this module — so don't
+read them as test failures. The drupal.org pipeline provides both.
+
 ## License
 
 GPL-2.0-or-later.

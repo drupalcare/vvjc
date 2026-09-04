@@ -6,12 +6,14 @@ namespace Drupal\Tests\vvjc\FunctionalJavascript;
 
 use Drupal\Tests\vvj_core\FunctionalJavascript\VvjPatternJavascriptTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Browser smoke tests for the vvjc example view custom element.
  */
 #[Group('vvjc')]
 #[Group('vvj_javascript')]
+#[RunTestsInSeparateProcesses]
 final class VvjcJavascriptSmokeTest extends VvjPatternJavascriptTestBase {
 
   /**

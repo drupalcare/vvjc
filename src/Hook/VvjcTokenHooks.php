@@ -75,7 +75,7 @@ final class VvjcTokenHooks {
    * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
    *   For propagating cache metadata.
    *
-   * @return array<string, string|\Drupal\Core\Render\Markup>
+   * @return array<string, string|\Drupal\Component\Render\MarkupInterface>
    *   Map of original placeholder → resolved value.
    */
   #[Hook('tokens')]

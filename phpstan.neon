@@ -1,6 +1,18 @@
-includes:
-  - phpstan-baseline.neon
-
+# PHPStan configuration for vvjc.
+#
+# There is deliberately NO baseline file. paragraphs_bundles records why: its
+# suppression list started at 145 entries and burning it down found five
+# shipped defects — three live fatals, a silent data-loss bug, and a dead
+# conditional-fields branch. A suppressed finding in this codebase has a poor
+# track record of being noise, so findings get fixed rather than generated away
+# with `--generate-baseline`.
+#
+# This module carried a baseline until 2026-09-03. It held two things. The
+# `tokens()` return variance was a real defect and is now FIXED at source: the
+# docblock declared `Markup` where the code produces `MarkupInterface`, which
+# `Markup` implements, so the declared contract was simply narrower than the
+# code. The by-ref preprocess entries are a genuine analyser limitation and are
+# recorded below, in the open, with the reason.
 parameters:
   level: max
   scanDirectories:
@@ -14,3 +26,25 @@ parameters:
   excludePaths:
     - vendor (?)
   treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    # `parameterByRef.type` cannot be resolved from this side. Drupal invokes a
+    # preprocess hook with a plain `array &$variables`, while this method
+    # documents the shape it actually receives. Widening our own docblock to a
+    # bare `array` to silence it would delete real type information from the
+    # code that reads these variables, which is the wrong trade — the same
+    # judgement, and the same narrow scoping, that paragraphs_bundles applies.
+    # Narrow deliberately: only this identifier, only this file.
+    -
+      identifier: parameterByRef.type
+      path: src/Hook/VvjcPreprocessHooks.php
+    # `KernelTestBase::$container` is declared nullable, so every
+    # `$this->container->get()` in a kernel test reads as a call on a possible
+    # NULL. It is not: parent::setUp() has built the container before any test
+    # method runs, and a NULL there would fail the test immediately and loudly
+    # rather than slip through. This is a framework typing artefact in test
+    # code, not a defect in it — so it is recorded rather than worked around
+    # with an assert on every line. Scoped to tests; shipped code gets no such
+    # licence and currently needs none.
+    -
+      identifier: method.nonObject
+      path: tests
