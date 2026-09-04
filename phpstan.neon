@@ -33,6 +33,19 @@ parameters:
   excludePaths:
     - vendor (?)
   treatPhpDocTypesAsCertain: false
+  # These modules are analysed against BOTH Drupal 11 and Drupal 12 by
+  # drupal.org CI (the `phpstan` and `phpstan (next major)` jobs). An
+  # ignoreErrors entry that matches on one version and not the other is itself
+  # a fatal error — "Ignored error pattern ... was not matched in reported
+  # errors" — so a config with any version-sensitive ignore cannot pass both
+  # jobs without this.
+  #
+  # Measured 2026-09-04: `method.nonObject` in tests fires on Drupal 12 and not
+  # on Drupal 11, so `phpstan (next major)` passed while `phpstan` failed with
+  # exactly that message. This does NOT suppress real findings — unmatched
+  # ignores stop being fatal, actual errors are still reported and still fail
+  # the build.
+  reportUnmatchedIgnoredErrors: false
   ignoreErrors:
     # `parameterByRef.type` cannot be resolved from this side. Drupal invokes a
     # preprocess hook with a plain `array &$variables`, while this method
