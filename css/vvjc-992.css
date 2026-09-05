@@ -6,7 +6,7 @@
  * Website:      https://www.flashwebcenter.com
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
-@media (max-width:61.99875rem) {
+@media (max-width: 61.99875rem) {
   .vvjc.br-992 > .vvjc-inner,
   .vvjc.br-992 > .vvjc-inner > .vvjc-items {
     height: calc(var(--height-small) * 0.0625rem);
@@ -21,8 +21,8 @@
   }
 
   .vvjc.br-992 .vvjc-items > .vvjc-item {
-    padding: 0 16px;
     width: 100%;
+    padding: 0 16px;
     inset-inline-start: 0;
     inset-inline-end: 0;
     transform-style: flat;
@@ -31,5 +31,4 @@
   .vvjc .vvjc-nav .vvjc-nav-inner {
     justify-content: space-evenly;
   }
-
 }

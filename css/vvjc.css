@@ -8,13 +8,13 @@
  */
 :root {
   --vvjb-progress-size: 30px;
-  --vvjb-progress-thickness: 6px;  /* Colors */
-  --vvjb-progress-color: #3b82f6;              /* Active progress color */
-  --vvjb-progress-track: rgba(255, 255, 255, 0.3);  /* Background track */
-  --vvjb-progress-inner-bg: #fff;              /* Inner circle background */
-  --vvjb-progress-text-color: #3b82f6;         /* Percentage text color */
-  --vvjb-progress-complete-color: #22c55e;     /* Color at 100% */
-  --vvjb-progress-complete-text: #22c55e;      /* Text color at 100% */
+  --vvjb-progress-thickness: 6px; /* Colors */
+  --vvjb-progress-color: #3b82f6; /* Active progress color */
+  --vvjb-progress-track: rgb(255, 255, 255, 0.3); /* Background track */
+  --vvjb-progress-inner-bg: #fff; /* Inner circle background */
+  --vvjb-progress-text-color: #3b82f6; /* Percentage text color */
+  --vvjb-progress-complete-color: #22c55e; /* Color at 100% */
+  --vvjb-progress-complete-text: #22c55e; /* Text color at 100% */
   --vvjb-progress-font-size: 0.625rem;
 }
 /* ==========================================================================
@@ -23,14 +23,14 @@
 
 .vvj-carousel .visually-hidden {
   position: absolute;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
   width: 1px;
   height: 1px;
   margin: -1px;
   padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
   white-space: nowrap;
+  border: 0;
 }
 
 .vvj-carousel,
@@ -40,48 +40,47 @@
 
 .vvj-carousel,
 .vvj-carousel .view-content {
+  display: block !important;
   width: 100%;
   min-width: 100%;
-  display: block !important;
 }
 
 /* ==========================================================================
    Dynamic 3D Carousel Container
    ========================================================================== */
 .vvjc {
-
   /* CSS Custom Properties with sensible defaults */
   --height-large: 400; /* Default large screen height (100-550 range) */
   --height-small: 350; /* Default small screen height (100-550 range) */
 
   display: grid;
   overflow: hidden;
+  animation: fade-in 1s ease-in 0.4s forwards;
   opacity: 0;
-  animation: fadeIn 1s ease-in 0.4s forwards;
 }
 
 /* ==========================================================================
  Inner Container - Dynamic Width & Perspective
  ========================================================================== */
 .vvjc > .vvjc-inner {
-
   /* CSS Custom Properties with defaults */
   --max-width: 600; /* Default max-width in pixels (300-1000 range) */
   --perspective: 640; /* Default perspective value */
 
-  /* Dynamic height based on --height-large variable */
-  height: calc(var(--height-large) * 0.0625rem); /* Converts 400 -> 25rem */
-  max-height: 38.125rem; /* ~610px safety cap */
-
-  /* Dynamic max-width and perspective */
-  max-width: calc(var(--max-width) * 1px);
-  perspective: calc(var(--perspective) * 1px);
   position: relative;
-  width: 100%;
   z-index: 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
+
+  /* Dynamic max-width and perspective */
+  max-width: calc(var(--max-width) * 1px);
+
+  /* Dynamic height based on --height-large variable */
+  height: calc(var(--height-large) * 0.0625rem); /* Converts 400 -> 25rem */
+  max-height: 38.125rem; /* ~610px safety cap */
   margin: 0 auto;
+  perspective: calc(var(--perspective) * 1px);
 }
 
 /* ==========================================================================
@@ -100,19 +99,21 @@
  Individual Carousel Items
  ========================================================================== */
 .vvjc .vvjc-items > .vvjc-item {
+  position: absolute;
+  top: 0;
+  overflow-y: auto;
+  width: calc(100% - 24px); /* 12px padding on each side */
+  max-width: 71.875rem; /* ~1150px - max readable content width */
 
   /* Dynamic height - slightly smaller than container */
   height: calc((var(--height-large) - 16) * 0.0625rem);
-  max-width: 71.875rem; /* ~1150px - max readable content width */
   max-height: 34.375rem; /* ~550px - optimal carousel height */
-  position: absolute;
+  transition:
+    transform 1s ease,
+    opacity 1s ease;
   transform-style: preserve-3d;
-  width: calc(100% - 24px); /* 12px padding on each side */
-  top: 0;
   inset-inline-start: 12px;
   inset-inline-end: 12px;
-  transition: transform 1s ease, opacity 1s ease;
-  overflow-y: auto;
   backface-visibility: hidden; /* Prevents flickering in 3D transforms */
   will-change: transform, opacity;
 }
@@ -125,8 +126,8 @@
  Navigation Controls
  ========================================================================== */
 .vvjc .vvjc-nav {
-  min-height: 3rem;
   width: 100%;
+  min-height: 3rem;
 }
 
 .vvjc .vvjc-nav .display-0 {
@@ -135,40 +136,40 @@
 
 .vvjc .vvjc-nav .vvjc-nav-inner {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  gap: 16px;
-  transition: all 0.3s ease;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  transition: all 0.3s ease;
+  gap: 16px;
 }
 
 .vvjc .vvjc-nav-inner button {
-  all: unset;
-  width: 28px;
-  height: 28px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  width: 28px;
+  height: 28px;
   margin: 0;
+  padding: 0;
+  cursor: pointer;
   transition: all 0.3s ease;
   color: #fff;
+  border: 2px solid rgb(255, 255, 255, 0.8);
+  border-radius: 50%;
+  background: rgb(0, 0, 0, 0.6);
+  all: unset;
   backdrop-filter: blur(4px);
 }
 
-.vvjc .vvjc-nav-inner button:hover{
-  background: rgba(0, 0, 0, 0.8);
-  border-color: #fff;
+.vvjc .vvjc-nav-inner button:hover {
   transform: scale(1.05);
+  border-color: #fff;
+  background: rgb(0, 0, 0, 0.8);
 }
 
 .vvjc .vvjc-nav-inner button:focus-visible {
-  outline: 2px solid currentcolor;
+  outline: 2px solid currentColor;
   outline-offset: 4px;
 }
 
@@ -184,16 +185,16 @@
 
 .vvjc .vvjc-nav-inner .button.prev-arrow,
 .vvjc .vvjc-nav-inner .button.next-arrow {
-  opacity: 1;
   visibility: visible;
   transform: translateX(0);
+  opacity: 1;
 }
 
 .vvjc .vvjc-nav-inner .button.prev-arrow.vvjc-hidden,
 .vvjc .vvjc-nav-inner .button.next-arrow.vvjc-hidden {
-  opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  opacity: 0;
 }
 
 .vvjc .vvjc-nav-inner .button.prev-arrow.vvjc-hidden {
@@ -222,7 +223,7 @@
 /* ==========================================================================
  Animations
  ========================================================================== */
-@keyframes fadeIn {
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -230,7 +231,6 @@
   to {
     opacity: 1;
   }
-
 }
 
 @keyframes flip {
@@ -241,62 +241,65 @@
   100% {
     transform: rotateY(180deg);
   }
-
 }
 
 /* ==========================================================================
  Progress Bar
  ========================================================================== */
 .vvjc .echo-animation {
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 32px;
   height: 32px;
-  position: relative;
   margin: 0;
 }
 
 /* Circular Progress Indicator */
 .vvjc .progressbar {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  visibility: visible;
   grid-area: 1 / 1;
+  place-items: center;
   align-self: end;
   justify-self: end;
   width: var(--vvjb-progress-size, 32px);
   height: var(--vvjb-progress-size, 32px);
-  border-radius: 50%;
-  background: conic-gradient(var(--vvjb-progress-color, #3b82f6) var(--progress, 0%), var(--vvjb-progress-track, rgba(255, 255, 255, 0.3)) 0%);
-  display: grid;
-  place-items: center;
-  position: relative;
+  transition:
+    background 0.05s linear,
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s ease;
   opacity: 1;
-  visibility: visible;
-  transition: background 0.05s linear, opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-  z-index: 10;
+  border-radius: 50%;
+  background: conic-gradient(var(--vvjb-progress-color, #3b82f6) var(--progress, 0%), var(--vvjb-progress-track, rgb(255, 255, 255, 0.3)) 0%);
 }
 
 /* Inner circle with percentage text */
 .vvjc .progressbar::after {
- font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace!important;
-  content: attr(aria-valuenow) "%";
-  width: calc(100% - var(--vvjb-progress-thickness, 6px));
-  height: calc(100% - var(--vvjb-progress-thickness, 6px));
-  border-radius: inherit;
-  background: var(--vvjb-progress-inner-bg, #fff);
+  position: absolute;
   display: grid;
   place-items: center;
+  width: calc(100% - var(--vvjb-progress-thickness, 6px));
+  height: calc(100% - var(--vvjb-progress-thickness, 6px));
+  content: attr(aria-valuenow) "%";
+  transition: color 0.3s ease;
+  color: var(--vvjb-progress-text-color, #3b82f6);
+  border-radius: inherit;
+  background: var(--vvjb-progress-inner-bg, #fff);
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "DejaVu Sans Mono", monospace !important;
   font-size: var(--vvjb-progress-font-size, 0.625rem);
   font-weight: bold;
-  color: var(--vvjb-progress-text-color, #3b82f6);
-  position: absolute;
   line-height: 1;
-  transition: color 0.3s ease;
 }
 
 /* Completion state - Scale up and change color */
 .vvjc .progressbar[aria-valuenow="100"] {
-  background: conic-gradient(var(--vvjb-progress-complete-color, #22c55e) 100%, var(--vvjb-progress-complete-color, #22c55e) 0%);
   transform: scale(1.05);
+  background: conic-gradient(var(--vvjb-progress-complete-color, #22c55e) 100%, var(--vvjb-progress-complete-color, #22c55e) 0%);
 }
 
 .vvjc .progressbar[aria-valuenow="100"]::after {
@@ -304,48 +307,48 @@
 }
 
 /* Reduced motion support */
-@media (prefers-reduced-motion:reduce) {
+@media (prefers-reduced-motion: reduce) {
   .vvjc .progressbar {
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease;
   }
 
   .vvjc .progressbar[aria-valuenow="100"] {
     transform: none;
   }
-
 }
 
 /* Reduced motion support */
-@media (prefers-reduced-motion:reduce) {
+@media (prefers-reduced-motion: reduce) {
   .vvjc .progressbar::before {
     transition: none;
   }
-
 }
 
 /* ==========================================================================
  Slide Counter (Current/Total Format)
  ========================================================================== */
 .vvjc .echo-total {
-  padding: 0 0.75rem;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  border-radius: 999px;
-  font-size: 0.875rem;
-  backdrop-filter: blur(4px);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
-  transition: all 0.3s ease;
   height: 32px;
+  padding: 0 0.75rem;
+  transition: all 0.3s ease;
+  color: #fff;
+  border-radius: 999px;
+  background: rgb(0, 0, 0, 0.6);
+  font-size: 0.875rem;
+  backdrop-filter: blur(4px);
+  gap: 0.25rem;
 }
 
 .vvjc .echo-total > * {
   display: inline-flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   line-height: 1;
 }
 
@@ -354,8 +357,8 @@
 }
 
 .vvjc .vvjc-counter-separator {
-  opacity: 0.7;
   padding: 0 0.125rem;
+  opacity: 0.7;
 }
 
 .vvjc .echo-total .total-slides {
@@ -367,57 +370,60 @@
  ========================================================================== */
 .vvjc .vvjc-dots-nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
   margin: 0 12px;
+  gap: 12px;
 }
 
 .vvjc .vvjc-dots-nav .dots-numbers-button {
-  all: unset;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  margin: 0;
   width: 10px;
   height: 10px;
-  border-radius: 50%;
-  font-size: 0;
-  line-height: initial;
-  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    width 0.3s ease-in-out,
+    transform 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out,
+    background-color 0.3s ease;
+  border: none;
   border-width: 2px;
   border-style: solid;
-  border-color: currentcolor;
+  border-color: currentColor;
+  border-radius: 50%;
   background-color: transparent;
+  font-size: 0;
+  line-height: initial;
+  all: unset;
 }
 
 .vvjc .vvjc-dots-nav .dots-numbers-button:hover {
   transform: scale(1.2);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgb(0, 0, 0, 0.3);
 }
 
 .vvjc .vvjc-dots-nav .dots-numbers-button.active {
   width: calc(2 * 10px);
-  border-radius: 50%;
-  border-width: 2px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-  animation: activePulse 1.5s infinite alternate;
-  pointer-events: none;
   cursor: default;
+  animation: active-pulse 1.5s infinite alternate;
+  pointer-events: none;
+  border-width: 2px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgb(0, 0, 0, 0.5);
 }
 
-@keyframes activePulse {
+@keyframes active-pulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgb(0, 0, 0, 0.5);
   }
 
   100% {
     transform: scale(1.2);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 20px rgb(0, 0, 0, 0.7);
   }
-
 }
 
 /* ==========================================================================
@@ -425,20 +431,20 @@
  ========================================================================== */
 .vvjc .announcer {
   position: absolute;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
   width: 1px;
   height: 1px;
   margin: -1px;
   padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
   white-space: nowrap;
+  border: 0;
 }
 
 /* ==========================================================================
  Accessibility - Reduced Motion Support
  ========================================================================== */
-@media (prefers-reduced-motion:reduce) {
+@media (prefers-reduced-motion: reduce) {
   .vvjc {
     animation: none;
     opacity: 1;
@@ -471,29 +477,27 @@
   .vvjc .progressbar {
     transition: none;
   }
-
 }
 
 /* ==========================================================================
    High Contrast Mode Support
    ========================================================================== */
-@media (prefers-contrast:high) {
+@media (prefers-contrast: more) {
   .vvjc-nav button {
-    border: 2px solid currentcolor;
+    border: 2px solid currentColor;
   }
 
   .vvjc .vvjc-nav span.current-slide-number {
-    border: 2px solid currentcolor;
+    border: 2px solid currentColor;
   }
 
   .vvjc .progressbar {
-    border: 2px solid currentcolor;
+    border: 2px solid currentColor;
   }
 
   .vvjc .vvjc-dots-nav .dots-numbers-button {
     border-width: 3px;
   }
-
 }
 
 /* ==========================================================================
@@ -501,7 +505,7 @@
    ========================================================================== */
 .vvjc .vvjc-nav button:focus-visible,
 .vvjc .vvjc-dots-nav .dots-numbers-button:focus-visible {
-  outline: 2px solid currentcolor;
+  outline: 2px solid currentColor;
   outline-offset: 2px;
 }
 
@@ -515,16 +519,16 @@ html[dir="rtl"] .vvjc-nav-inner .next-arrow svg {
    ========================================================================== */
 .vvjc .vvjc-dots-nav.vvjc-scrollable-dots {
   display: flex;
-  flex-wrap: nowrap;
   overflow-x: auto;
   overflow-y: visible;
+  flex-wrap: nowrap;
+  min-height: 60px;
+  margin: 0;
+  padding: 18px 32px;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  min-height: 60px;
-  padding:18px 32px;
-  margin: 0;
 }
 
 .vvjc .vvjc-dots-nav.vvjc-scrollable-dots::-webkit-scrollbar {

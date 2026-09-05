@@ -1,0 +1,15 @@
+{
+  // ESLint configuration. drupal.org CI links core's .eslintrc.passing.json as
+  // the PARENT config, so this file adds to core's rules rather than replacing
+  // them. Everything here is an addition with a reason.
+  //
+  // WHY ecmaVersion IS RAISED. Core pins parserOptions.ecmaVersion to 2020.
+  // These custom elements use CLASS FIELDS — `_onClick = (event) => …` — which
+  // are ES2022. Under core's setting eslint cannot PARSE such a file at all:
+  // it reports "Parsing error: Unexpected token =" and checks NOTHING in it.
+  // MEASURED 2026-09-05: three files across the VVJ set were in that state and
+  // had therefore never been linted.
+  "parserOptions": {
+    "ecmaVersion": 2022
+  }
+}

@@ -12,21 +12,25 @@
 // phpcs:disable Squiz.WhiteSpace.OperatorSpacing
 
 (function (Drupal, once) {
-  'use strict';
-
   /**
    * Toggle deep link identifier field visibility.
    */
   Drupal.behaviors.vvjcDeeplinkToggle = {
-    attach: function (context, settings) {
-      const toggleCheckbox = once('vvjc-deeplink-toggle', '[data-vvjc-deeplink-toggle="true"]', context);
+    attach(context, settings) {
+      const toggleCheckbox = once(
+        'vvjc-deeplink-toggle',
+        '[data-vvjc-deeplink-toggle="true"]',
+        context,
+      );
 
       if (!toggleCheckbox.length) {
         return;
       }
 
       toggleCheckbox.forEach(function (checkbox) {
-        const wrapper = context.querySelector('[data-vvjc-deeplink-field="true"]');
+        const wrapper = context.querySelector(
+          '[data-vvjc-deeplink-field="true"]',
+        );
 
         if (!wrapper) {
           return;
@@ -40,6 +44,7 @@
 
         /**
          * Update field visibility and required state.
+         * @param isEnabled
          */
         const updateVisibility = function (isEnabled) {
           const input = wrapper.querySelector('input[type="text"]');
@@ -52,8 +57,7 @@
               input.removeAttribute('tabindex');
               input.setAttribute('required', 'required');
             }
-          }
-          else {
+          } else {
             wrapper.classList.add('hidden-element');
             wrapper.setAttribute('aria-hidden', 'true');
 
@@ -72,7 +76,6 @@
           updateVisibility(this.checked);
         });
       });
-    }
+    },
   };
-
 })(Drupal, once);
