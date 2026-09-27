@@ -5,6 +5,14 @@ views.style.views_vvjc:
     max_width:
       type: string
       label: 'Maximum width for carousel items'
+    carousel_style:
+      type: string
+      label: 'Carousel style: ring or coverflow'
+      constraints:
+        Choice:
+          choices:
+            - ring
+            - coverflow
     time_in_seconds:
       type: string
       label: 'Auto-rotate interval in milliseconds'

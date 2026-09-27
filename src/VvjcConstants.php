@@ -68,6 +68,22 @@ final class VvjcConstants {
   public const string DEFAULT_BREAKPOINT = '992';
 
   /**
+   * Carousel style values.
+   *
+   * The ring is the default so every existing view renders exactly as before.
+   */
+  public const string STYLE_RING = 'ring';
+  public const string STYLE_COVERFLOW = 'coverflow';
+  public const string DEFAULT_CAROUSEL_STYLE = self::STYLE_RING;
+
+  /**
+   * Every allowed carousel style, for validation.
+   *
+   * @var list<string>
+   */
+  public const array CAROUSEL_STYLES = [self::STYLE_RING, self::STYLE_COVERFLOW];
+
+  /**
    * Defaults.
    */
   public const int DEFAULT_PERSPECTIVE = 0;

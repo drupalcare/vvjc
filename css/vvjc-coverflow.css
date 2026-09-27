@@ -1,0 +1,32 @@
+/**
+ * @file
+ * Views Vanilla JavaScript 3D Carousel — coverflow style only.
+ *
+ * Loaded only when the Views format's Carousel Style is "coverflow". The
+ * card positions are written by the script from each card's measured width,
+ * so this file sets no width, height or transform.
+ *
+ * Filename:     vvjc-coverflow.css
+ * Website:      https://www.flashwebcenter.com
+ * Developer:    Alaa Haddad https://www.alaahaddad.com.
+ */
+
+/* The deck never rotates in a coverflow; the cards move. */
+.vvjc.vvjc--coverflow .vvjc-items {
+  transition: none;
+}
+
+/* Cards turn and scale about their own centre, which the script assumes. */
+.vvjc.vvjc--coverflow .vvjc-items > .vvjc-item {
+  transform-origin: center center;
+}
+
+/* Every card on screen is readable, so its links and buttons must work.
+   vvjc.css disables pointer events on every card but the active one,
+   which is right for a drum and wrong for a fan. Cards that are off screen
+   are `inert`, so they stay unreachable. */
+.vvjc.vvjc--coverflow .vvjc-item:not([inert]) a,
+.vvjc.vvjc--coverflow .vvjc-item:not([inert]) button {
+  cursor: pointer;
+  pointer-events: auto;
+}

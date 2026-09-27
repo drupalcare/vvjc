@@ -81,6 +81,7 @@ class Carousel3D extends VvjStylePluginBase {
    * {@inheritdoc}
    */
   protected function definePatternOptions(array $options): array {
+    $options['carousel_style'] = ['default' => VvjcConstants::DEFAULT_CAROUSEL_STYLE];
     $options['max_width'] = ['default' => VvjcConstants::DEFAULT_MAX_WIDTH];
     $options['time_in_seconds'] = ['default' => VvjcConstants::DEFAULT_TIME];
     $options['large_screen_height'] = ['default' => VvjcConstants::DEFAULT_LARGE_SCREEN_HEIGHT];
@@ -117,7 +118,7 @@ class Carousel3D extends VvjStylePluginBase {
   }
 
   /**
-   * Dimensions section — width, large/small height, perspective.
+   * Dimensions section — style, width, large/small height, perspective.
    *
    * @param array<int|string, mixed> $form
    *   The form, modified in place.
@@ -128,6 +129,18 @@ class Carousel3D extends VvjStylePluginBase {
       '#title' => $this->t('Dimensions Settings'),
       '#open' => TRUE,
       '#weight' => -40,
+    ];
+
+    $form['dimensions_section']['carousel_style'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Carousel Style'),
+      '#options' => [
+        VvjcConstants::STYLE_RING => $this->t('Rotating ring (3D drum)'),
+        VvjcConstants::STYLE_COVERFLOW => $this->t('Coverflow (angled cards)'),
+      ],
+      '#default_value' => $this->options['carousel_style'] ?? VvjcConstants::DEFAULT_CAROUSEL_STYLE,
+      '#description' => $this->t('How the slides are arranged in 3D. Rotating ring spins a drum and shows one slide at a time. Coverflow fans the cards across an arc with the current one in the middle, so several are visible at once.'),
+      '#required' => TRUE,
     ];
 
     $form['dimensions_section']['max_width'] = [
@@ -458,6 +471,11 @@ class Carousel3D extends VvjStylePluginBase {
     $raw_breakpoint = $this->options['available_breakpoints'] ?? VvjcConstants::DEFAULT_BREAKPOINT;
     $breakpoint = is_scalar($raw_breakpoint) ? (string) $raw_breakpoint : VvjcConstants::DEFAULT_BREAKPOINT;
     $libraries[] = 'vvjc/vvjc__' . $breakpoint;
+    // The coverflow's extra rules load only for a coverflow, so a ring page
+    // downloads exactly what it did before this option existed.
+    if (($this->options['carousel_style'] ?? VvjcConstants::DEFAULT_CAROUSEL_STYLE) === VvjcConstants::STYLE_COVERFLOW) {
+      $libraries[] = 'vvjc/vvjc-coverflow';
+    }
     return $libraries;
   }
 
@@ -521,6 +539,10 @@ class Carousel3D extends VvjStylePluginBase {
 
     $dimensions = $values['dimensions_section'] ?? NULL;
     if (is_array($dimensions)) {
+      $style = $dimensions['carousel_style'] ?? VvjcConstants::DEFAULT_CAROUSEL_STYLE;
+      $flattened['carousel_style'] = in_array($style, VvjcConstants::CAROUSEL_STYLES, TRUE)
+        ? $style
+        : VvjcConstants::DEFAULT_CAROUSEL_STYLE;
       $flattened['max_width'] = $dimensions['max_width'] ?? VvjcConstants::DEFAULT_MAX_WIDTH;
       $flattened['large_screen_height'] = $dimensions['large_screen_height'] ?? VvjcConstants::DEFAULT_LARGE_SCREEN_HEIGHT;
       $flattened['small_screen_height'] = $dimensions['small_screen_height'] ?? VvjcConstants::DEFAULT_SMALL_SCREEN_HEIGHT;

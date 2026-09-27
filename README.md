@@ -11,8 +11,9 @@ Behavior runs in a `<vvjc-carousel>` custom element extending `VvjElementBase`.
 
 ## Features
 
-- 3D ring layout — slides arranged on a virtual cylinder via rotateY +
-  translateZ
+- Two 3D styles: a rotating ring (slides on a virtual cylinder via rotateY +
+  translateZ) or a coverflow (angled cards fanned across an arc, several
+  visible at once, wrapping at the ends)
 - 8 width presets, 10 large-screen height presets, 9 small-screen height presets
 - 14 auto-rotate intervals from 2 s to 15 s, plus disabled
 - Configurable CSS `perspective` (or auto-computed)

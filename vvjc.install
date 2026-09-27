@@ -52,3 +52,29 @@ function vvjc_update_10001(): string {
   }
   return 'Enabled vvj_core (new foundation dependency for vvjc v2).';
 }
+
+/**
+ * Convert this module's views from the v1 option shape to v2.
+ */
+function vvjc_update_10002(): string {
+  // A v1 view keeps the options exactly as v1 stored them: numbers as strings
+  // ('500'), booleans as integers (1), and any key a later release renamed.
+  // v2's schema declares integer/boolean/float, so the stored view fails
+  // validation, and a renamed option (vvja `first_toggle`, vvjh 1.0
+  // `min_height`) silently stops working.
+  //
+  // The conversion lives in vvj_core's VvjUpgradeAuditor::normalize() and in
+  // this module's style plugin (upgradeLegacyOptions()), so `drush updb` and
+  // `drush vvj:upgrade` run the same code. Idempotent.
+  //
+  // vvj_core is enabled by vvjc_update_10001, which runs first.
+  if (!\Drupal::hasService('vvj_core.upgrade_auditor')) {
+    return 'vvj_core is not enabled yet; run the updates again to convert vvjc views.';
+  }
+  /** @var \Drupal\vvj_core\Service\VvjUpgradeAuditor $auditor */
+  $auditor = \Drupal::service('vvj_core.upgrade_auditor');
+  $changed = $auditor->normalizeAll(['vvjc']);
+  return $changed === []
+    ? 'All vvjc views already use the v2 option shape.'
+    : sprintf('Converted %d vvjc view(s) to the v2 option shape: %s.', count($changed), implode(', ', $changed));
+}

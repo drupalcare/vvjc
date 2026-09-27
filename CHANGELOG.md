@@ -11,6 +11,17 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 
 ### Fixed
 
+- Update 10002 converts v1 views to the v2 option shape (value types:
+  strings and integers stored where v2 declares integer, boolean and float).
+- Reaching the first or last slide with the keyboard hid the arrow that had
+  focus and dropped the user to the top of the page. Focus now moves to the
+  opposite arrow.
+- A one-slide view with autoplay set the slide index to -1 and left no slide
+  active.
+- Under the operating system's reduced-motion setting the ring's drum still
+  rotated, because the script set its transition inline over the stylesheet's
+  reduced-motion rule. It now moves without animation, like the slides.
+
 - Restored v1's support for **any** Views row plugin (Fields *or* Content/entity
   rows). The shared base defaulted to requiring Fields — force-switching the row
   plugin on edit and blocking validation — which broke non-Fields carousels
@@ -23,6 +34,12 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
   in the `vvj_core` base — the toggle attributes are slug-derived).
 
 ### Added
+
+- **Carousel Style** option (Format settings → Dimensions): *Rotating ring*
+  (default, unchanged) or *Coverflow*, an open fan with the current card in
+  front that wraps at the ends. Existing views keep the ring; their markup is
+  byte-identical. The coverflow's rules ship in a separate `vvjc/vvjc-coverflow`
+  library that loads only for a coverflow.
 
 - `drupal/vvj_core` dependency (auto-installed).
 - `vvjc.install` with `vvjc_update_10001()` to auto-enable vvj_core during

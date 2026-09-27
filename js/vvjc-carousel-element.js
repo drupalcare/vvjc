@@ -2,8 +2,10 @@
  * @file
  * VvjcCarouselElement — `<vvjc-carousel>` custom element.
  *
- * Extends `Drupal.Vvj.ElementBase` from `vvj_core`. 3D carousel using
- * rotateY + translateZ placement of N cells on a virtual cylinder. Full
+ * Extends `Drupal.Vvj.ElementBase` from `vvj_core`. 3D carousel in two
+ * styles: a ring (rotateY + translateZ placement of N cells on a virtual
+ * cylinder, ping-pong at the ends) and a coverflow (an open fan, centre card
+ * forward, wrapping). The style comes from `data-vvjc-style`. Full
  * v1 feature set preserved: autoplay (with progress bar), arrows, dots
  * (with scrollable variant), play/pause, slide counter, screen-reader
  * announcer, deep linking, touch/swipe, keyboard navigation, RTL-aware,
@@ -33,6 +35,16 @@
 
   const PLAY_SVG = `<svg class="svg-play" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor"><path d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path></svg>`;
   const PAUSE_SVG = `<svg class="svg-pause" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor"><path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path></svg>`;
+
+  // Coverflow look. These are the values tuned for paragraphs_bundles' 3D
+  // carousel (paragraph-bundle-3d-carousel.js), copied because the two
+  // projects share no code. They are fixed constants, not settings.
+  const CF_CENTRE_SCALE = 0.62;
+  const CF_SPACING = 0.72;
+  const CF_TILT = 45;
+  const CF_DEPTH = 120;
+  const CF_SHRINK = 0.16;
+  const CF_MIN_SCALE = 0.3;
 
   function isRTLContext(element) {
     return (
@@ -86,6 +98,14 @@
 
       // Feature flags.
       this._features = {};
+
+      // Geometry: 'ring' unless the markup says coverflow (_readConfig).
+      this._style = 'ring';
+      // Coverflow only: each card's slot at the previous layout, so a card
+      // that wraps round the deck can be told apart from one that moves.
+      this._lastSlot = new Map();
+      // Coverflow only: the stylesheet's card transition in ms, memoised.
+      this._cssDuration = null;
     }
 
     onHydrate() {
@@ -186,8 +206,12 @@
         const w = window.innerWidth;
         if (Math.abs(w - this._lastWidth) >= 50) {
           this._lastWidth = w;
-          this._currentIndex = 0;
-          this._direction = 1;
+          if (this._style !== 'coverflow') {
+            // The ring rebuilds its drum from the first slide. A coverflow
+            // lays out from the current card, so it keeps its place.
+            this._currentIndex = 0;
+            this._direction = 1;
+          }
           this._buildCarousel();
           this._updateSlide();
           this._restartAutoPlay();
@@ -223,6 +247,8 @@
         showPlayPause: ds.showPlayPause === 'true',
         showSlideCounter: ds.showSlideCounter === 'true',
       };
+      // Emitted only for coverflow, so a ring's markup is unchanged.
+      this._style = ds.vvjcStyle === 'coverflow' ? 'coverflow' : 'ring';
     }
 
     // -----------------------------------------------------------------
@@ -230,6 +256,16 @@
     // -----------------------------------------------------------------
 
     _buildCarousel() {
+      if (this._style === 'coverflow') {
+        // The deck never rotates; _updateSlide(), which every caller runs
+        // next, lays the cards out.
+        this._items.style.transform = '';
+        this._cells.forEach((cell) => cell.classList.remove('active'));
+        this._cells[0]?.classList.add('active');
+        this._updateNavVisibility();
+        return;
+      }
+
       const theta = 360 / this._cellCount;
       const radius = Math.round(
         this._items.offsetWidth / 2 / Math.tan(Math.PI / this._cellCount),
@@ -252,12 +288,22 @@
     }
 
     _updateSlide() {
+      if (this._style === 'coverflow') {
+        this._updateCoverflow();
+        this._syncSlideState();
+        return;
+      }
+
       const theta = 360 / this._cellCount;
       const radius = Math.round(
         this._items.offsetWidth / 2 / Math.tan(Math.PI / this._cellCount),
       );
       const angle = theta * this._currentIndex * -1;
-      this._items.style.transition = 'transform 0.8s ease-in-out';
+      // Inline, so it beats the stylesheet's reduced-motion rule; it must
+      // therefore apply that rule itself or the drum still spins.
+      this._items.style.transition = this.reducedMotion
+        ? 'none'
+        : 'transform 0.8s ease-in-out';
       this._items.style.transform = `translateZ(${-radius}px) rotateY(${angle}deg)`;
 
       this._cells.forEach((cell, index) => {
@@ -269,6 +315,16 @@
         cell.classList.toggle('active', isActive);
       });
 
+      this._syncSlideState();
+    }
+
+    /**
+     * Everything a slide change updates besides the geometry.
+     *
+     * Moved unchanged out of _updateSlide(), so both geometries share one
+     * counter, dots, announcer, progress, hash and arrows.
+     */
+    _syncSlideState() {
       if (this._features.showSlideCounter && this._slideNumberEl) {
         this._slideNumberEl.textContent = String(this._currentIndex + 1);
       }
@@ -289,19 +345,239 @@
       this._updateNavVisibility();
     }
 
+    /**
+     * Lays the coverflow out and sets what assistive technology can reach.
+     *
+     * Several cards are readable at once, so `inert` follows what is on
+     * screen, read back from the opacity _applyCoverflow() has just written.
+     * One source of truth, rather than repeating the distance maths here.
+     */
+    _updateCoverflow() {
+      // Read before anything moves: a card turned `inert` below loses focus
+      // at once, and reading it afterwards returns <body>.
+      const focused = document.activeElement;
+      let focusLost = false;
+
+      this._applyCoverflow();
+      this._cells.forEach((cell, index) => {
+        const shown = cell.style.opacity !== '0';
+        if (!shown && focused instanceof Node && cell.contains(focused)) {
+          focusLost = true;
+        }
+        cell.setAttribute('aria-hidden', String(!shown));
+        cell.toggleAttribute('inert', !shown);
+        cell.querySelectorAll('a, button').forEach((el) => {
+          el.setAttribute('tabindex', shown ? '0' : '-1');
+        });
+        cell.classList.toggle('active', index === this._currentIndex);
+      });
+
+      // A keyboard user whose card has just left the screen goes to the
+      // centre card rather than to the top of the page (measured 2026-09-26:
+      // a focused link on the edge card fell to <body> on one Prev).
+      if (focusLost) {
+        this._cells[this._currentIndex]?.focus({ preventScroll: true });
+      }
+    }
+
+    /**
+     * Card width, spacing and how far out a card can sit and still be seen.
+     *
+     * @return {{left: number, right: number, step: number, maxDist: number}}
+     *   Cards left and right of centre, px between slots, and the furthest
+     *   slot still inside the clipping box.
+     */
+    _getCoverflowLayout() {
+      const cardWidth = this._cells[0]?.offsetWidth || this._items.offsetWidth;
+
+      // Split the cards round one centre card; an odd remainder goes right.
+      const left = Math.floor((this._cellCount - 1) / 2);
+      const right = this._cellCount - 1 - left;
+      const step = CF_SPACING * cardWidth * CF_CENTRE_SCALE;
+
+      // MEASURE THE BOX THAT CLIPS. `overflow: hidden` is on the element
+      // itself (.vvjc) and, below the breakpoint, on .vvjc-inner. Never on
+      // .vvjc-items. Which one clips is read from the cascade, not assumed.
+      const inner = this.querySelector('.vvjc-inner');
+      const clipWidth = Math.min(
+        this.offsetWidth || Infinity,
+        inner && getComputedStyle(inner).overflow === 'hidden'
+          ? inner.offsetWidth
+          : Infinity,
+      );
+      const reach = clipWidth / 2 + (cardWidth * CF_CENTRE_SCALE) / 2;
+      const maxDist = Number.isFinite(reach)
+        ? Math.max(1, Math.floor(reach / step))
+        : this._cellCount;
+
+      return { left, right, step, maxDist };
+    }
+
+    /**
+     * The card in a given slot, wrapping round the ends.
+     *
+     * @param {number} slot
+     *   Slots from the centre; negative is left.
+     * @return {number}
+     *   The cell index for that slot.
+     */
+    _coverflowIndexAt(slot) {
+      return (
+        (((this._currentIndex + slot) % this._cellCount) + this._cellCount) %
+        this._cellCount
+      );
+    }
+
+    /**
+     * The stylesheet's card transition duration in ms, memoised.
+     *
+     * First read at the first wrap, when the card carries no inline
+     * transition of its own, so this is the stylesheet's value.
+     *
+     * @param {HTMLElement} cell
+     *   A card.
+     * @return {number}
+     *   Duration in ms; 0 when none is declared.
+     */
+    _cssDurationOf(cell) {
+      if (this._cssDuration !== null) {
+        return this._cssDuration;
+      }
+      cell.style.transition = '';
+      const raw = getComputedStyle(cell).transitionDuration.split(',')[0];
+      const value = parseFloat(raw);
+      if (!Number.isFinite(value)) {
+        this._cssDuration = 0;
+        return 0;
+      }
+      this._cssDuration = raw.trim().endsWith('ms') ? value : value * 1000;
+      return this._cssDuration;
+    }
+
+    /**
+     * Places every card on the fan.
+     *
+     * Every style write is a CSSOM property write, never a `style` attribute,
+     * so the carousel stays clean under a CSP without 'unsafe-inline'.
+     *
+     * Reduced motion follows the OS setting, not the pause option: vvjc.css
+     * already drops every card transition under prefers-reduced-motion, and
+     * the wrap animation below is JS, which CSS cannot reach.
+     */
+    _applyCoverflow() {
+      const { reducedMotion } = this;
+      const { left, right, step, maxDist } = this._getCoverflowLayout();
+      // RTL: the next card sits on the left, so the fan is mirrored.
+      const mirror = this._isRTL ? -1 : 1;
+
+      const placed = new Map();
+      for (let slot = -left; slot <= right; slot++) {
+        const dist = Math.abs(slot);
+        placed.set(this._coverflowIndexAt(slot), {
+          slot,
+          dist,
+          x: slot * step * mirror,
+          z: -dist * CF_DEPTH,
+          ry: -Math.sign(slot) * CF_TILT * mirror,
+          scale: Math.max(
+            CF_CENTRE_SCALE * (1 - dist * CF_SHRINK),
+            CF_MIN_SCALE,
+          ),
+        });
+      }
+
+      this._cells.forEach((cell, index) => {
+        const at = placed.get(index);
+        if (!at) {
+          return;
+        }
+
+        // A WRAPPING CARD MUST NOT SLIDE. On every step one card leaves one
+        // end and reappears at the other; a plain transition flies it across
+        // the whole fan (measured in paragraphs_bundles 2026-09-25: 472px,
+        // still 20% opaque halfway). It fades out, jumps while invisible and
+        // fades in. "Wrapping" is a slot change of more than half the deck.
+        const previous = this._lastSlot.get(index);
+        this._lastSlot.set(index, at.slot);
+        const wraps =
+          !reducedMotion &&
+          previous !== undefined &&
+          Math.abs(at.slot - previous) * 2 > this._cellCount;
+
+        // ORDER IS LOAD-BEARING: the transition is set and the duration read
+        // BEFORE the transform is written. Reading computed style after the
+        // write starts the ordinary slide on the spot.
+        const duration = wraps ? this._cssDurationOf(cell) : 0;
+        const animated =
+          wraps && duration > 0 && typeof cell.animate === 'function';
+        if (animated) {
+          cell.style.transition = `transform 0s ${duration / 2}ms, opacity 0s`;
+        } else {
+          cell.style.transition = reducedMotion || wraps ? 'none' : '';
+        }
+
+        const fromOpacity = cell.style.opacity || '1';
+        cell.style.opacity = at.dist > maxDist ? '0' : '1';
+        cell.style.zIndex = String(100 - at.dist);
+        cell.style.transform =
+          `translateX(${at.x}px) ` +
+          `translateZ(${at.z}px) ` +
+          `rotateY(${at.ry}deg) ` +
+          `scale(${at.scale})`;
+
+        if (animated) {
+          cell.animate(
+            [
+              { opacity: fromOpacity },
+              { opacity: 0, offset: 0.5 },
+              { opacity: cell.style.opacity },
+            ],
+            { duration, easing: 'ease-in-out' },
+          );
+        }
+      });
+
+      this._items.style.transition = '';
+      this._items.style.transform = '';
+    }
+
     _updateNavVisibility() {
       if (!this._features.showNavigationArrows) {
         return;
       }
+      // Read BEFORE any arrow is hidden. Chrome drops focus from an element
+      // the moment it becomes `visibility: hidden`, so reading it after the
+      // toggle below already returns <body> (measured 2026-09-25).
+      const focused = document.activeElement;
+
+      // The ring ping-pongs and hides the arrow at each end. The coverflow
+      // wraps, so both arrows always do something and are never hidden,
+      // unless there is only one card and neither can do anything.
+      const looping = this._style === 'coverflow' && this._cellCount > 1;
       if (this._prevButton) {
-        const atStart = this._currentIndex === 0;
+        const atStart = !looping && this._currentIndex === 0;
         this._prevButton.classList.toggle('vvjc-hidden', atStart);
         this._prevButton.setAttribute('tabindex', atStart ? '-1' : '0');
       }
       if (this._nextButton) {
-        const atEnd = this._currentIndex === this._cellCount - 1;
+        const atEnd = !looping && this._currentIndex === this._cellCount - 1;
         this._nextButton.classList.toggle('vvjc-hidden', atEnd);
         this._nextButton.setAttribute('tabindex', atEnd ? '-1' : '0');
+      }
+
+      // Never hide the control that holds focus without moving it. A hidden
+      // arrow is `visibility: hidden`, which cannot keep focus, so a keyboard
+      // user reaching the last slide was dropped to the top of the page.
+      if (
+        focused === this._nextButton &&
+        this._nextButton?.classList.contains('vvjc-hidden')
+      ) {
+        this._prevButton?.focus();
+      } else if (
+        focused === this._prevButton &&
+        this._prevButton?.classList.contains('vvjc-hidden')
+      ) {
+        this._nextButton?.focus();
       }
     }
 
@@ -309,7 +585,23 @@
     // Navigation primitives.
     // -----------------------------------------------------------------
 
-    _advanceSlide() {
+    _advanceSlide(step) {
+      // One slide has nowhere to go. Without this the ring's ping-pong sets
+      // the index to cellCount - 2 = -1 and every card loses `active`.
+      if (this._cellCount <= 1) {
+        return;
+      }
+
+      if (this._style === 'coverflow') {
+        // The fan wraps. Autoplay passes no step and always moves forward;
+        // a Prev click passes -1 and moves back once.
+        const by = step ?? 1;
+        this._currentIndex =
+          (this._currentIndex + by + this._cellCount) % this._cellCount;
+        this._updateSlide();
+        return;
+      }
+
       this._currentIndex += this._direction;
       if (this._currentIndex >= this._cellCount) {
         this._currentIndex = this._cellCount - 2;
@@ -322,6 +614,13 @@
     }
 
     _manualAdvance(direction) {
+      if (this._style === 'coverflow') {
+        // A step, not a heading: the ring's _direction would leave autoplay
+        // running backwards after one Prev click.
+        this._advanceSlide(direction);
+        this._restartAutoPlay();
+        return;
+      }
       this._direction = direction;
       this._advanceSlide();
       this._restartAutoPlay();

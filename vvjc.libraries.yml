@@ -53,3 +53,10 @@ vvjc__1400:
   css:
     theme:
       css/vvjc-1400.css: { weight: 202 }
+
+vvjc-coverflow:
+  css:
+    theme:
+      css/vvjc-coverflow.css: { weight: 201 }
+  dependencies:
+    - vvjc/vvjc

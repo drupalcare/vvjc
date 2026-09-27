@@ -11,6 +11,7 @@
  *   - small_screen_height: Height of the carousel for small screens.
  *   - available_breakpoints: Breakpoints for the carousel.
  *   - perspective: Perspective value for the carousel.
+ *   - carousel_style: 'ring' (default) or 'coverflow'.
  *   - show_navigation_arrows: Display navigation arrows.
  *   - show_play_pause: Display play/pause button.
  *   - show_slide_counter: Display slide counter.
@@ -38,6 +39,7 @@
 {% set height_small = options.small_screen_height ?? 350 %}
 {% set max_width = options.max_width ?? 600 %}
 {% set breakpoint = options.available_breakpoints ?? 992 %}
+{%- set geometry = options.carousel_style|default('ring') == 'coverflow' ? 'coverflow' : 'ring' %}
 
 {% set show_navigation_arrows = options.show_navigation_arrows ?? true %}
 {% set show_play_pause = options.show_play_pause ?? true %}
@@ -66,6 +68,7 @@
   'vvjc',
   'vvjc-' ~ unique_id,
   'br-' ~ breakpoint,
+  geometry == 'coverflow' ? 'vvjc--coverflow',
 ] %}
 
 {# Build inline styles with CSS custom properties #}
@@ -97,7 +100,7 @@
       {% if deeplink_config.enabled and deeplink_config.identifier and show_dots_navigation %}
       data-deeplink-enabled="true"
       data-deeplink-id="{{ deeplink_config.identifier }}"
-      {% endif %}>
+      {% endif %}{% if geometry == 'coverflow' %} data-vvjc-style="coverflow"{% endif %}>
       {% for row in rows %}
         {% set row_id = 'item-' ~ unique_id ~ '-' ~ loop.index %}
         <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="tabpanel" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="{{ loop.first ? '0' : '-1' }}" aria-labelledby="label-{{ row_id }}" {% if background_rgb and not options.disable_background %} style="background-color:{{ background_rgb }}"{% endif %}>
