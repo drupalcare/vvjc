@@ -16,7 +16,7 @@
     "require": {
         "php": ">=8.3",
         "drupal/core": "^11.3 || ^12",
-        "drupal/vvj_core": "^2.0"
+        "drupal/vvj_core": "^2.0.1"
     },
     "support": {
         "issues": "https://drupal.org/project/issues/vvjc",
