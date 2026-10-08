@@ -119,14 +119,14 @@
     <div class="vvjc-nav-inner">
 
       {% if show_navigation_arrows %}
-        <button id="prev-{{ unique_id }}" role="button" class="button prev-arrow" aria-controls="{{ carousel_id }}" aria-label="{{ 'Previous Slide'|t }}">
+        <button id="prev-{{ unique_id }}" role="button" class="button prev-arrow control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'Previous Slide'|t }}">
           <span class="visually-hidden">{{ 'Previous Slide'|t }}</span>
           {{ include('@vvjc/svg/svg-prev.svg') }}
         </button>
       {% endif %}
 
       {% if show_play_pause and time_in_seconds > 0 %}
-        <button id="btn-{{ unique_id }}" class="button display-{{ time_in_seconds }}{% if time_in_seconds > 0 %} pause{% else %} play{% endif %}" aria-controls="{{ carousel_id }}" aria-pressed="{{ time_in_seconds > 0 ? 'true' : 'false' }}" aria-label="{{ time_in_seconds > 0 ? 'Pause Slideshow' : 'Play Slideshow' }}">
+        <button id="btn-{{ unique_id }}" class="button display-{{ time_in_seconds }}{% if time_in_seconds > 0 %} pause{% else %} play{% endif %} control-btn" aria-controls="{{ carousel_id }}" aria-pressed="{{ time_in_seconds > 0 ? 'true' : 'false' }}" aria-label="{{ time_in_seconds > 0 ? 'Pause Slideshow' : 'Play Slideshow' }}">
           <span class="visually-hidden">{{ 'Play Pause 3D Carousel'|t }}</span>
           {{ include('@vvjc/svg/svg-pause.svg') }}
         </button>
@@ -156,7 +156,7 @@
               {# Deep linking enabled - use anchor links #}
               {% set slide_link = '#carousel3d-' ~ deeplink_config.identifier ~ '-' ~ loop.index %}
               <a href="{{ slide_link }}"
-                 class="dots-numbers-button{{ loop.first ? ' active' : '' }}"
+                 class="dots-numbers-button{{ loop.first ? ' active' : '' }} control-btn"
                  role="tab"
                  aria-selected="{{ loop.first ? 'true' : 'false' }}"
                  aria-controls="item-{{ unique_id }}-{{ loop.index }}"
@@ -166,7 +166,7 @@
               </a>
             {% else %}
               {# Default buttons #}
-              <button class="dots-numbers-button{{ loop.first ? ' active' : '' }}" role="tab" aria-selected="{{ loop.first ? 'true' : 'false' }}" aria-controls="item-{{ unique_id }}-{{ loop.index }}" aria-label="{{ 'Go to slide @index'|t({'@index': loop.index}) }}" tabindex="{{ loop.first ? '0' : '-1' }}">
+              <button class="dots-numbers-button{{ loop.first ? ' active' : '' }} control-btn" role="tab" aria-selected="{{ loop.first ? 'true' : 'false' }}" aria-controls="item-{{ unique_id }}-{{ loop.index }}" aria-label="{{ 'Go to slide @index'|t({'@index': loop.index}) }}" tabindex="{{ loop.first ? '0' : '-1' }}">
                 <span class="visually-hidden">{{ 'Slide @index'|t({'@index': loop.index}) }}</span>
               </button>
             {% endif %}
@@ -175,7 +175,7 @@
       {% endif %}
 
       {% if show_navigation_arrows %}
-        <button id="next-{{ unique_id }}" role="button" class="button next-arrow" aria-controls="{{ carousel_id }}" aria-label="{{ 'Next Slide'|t }}">
+        <button id="next-{{ unique_id }}" role="button" class="button next-arrow control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'Next Slide'|t }}">
           <span class="visually-hidden">{{ 'Next Slide'|t }}</span>
           {{ include('@vvjc/svg/svg-next.svg') }}
         </button>
