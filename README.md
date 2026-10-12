@@ -19,19 +19,19 @@ Behavior runs in a `<vvjc-carousel>` custom element extending `VvjElementBase`.
 - Configurable CSS `perspective` (or auto-computed)
 - Background color + adjustable opacity, or fully disabled
 - 5 responsive breakpoints (576 / 768 / 992 / 1200 / 1400 px)
-- Navigation arrows, play/pause button, slide counter, progress bar, dots — all
+- Navigation arrows, play/pause button, slide counter, progress bar, dots, all
   independently togglable
 - Scrollable dots variant for large slide counts
 - Touch / swipe gestures (RTL-aware)
-- Keyboard nav: ArrowLeft/Right, Space (play/pause), Home, End — RTL-aware
+- Keyboard nav: ArrowLeft/Right, Space (play/pause), Home, End, RTL-aware
 - Screen-reader announcements via ARIA live region
-- `prefers-reduced-motion` honored — auto-rotation pauses, transitions disabled
+- `prefers-reduced-motion` honored: auto-rotation pauses, transitions disabled
 - IntersectionObserver-driven pause when out of viewport
-- Deep linking — shareable URL fragments per slide (`#carousel3d-gallery-3`)
+- Deep linking: shareable URL fragments per slide (`#carousel3d-gallery-3`)
 - Lazy IntersectionObserver hydration; AbortController-tracked listeners
-- **Views tokens** — `[vvjc:field]` / `[vvjc:field:plain]` in Views text areas
+- **Views tokens**: `[vvjc:field]` / `[vvjc:field:plain]` in Views text areas
   with *Use replacement tokens from the first row*
-- **Drupal admin help** — `/admin/help/vvjc`
+- **Drupal admin help**: `/admin/help/vvjc`
 
 ## Token Support in Views Text Areas
 
@@ -124,10 +124,10 @@ export SIMPLETEST_DB="mysql://user:pass@localhost/dbname"
 ../vendor/bin/phpunit -c core modules/contrib/vvjc/tests/src/Kernel
 ```
 
-The **Functional** and **FunctionalJavascript** suites additionally need
+The **Functional** and **FunctionalJavascript** suites also need
 `SIMPLETEST_BASE_URL` pointing at a running web server, and the JavaScript ones
 need chromedriver. Without those they error rather than fail, and the errors
-name missing infrastructure rather than anything about this module — so don't
+name missing infrastructure rather than anything about this module, so don't
 read them as test failures. The drupal.org pipeline provides both.
 
 ## License

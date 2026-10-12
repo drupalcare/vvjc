@@ -1,11 +1,11 @@
 # Changelog
 
-## [2.0.0] — UNRELEASED
+## [2.0.0] (UNRELEASED)
 
-**Drop-in upgrade for 1.x sites.** v2 modernizes internals — extends `vvj_core`
+**Drop-in upgrade for 1.x sites.** v2 modernizes internals: extends `vvj_core`
 foundation, ships `<vvjc-carousel>` custom element extending `VvjElementBase`,
 AbortController-tracked listeners, IntersectionObserver-driven pause-when-out-
-of-viewport — while preserving every CSS rule, library name (incl. all 5
+of-viewport, while preserving every CSS rule, library name (incl. all 5
 breakpoint libraries + admin), option key, plugin ID, theme hook, JS behavior
 key, and the full Drupal.vvjc.* public API surface from 1.x.
 
@@ -23,15 +23,15 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
   reduced-motion rule. It now moves without animation, like the slides.
 
 - Restored v1's support for **any** Views row plugin (Fields *or* Content/entity
-  rows). The shared base defaulted to requiring Fields — force-switching the row
-  plugin on edit and blocking validation — which broke non-Fields carousels
+  rows). The shared base defaulted to requiring Fields: force-switching the row
+  plugin on edit and blocking validation, which broke non-Fields carousels
   including the shipped `vvjc_example` (`entity:node` teaser rows). vvjc now
   opts out (`requiresFieldsRow()` → FALSE), matching v1.
 - Restored v1's performance guidance in the Views options form (recommend
-  limiting to ~30 items) — the shared base showed a generic "requires Fields as
+  limiting to ~30 items). The shared base showed a generic "requires Fields as
   row style" note instead.
 - Deep-link "URL Identifier" field show/hide + required toggle now works (fixed
-  in the `vvj_core` base — the toggle attributes are slug-derived).
+  in the `vvj_core` base. The toggle attributes are slug-derived).
 
 ### Added
 
