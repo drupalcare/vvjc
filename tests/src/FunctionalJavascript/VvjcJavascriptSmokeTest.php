@@ -50,13 +50,14 @@ final class VvjcJavascriptSmokeTest extends VvjPatternJavascriptTestBase {
   }
 
   /**
-   * Keyboard focus is not dropped when the ring hides its last arrow.
+   * The ring disables, never hides, the arrow at an end, and keeps focus on it.
    *
-   * The arrow at an end becomes `visibility: hidden`, which cannot keep
-   * focus; before the fix a keyboard user reaching the last slide landed on
-   * <body>. A real WebDriver click gives the button focus, as Enter would.
+   * A hidden arrow could not keep focus, so a keyboard user reaching the last
+   * slide landed on <body>, and hiding it shifted the other controls. A real
+   * WebDriver click gives the button focus, as Enter would. A click on the
+   * disabled arrow does nothing.
    */
-  public function testRingMovesFocusOffTheHiddenArrow(): void {
+  public function testRingDisablesTheArrowAtTheEnd(): void {
     $this->setExampleStyleOptions(['time_in_seconds' => '0']);
     $this->drupalGet('<front>');
     $this->waitForCarousel();
@@ -68,8 +69,11 @@ final class VvjcJavascriptSmokeTest extends VvjPatternJavascriptTestBase {
     $next->click();
 
     $this->assertJsCondition("document.querySelector('vvjc-carousel').getCurrentSlide() === 3");
-    $this->assertJsCondition("document.querySelector('vvjc-carousel .next-arrow').classList.contains('vvjc-hidden')");
-    $this->assertJsCondition("document.activeElement === document.querySelector('vvjc-carousel .prev-arrow')");
+    $this->assertJsCondition("document.querySelector('vvjc-carousel .next-arrow').classList.contains('vvjc-disabled')");
+    $this->assertJsCondition("document.querySelector('vvjc-carousel .next-arrow').getAttribute('aria-disabled') === 'true'");
+    $this->assertJsCondition("document.activeElement === document.querySelector('vvjc-carousel .next-arrow')");
+    $next->click();
+    $this->assertJsCondition("document.querySelector('vvjc-carousel').getCurrentSlide() === 3");
   }
 
   /**
@@ -106,21 +110,21 @@ final class VvjcJavascriptSmokeTest extends VvjPatternJavascriptTestBase {
     $prev->click();
 
     $this->assertJsCondition("document.querySelector('vvjc-carousel').getCurrentSlide() === 3");
-    $this->assertJsCondition("!document.querySelector('vvjc-carousel .prev-arrow').classList.contains('vvjc-hidden')");
-    $this->assertJsCondition("!document.querySelector('vvjc-carousel .next-arrow').classList.contains('vvjc-hidden')");
+    $this->assertJsCondition("!document.querySelector('vvjc-carousel .prev-arrow').classList.contains('vvjc-disabled')");
+    $this->assertJsCondition("!document.querySelector('vvjc-carousel .next-arrow').classList.contains('vvjc-disabled')");
   }
 
   /**
-   * A one-card coverflow hides both arrows, since neither can do anything.
+   * A one-card coverflow disables both arrows, since neither can do anything.
    */
-  public function testOneCardCoverflowHidesBothArrows(): void {
+  public function testOneCardCoverflowDisablesBothArrows(): void {
     $this->keepOnlyOneNode();
     $this->setExampleStyleOptions(['time_in_seconds' => '0', 'carousel_style' => 'coverflow']);
     $this->drupalGet('<front>');
     $this->waitForCarousel();
 
-    $this->assertJsCondition("document.querySelector('vvjc-carousel .prev-arrow').classList.contains('vvjc-hidden')");
-    $this->assertJsCondition("document.querySelector('vvjc-carousel .next-arrow').classList.contains('vvjc-hidden')");
+    $this->assertJsCondition("document.querySelector('vvjc-carousel .prev-arrow').getAttribute('aria-disabled') === 'true'");
+    $this->assertJsCondition("document.querySelector('vvjc-carousel .next-arrow').getAttribute('aria-disabled') === 'true'");
   }
 
   /**

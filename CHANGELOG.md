@@ -11,11 +11,18 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 
 ### Fixed
 
+- **The arrows no longer disappear at the ends.** On the ring, which does
+  not loop, the previous arrow on the first card and the next arrow on the
+  last card were hidden, which left a gap and shifted the controls beside
+  them. They now stay in place, dimmed and marked `aria-disabled="true"`, and
+  a click on them does nothing. An arrow key or a swipe past an end does
+  nothing either; before, it bounced the ring back the other way. Keyboard
+  focus stays on an arrow that becomes disabled (it used to drop to the top
+  of the page). Autoplay still reverses at the ends. The `vvjc-hidden` class is replaced by `vvjc-disabled`; a theme
+  that styled `vvjc-hidden` should style `vvjc-disabled` instead. The
+  coverflow, which loops, is unchanged.
 - Update 10002 converts v1 views to the v2 option shape (value types:
   strings and integers stored where v2 declares integer, boolean and float).
-- Reaching the first or last slide with the keyboard hid the arrow that had
-  focus and dropped the user to the top of the page. Focus now moves to the
-  opposite arrow.
 - A one-slide view with autoplay set the slide index to -1 and left no slide
   active.
 - Under the operating system's reduced-motion setting the ring's drum still

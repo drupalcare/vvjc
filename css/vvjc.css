@@ -190,19 +190,17 @@
   opacity: 1;
 }
 
-.vvjc .vvjc-nav-inner .button.prev-arrow.vvjc-hidden,
-.vvjc .vvjc-nav-inner .button.next-arrow.vvjc-hidden {
-  visibility: hidden;
-  pointer-events: none;
-  opacity: 0;
+/* At an end of a carousel that does not loop, the arrow stays in place, dimmed and inactive (aria-disabled). */
+.vvjc .vvjc-nav-inner .button.vvjc-disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
-.vvjc .vvjc-nav-inner .button.prev-arrow.vvjc-hidden {
-  transform: translateX(-20px);
-}
-
-.vvjc .vvjc-nav-inner .button.next-arrow.vvjc-hidden {
-  transform: translateX(20px);
+.vvjc .vvjc-nav-inner .button.vvjc-disabled:hover,
+.vvjc .vvjc-nav-inner .button.vvjc-disabled:active {
+  transform: none;
+  border-color: rgb(255, 255, 255, 0.8);
+  background: rgb(0, 0, 0, 0.6);
 }
 
 /* ==========================================================================

@@ -545,39 +545,28 @@
       if (!this._features.showNavigationArrows) {
         return;
       }
-      // Read BEFORE any arrow is hidden. Chrome drops focus from an element
-      // the moment it becomes `visibility: hidden`, so reading it after the
-      // toggle below already returns <body> (measured 2026-09-25).
-      const focused = document.activeElement;
-
-      // The ring ping-pongs and hides the arrow at each end. The coverflow
-      // wraps, so both arrows always do something and are never hidden,
-      // unless there is only one card and neither can do anything.
+      // The ring ping-pongs and stops at each end. The coverflow wraps, so
+      // both arrows always do something, unless there is only one card and
+      // neither can do anything. An arrow at an end stays in place but is
+      // disabled, so the controls never shift. aria-disabled (not the
+      // disabled attribute) keeps a focused arrow focused when the last click
+      // brings it to the end.
       const looping = this._style === 'coverflow' && this._cellCount > 1;
-      if (this._prevButton) {
-        const atStart = !looping && this._currentIndex === 0;
-        this._prevButton.classList.toggle('vvjc-hidden', atStart);
-        this._prevButton.setAttribute('tabindex', atStart ? '-1' : '0');
-      }
-      if (this._nextButton) {
-        const atEnd = !looping && this._currentIndex === this._cellCount - 1;
-        this._nextButton.classList.toggle('vvjc-hidden', atEnd);
-        this._nextButton.setAttribute('tabindex', atEnd ? '-1' : '0');
-      }
+      const atStart = !looping && this._currentIndex === 0;
+      const atEnd = !looping && this._currentIndex === this._cellCount - 1;
+      this._setArrowDisabled(this._prevButton, atStart);
+      this._setArrowDisabled(this._nextButton, atEnd);
+    }
 
-      // Never hide the control that holds focus without moving it. A hidden
-      // arrow is `visibility: hidden`, which cannot keep focus, so a keyboard
-      // user reaching the last slide was dropped to the top of the page.
-      if (
-        focused === this._nextButton &&
-        this._nextButton?.classList.contains('vvjc-hidden')
-      ) {
-        this._prevButton?.focus();
-      } else if (
-        focused === this._prevButton &&
-        this._prevButton?.classList.contains('vvjc-hidden')
-      ) {
-        this._nextButton?.focus();
+    _setArrowDisabled(button, disabled) {
+      if (!button) {
+        return;
+      }
+      button.classList.toggle('vvjc-disabled', disabled);
+      if (disabled) {
+        button.setAttribute('aria-disabled', 'true');
+      } else {
+        button.removeAttribute('aria-disabled');
       }
     }
 
@@ -621,6 +610,15 @@
         this._restartAutoPlay();
         return;
       }
+      // The ring stops at its ends for the visitor: an arrow, key or swipe
+      // past an end does nothing, as its disabled arrow says. Only autoplay
+      // bounces back from an end.
+      if (
+        (direction > 0 && this._currentIndex === this._cellCount - 1) ||
+        (direction < 0 && this._currentIndex === 0)
+      ) {
+        return;
+      }
       this._direction = direction;
       this._advanceSlide();
       this._restartAutoPlay();
@@ -647,12 +645,22 @@
       if (this._features.showNavigationArrows) {
         this._nextButton?.addEventListener(
           'click',
-          () => this._manualAdvance(1),
+          () => {
+            if (this._nextButton.getAttribute('aria-disabled') === 'true') {
+              return;
+            }
+            this._manualAdvance(1);
+          },
           { signal: this.signal },
         );
         this._prevButton?.addEventListener(
           'click',
-          () => this._manualAdvance(-1),
+          () => {
+            if (this._prevButton.getAttribute('aria-disabled') === 'true') {
+              return;
+            }
+            this._manualAdvance(-1);
+          },
           { signal: this.signal },
         );
       }
