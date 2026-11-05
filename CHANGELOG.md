@@ -52,6 +52,7 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 
 ### Added
 
+- **Patterns**: 5 ready-made designs for this format (Story reel, Orbit dock, Index split, Thumb rail, Ambient stage). Pick one in the "Patterns" section of the format settings and its layout, animation, styling and deep linking settings are applied to the view. Needs the `vvj_patterns` module from `vvj_core`; the optional `vvj_patterns_demo` module adds example views.
 - **Carousel Style** option (Format settings → Dimensions): *Rotating ring*
   (default, unchanged) or *Coverflow*, an open fan with the current card in
   front that wraps at the ends. Existing views keep the ring; their markup is
