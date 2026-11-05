@@ -6,24 +6,24 @@
  * setting (DECISIONS.md NEW 4), which is not built yet.
  */
 
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split { max-width: 1160px; margin: 0 auto; padding: clamp(28px, 5vw, 72px) 20px; grid-template-columns: minmax(240px, 380px) minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; grid-template-areas: "count stage" "dots stage" "arrows stage" ". stage"; align-items: center; column-gap: clamp(32px, 7vw, 110px); row-gap: 20px; opacity: 1; animation: none; }
+.vvj-pattern--vvjc-index-split { max-width: 1160px; margin: 0 auto; padding: clamp(28px, 5vw, 72px) 20px; grid-template-columns: minmax(240px, 380px) minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; grid-template-areas: "count stage" "dots stage" "arrows stage" ". stage"; align-items: center; column-gap: clamp(32px, 7vw, 110px); row-gap: 20px; opacity: 1; animation: none; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav,
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner { display: contents; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split > .vvjc-inner { grid-area: stage; }
+:where(.vvj-pattern--vvjc-index-split) > .vvjc-inner { grid-area: stage; }
 
 /* Text cards: image on top, words below on the page ground. */
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-items > .vvjc-item { display: flex; flex-direction: column; gap: 8px; padding: 0 0 22px; color: var(--vvj-ink); border: 1px solid var(--vvj-line); border-radius: 20px; background: var(--vvj-surface); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-items > .vvjc-item:not(.active) { opacity: 0.22; }
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-items) > .vvjc-item:not(.active) { opacity: 0.22; }
 /* A faded card shows its picture only: its words would be unreadable. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item:not(.active) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) { visibility: hidden; }
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item:not(.active)) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) { visibility: hidden; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media { position: relative; flex: 1 1 0; min-height: 96px; margin: 0 0 12px; background: var(--vvj-raised); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media::after { content: none; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media img { clip-path: inset(0 100% 0 0); transition: clip-path 1s var(--vvj-ease-io) 0.35s; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item.active .vvj-media img { clip-path: inset(0); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) { padding: 0 22px; }
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item) :where(.vvj-media) img { clip-path: inset(0 100% 0 0); transition: clip-path 1s var(--vvj-ease-io) 0.35s; }
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item.active) :where(.vvj-media) img { clip-path: inset(0); }
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) { padding: 0 22px; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-kicker { color: var(--vvj-muted); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-title { font: 600 1.75rem/1.1 var(--vvj-font-display); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-summary { color: var(--vvj-muted); font-size: 0.9375rem; line-height: 1.5; }
+.vvj-pattern--vvjc-index-split :where(.vvjc-item) .vvj-summary { color: var(--vvj-muted); font-size: 0.9375rem; line-height: 1.5; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link { margin: auto 0 0; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link a::after { content: ""; width: 16px; height: 16px; background: currentColor; -webkit-mask: var(--vvjc-icon-next) center / contain no-repeat; mask: var(--vvjc-icon-next) center / contain no-repeat; transition: transform 0.25s var(--vvj-ease-out); }
@@ -44,15 +44,15 @@
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active::after { transform: scaleX(1); }
 
 /* Square arrows, side by side in one cell. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner :is(.prev-arrow, .next-arrow) { grid-area: arrows; justify-self: start; width: 52px; height: 52px; color: var(--vvj-ink); border: 1.5px solid var(--vvj-ink); border-radius: 4px; font-size: 18px; transition: background-color 0.2s, color 0.2s, transform 0.1s; }
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) { grid-area: arrows; justify-self: start; width: 52px; height: 52px; color: var(--vvj-ink); border: 1.5px solid var(--vvj-ink); border-radius: 4px; font-size: 18px; transition: background-color 0.2s, color 0.2s, transform 0.1s; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .next-arrow { margin: 0 0 0 64px; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvj-surface); background: var(--vvj-ink); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner :is(.prev-arrow, .next-arrow)::before { transition: transform 0.25s var(--vvj-ease-out); }
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow)::before { transition: transform 0.25s var(--vvj-ease-out); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .next-arrow:not(.vvjc-disabled):hover::before { transform: translateX(3px); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .prev-arrow:not(.vvjc-disabled):hover::before { transform: translateX(-3px); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .control-btn:active { transform: translateY(1px); }
 
 @media (max-width: 767.98px) {
-  .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "stage" "count" "arrows" "dots"; }
+  .vvj-pattern--vvjc-index-split { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "stage" "count" "arrows" "dots"; }
   .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .echo-total .current-slide { font-size: 56px; }
 }

@@ -8,7 +8,7 @@
  */
 @media (max-width: 35.99875rem) {
   .vvjc.br-576 > .vvjc-inner,
-  .vvjc.br-576 > .vvjc-inner > .vvjc-items {
+  :where(.vvjc.br-576) > :where(.vvjc-inner) > .vvjc-items {
     height: calc(var(--height-small) * 0.0625rem);
   }
 
@@ -16,7 +16,7 @@
     height: calc((var(--height-small) - 16) * 0.0625rem);
   }
 
-  .vvjc.br-576 > .vvjc-inner {
+  :where(.vvjc.br-576) > .vvjc-inner {
     overflow: hidden;
   }
 

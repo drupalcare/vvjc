@@ -43,6 +43,11 @@ vendor/bin/phpstan analyse -c web/modules/contrib/vvjc/phpstan.neon
 PHPStan reads `phpstan.neon` (level `max`). Findings are fixed, not suppressed with a generated baseline. How to run
 the PHPUnit suites is in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+## CSS checks
+
+The cascade checker is `vvj_core/scripts/check-vvj-cascade.py` (one copy; run `python3 -I` on it from the lane root, `--list` prints each change). Its CI job `vvj-cascade` runs in vvj_core's pipeline, not in this repo's.
+`.stylelintrc.json` reports id selectors, `!important` and selectors above 0,2,0 as warnings only; the drupal.org template's stylelint job never fails the pipeline (needs checking), so the cascade checker is the gate.
+
 ## What must not change
 
 - Plugin ID `views_vvjc`, the theme hook, Twig template names, library names, option keys, the CSS classes on the

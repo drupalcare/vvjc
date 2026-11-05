@@ -6,18 +6,18 @@
  * setting (DECISIONS.md NEW 5), which is not built yet.
  */
 
-.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail { --vvjc-stage-h: calc(var(--height-large) * 0.0625rem); position: relative; overflow-x: clip; padding: clamp(20px, 3vw, 40px) 12px; opacity: 1; animation: vvjc-thumb-rail-in 0.9s var(--vvj-ease-out) both; }
+.vvj-pattern--vvjc-thumb-rail { --vvjc-stage-h: calc(var(--height-large) * 0.0625rem); position: relative; overflow-x: clip; padding: clamp(20px, 3vw, 40px) 12px; opacity: 1; animation: vvjc-thumb-rail-in 0.9s var(--vvj-ease-out) both; }
 @keyframes vvjc-thumb-rail-in { from { opacity: 0; filter: blur(8px); } }
 
 /* Wide cards with a caption bar that slides up. */
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-items > .vvjc-item { --vvjc-cw: min(760px, calc(100% - 24px)); inset: 8px auto auto calc(50% - var(--vvjc-cw) / 2); width: var(--vvjc-cw); display: flex; align-items: flex-end; border-radius: 28px; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-media::after { content: none; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-media img { transition: filter 0.6s; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item:not(.active) .vvj-media img { filter: grayscale(0.6) brightness(0.8); }
+:where(.vvj-pattern--vvjc-thumb-rail) :where(.vvjc-item) :where(.vvj-media) img { transition: filter 0.6s; }
+:where(.vvj-pattern--vvjc-thumb-rail) :where(.vvjc-item:not(.active)) :where(.vvj-media) img { filter: grayscale(0.6) brightness(0.8); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item::after { content: ""; position: absolute; inset: auto 0 0; height: 88px; background: linear-gradient(var(--vvj-glass-bg) 0 0), rgb(0 0 0 / 0.6); transform: translateY(100%); transition: transform 0.5s var(--vvj-ease-out) 0.15s; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item.active::after { transform: none; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item :is(.vvj-kicker, .vvj-title) { z-index: 1; display: flex; align-items: center; min-height: 88px; opacity: 0; transition: opacity 0.35s 0.65s; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item.active :is(.vvj-kicker, .vvj-title) { opacity: 1; }
+:where(.vvj-pattern--vvjc-thumb-rail) :where(.vvjc-item) :is(.vvj-kicker, .vvj-title) { z-index: 1; display: flex; align-items: center; min-height: 88px; opacity: 0; transition: opacity 0.35s 0.65s; }
+:where(.vvj-pattern--vvjc-thumb-rail) :where(.vvjc-item.active) :is(.vvj-kicker, .vvj-title) { opacity: 1; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-kicker { flex: none; padding: 0 18px 0 30px; color: var(--vvj-stage-muted); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-title { min-width: 0; padding: 0 30px 0 0; font: 600 clamp(1.25rem, 2.4vw, 1.875rem)/1.15 var(--vvj-font-ui); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-title a { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; }
@@ -36,9 +36,9 @@
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .control-btn[id^="btn-"]:hover { border-color: var(--vvj-ink); }
 
 /* Round glass arrows over the stage, the counter pill top right. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner :is(.prev-arrow, .next-arrow) { --vvjc-arrow-top: calc(clamp(20px, 3vw, 40px) + var(--vvjc-stage-h) / 2 - 30px); position: absolute; z-index: 120; width: 60px; height: 60px; color: var(--vvj-stage-color); border: 1px solid var(--vvj-glass-line); background: var(--vvj-glass-bg); box-shadow: var(--vvj-glass-shadow); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); overflow: hidden; font-size: 16px; transition: transform 0.2s, background-color 0.2s, color 0.2s; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .prev-arrow { inset: var(--vvjc-arrow-top) auto auto max(4px, calc(50% - 400px)); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .next-arrow { inset: var(--vvjc-arrow-top) max(4px, calc(50% - 400px)) auto auto; }
+:where(.vvj-pattern--vvjc-thumb-rail) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) { --vvjc-arrow-top: calc(clamp(20px, 3vw, 40px) + var(--vvjc-stage-h) / 2 - 30px); position: absolute; z-index: 120; width: 60px; height: 60px; color: var(--vvj-stage-color); border: 1px solid var(--vvj-glass-line); background: var(--vvj-glass-bg); box-shadow: var(--vvj-glass-shadow); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); overflow: hidden; font-size: 16px; transition: transform 0.2s, background-color 0.2s, color 0.2s; }
+.vvj-pattern--vvjc-thumb-rail :where(.vvjc-nav-inner) .prev-arrow { inset: var(--vvjc-arrow-top) auto auto max(4px, calc(50% - 400px)); }
+.vvj-pattern--vvjc-thumb-rail :where(.vvjc-nav-inner) .next-arrow { inset: var(--vvjc-arrow-top) max(4px, calc(50% - 400px)) auto auto; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvj-stage-bg); background: var(--vvj-stage-color); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .next-arrow:hover::before { animation: vvjc-thumb-rail-r 0.5s var(--vvj-ease-out); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .prev-arrow:hover::before { animation: vvjc-thumb-rail-l 0.5s var(--vvj-ease-out); }
@@ -48,6 +48,6 @@
 .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .echo-total { position: absolute; z-index: 120; inset: calc(clamp(20px, 3vw, 40px) + 18px) max(12px, calc(50% - 380px)) auto auto; padding: 6px 14px; color: var(--vvj-stage-color); border-radius: 999px; background: var(--vvj-glass-bg); font-size: 0.875rem; font-weight: 600; }
 
 @media (max-width: 767.98px) {
-  .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail { --vvjc-stage-h: calc(var(--height-small) * 0.0625rem); }
-  .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner :is(.prev-arrow, .next-arrow) { --vvjc-arrow-top: calc(clamp(20px, 3vw, 40px) + var(--vvjc-stage-h) / 2 - 24px); width: 48px; height: 48px; }
+  .vvj-pattern--vvjc-thumb-rail { --vvjc-stage-h: calc(var(--height-small) * 0.0625rem); }
+  :where(.vvj-pattern--vvjc-thumb-rail) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) { --vvjc-arrow-top: calc(clamp(20px, 3vw, 40px) + var(--vvjc-stage-h) / 2 - 24px); width: 48px; height: 48px; }
 }

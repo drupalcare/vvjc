@@ -12,12 +12,12 @@
  */
 
 /* The deck never rotates in a coverflow; the cards move. */
-.vvjc.vvjc--coverflow .vvjc-items {
+:where(.vvjc.vvjc--coverflow) .vvjc-items {
   transition: none;
 }
 
 /* Cards turn and scale about their own centre, which the script assumes. */
-.vvjc.vvjc--coverflow .vvjc-items > .vvjc-item {
+:where(.vvjc.vvjc--coverflow) :where(.vvjc-items) > .vvjc-item {
   transform-origin: center center;
 }
 
@@ -26,7 +26,7 @@
    which is right for a drum and wrong for a fan. Cards that are off screen
    are `inert`, so they stay unreachable. */
 .vvjc.vvjc--coverflow .vvjc-item:not([inert]) a,
-.vvjc.vvjc--coverflow .vvjc-item:not([inert]) button {
+:where(.vvjc.vvjc--coverflow) :where(.vvjc-item:not([inert])) button {
   cursor: pointer;
   pointer-events: auto;
 }

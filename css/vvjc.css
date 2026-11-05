@@ -34,13 +34,13 @@
 }
 
 .vvj-carousel,
-.vvj-carousel * {
+:where(.vvj-carousel) * {
   box-sizing: border-box;
 }
 
 .vvj-carousel,
 .vvj-carousel .view-content {
-  display: block !important;
+  display: block;
   width: 100%;
   min-width: 100%;
 }
@@ -104,7 +104,7 @@
 /* ==========================================================================
  3D Items Container
  ========================================================================== */
-.vvjc .vvjc-items {
+:where(.vvjc) .vvjc-items {
   width: 100%;
   height: 100%; /* Inherits from parent */
   margin: 0 auto;
@@ -143,12 +143,12 @@
 /* ==========================================================================
  Navigation Controls
  ========================================================================== */
-.vvjc .vvjc-nav {
+:where(.vvjc) .vvjc-nav {
   width: 100%;
   min-height: 3rem;
 }
 
-.vvjc .vvjc-nav .display-0 {
+:where(.vvjc) :where(.vvjc-nav) .display-0 {
   display: none;
 }
 
@@ -224,14 +224,14 @@
 /* ==========================================================================
  Pointer Events & Interaction
  ========================================================================== */
-.vvjc .vvjc-item,
-.vvjc .vvjc-item:not(.active) * {
+:where(.vvjc) .vvjc-item,
+:where(.vvjc) :where(.vvjc-item:not(.active)) * {
   cursor: default;
   pointer-events: none;
 }
 
 .vvjc .vvjc-item.active a,
-.vvjc .vvjc-item.active button {
+:where(.vvjc) :where(.vvjc-item.active) button {
   cursor: pointer;
   pointer-events: auto;
 }
@@ -361,14 +361,14 @@
   gap: 0.25rem;
 }
 
-.vvjc .echo-total > * {
+.vvjc :where(.echo-total) > * {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
 }
 
-.vvjc .echo-total .current-slide {
+:where(.vvjc) :where(.echo-total) .current-slide {
   font-weight: 700;
 }
 
@@ -377,7 +377,7 @@
   opacity: 0.7;
 }
 
-.vvjc .echo-total .total-slides {
+:where(.vvjc) :where(.echo-total) .total-slides {
   opacity: 0.9;
 }
 
@@ -466,7 +466,7 @@
     opacity: 1;
   }
 
-  .vvjc .vvjc-items {
+  :where(.vvjc) .vvjc-items {
     transition: none;
   }
 
@@ -525,8 +525,8 @@
   outline-offset: 2px;
 }
 
-html[dir="rtl"] .vvjc-nav-inner .prev-arrow svg,
-html[dir="rtl"] .vvjc-nav-inner .next-arrow svg {
+:where(html[dir="rtl"]) :where(.vvjc-nav-inner) :where(.prev-arrow) svg,
+:where(html[dir="rtl"]) :where(.vvjc-nav-inner) :where(.next-arrow) svg {
   transform: rotate(180deg);
 }
 
