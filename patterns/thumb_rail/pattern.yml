@@ -1,0 +1,30 @@
+label: 'Thumb rail'
+description: 'A wide coverflow fan with a caption bar, round glass arrows over the stage and a rail of numbered tiles below.'
+weight: 3
+options:
+  carousel_style: coverflow
+  max_width: '1000'
+  large_screen_height: '500'
+  small_screen_height: '380'
+  perspective: 0
+  time_in_seconds: '6000'
+  enable_pause_on_hover: true
+  enable_touch_swipe: true
+  enable_keyboard_nav: true
+  show_navigation_arrows: true
+  show_play_pause: true
+  show_slide_counter: true
+  show_progress_bar: true
+  show_dots_navigation: true
+  scrollable_dots_width: 0
+  enable_screen_reader: true
+  pause_on_reduced_motion: true
+  background_color: '#ffffff'
+  background_color_opacity: 0.7
+  disable_background: true
+  available_breakpoints: '768'
+  enable_deeplink: false
+features: []
+needs:
+  - 'Fields in this order: the image (vvj_image, class vvj-media), kicker (vvj_kicker, class vvj-kicker) and title linked to the content (class vvj-title).'
+  - 'Show the image with the image style vvj_landscape_1200.'

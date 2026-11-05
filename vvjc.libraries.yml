@@ -60,3 +60,53 @@ vvjc-coverflow:
       css/vvjc-coverflow.css: { weight: 201 }
   dependencies:
     - vvjc/vvjc
+
+# Patterns. The weights put them after the breakpoint (202) and coverflow
+# (201) files, so a Pattern rule wins over the module rule it restyles.
+vvjc-pattern-base:
+  css:
+    theme:
+      patterns/vvjc-pattern-base.css: { weight: 205 }
+  dependencies:
+    - vvjc/vvjc
+    - vvj_patterns/base
+
+pattern.story_reel:
+  css:
+    theme:
+      patterns/story_reel/vvjc-story-reel.css: { weight: 210 }
+  js:
+    patterns/story_reel/vvjc-story-reel.js: {}
+  dependencies:
+    - vvjc/vvjc-pattern-base
+    - core/drupal
+    - core/once
+    - vvj_patterns/split-text
+
+pattern.orbit_dock:
+  css:
+    theme:
+      patterns/orbit_dock/vvjc-orbit-dock.css: { weight: 210 }
+  dependencies:
+    - vvjc/vvjc-pattern-base
+
+pattern.index_split:
+  css:
+    theme:
+      patterns/index_split/vvjc-index-split.css: { weight: 210 }
+  dependencies:
+    - vvjc/vvjc-pattern-base
+
+pattern.thumb_rail:
+  css:
+    theme:
+      patterns/thumb_rail/vvjc-thumb-rail.css: { weight: 210 }
+  dependencies:
+    - vvjc/vvjc-pattern-base
+
+pattern.ambient_stage:
+  css:
+    theme:
+      patterns/ambient_stage/vvjc-ambient-stage.css: { weight: 210 }
+  dependencies:
+    - vvjc/vvjc-pattern-base

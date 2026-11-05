@@ -1,0 +1,53 @@
+/**
+ * @file
+ * vvjc Pattern Thumb rail.
+ *
+ * The rail shows numbered tiles: photo thumbnails need the "dot thumbnails"
+ * setting (DECISIONS.md NEW 5), which is not built yet.
+ */
+
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail { --vvjc-stage-h: calc(var(--height-large) * 0.0625rem); position: relative; overflow-x: clip; padding: clamp(20px, 3vw, 40px) 12px; opacity: 1; animation: vvjc-thumb-rail-in 0.9s var(--vvj-ease-out) both; }
+@keyframes vvjc-thumb-rail-in { from { opacity: 0; filter: blur(8px); } }
+
+/* Wide cards with a caption bar that slides up. */
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-items > .vvjc-item { --vvjc-cw: min(760px, calc(100% - 24px)); inset: 8px auto auto calc(50% - var(--vvjc-cw) / 2); width: var(--vvjc-cw); display: flex; align-items: flex-end; border-radius: 28px; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-media::after { content: none; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-media img { transition: filter 0.6s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item:not(.active) .vvj-media img { filter: grayscale(0.6) brightness(0.8); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item::after { content: ""; position: absolute; inset: auto 0 0; height: 88px; background: linear-gradient(var(--vvj-glass-bg) 0 0), rgb(0 0 0 / 0.6); transform: translateY(100%); transition: transform 0.5s var(--vvj-ease-out) 0.15s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item.active::after { transform: none; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item :is(.vvj-kicker, .vvj-title) { z-index: 1; display: flex; align-items: center; min-height: 88px; opacity: 0; transition: opacity 0.35s 0.65s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item.active :is(.vvj-kicker, .vvj-title) { opacity: 1; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-kicker { flex: none; padding: 0 18px 0 30px; color: var(--vvj-stage-muted); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-title { min-width: 0; padding: 0 30px 0 0; font: 600 clamp(1.25rem, 2.4vw, 1.875rem)/1.15 var(--vvj-font-ui); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-title a { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-title a::after { content: ""; flex: none; width: 20px; height: 20px; background: currentColor; -webkit-mask: var(--vvjc-icon-out) center / contain no-repeat; mask: var(--vvjc-icon-out) center / contain no-repeat; transition: transform 0.3s var(--vvj-ease-out); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-item .vvj-title a:hover::after { transform: translate(4px, -4px); }
+
+/* Below the stage: progress line, the rail, play. */
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav .vvjc-nav-inner { flex-direction: column; flex-wrap: nowrap; gap: 12px; padding: 10px 0 0; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .echo-animation { order: 1; width: min(480px, 100%); margin: 0; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .progressbar { width: 100%; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--vvj-ink) var(--progress, 0%), var(--vvj-line) 0); -webkit-mask: none; mask: none; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-dots-nav { order: 2; justify-content: center; gap: clamp(6px, 2vw, 12px); max-width: 100%; padding: 10px 6px; overflow-x: auto; scrollbar-width: none; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-dots-nav .dots-numbers-button { flex: 0 1 96px; width: auto; min-width: 44px; height: 64px; color: var(--vvj-stage-muted); border-radius: 10px; background: var(--vvj-stage-bg); font-size: 0.9375rem; font-weight: 600; transition: color 0.3s, transform 0.35s var(--vvj-ease-out), box-shadow 0.3s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-dots-nav .dots-numbers-button:hover { color: var(--vvj-stage-color); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-dots-nav .dots-numbers-button.active { color: var(--vvj-stage-color); transform: translateY(-4px); box-shadow: 0 0 0 2px var(--vvj-surface), 0 0 0 4px var(--vvj-ink); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .control-btn[id^="btn-"] { order: 3; width: 48px; height: 48px; color: var(--vvj-ink); border: 1.5px solid var(--vvj-muted); font-size: 14px; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .control-btn[id^="btn-"]:hover { border-color: var(--vvj-ink); }
+
+/* Round glass arrows over the stage, the counter pill top right. */
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner :is(.prev-arrow, .next-arrow) { --vvjc-arrow-top: calc(clamp(20px, 3vw, 40px) + var(--vvjc-stage-h) / 2 - 30px); position: absolute; z-index: 120; width: 60px; height: 60px; color: var(--vvj-stage-color); border: 1px solid var(--vvj-glass-line); background: var(--vvj-glass-bg); box-shadow: var(--vvj-glass-shadow); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); overflow: hidden; font-size: 16px; transition: transform 0.2s, background-color 0.2s, color 0.2s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .prev-arrow { inset: var(--vvjc-arrow-top) auto auto max(4px, calc(50% - 400px)); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .next-arrow { inset: var(--vvjc-arrow-top) max(4px, calc(50% - 400px)) auto auto; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvj-stage-bg); background: var(--vvj-stage-color); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .next-arrow:hover::before { animation: vvjc-thumb-rail-r 0.5s var(--vvj-ease-out); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .prev-arrow:hover::before { animation: vvjc-thumb-rail-l 0.5s var(--vvj-ease-out); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner .control-btn:active { transform: scale(0.92); }
+@keyframes vvjc-thumb-rail-r { 45% { transform: translateX(220%); } 46% { transform: translateX(-220%); } }
+@keyframes vvjc-thumb-rail-l { 45% { transform: translateX(-220%); } 46% { transform: translateX(220%); } }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .echo-total { position: absolute; z-index: 120; inset: calc(clamp(20px, 3vw, 40px) + 18px) max(12px, calc(50% - 380px)) auto auto; padding: 6px 14px; color: var(--vvj-stage-color); border-radius: 999px; background: var(--vvj-glass-bg); font-size: 0.875rem; font-weight: 600; }
+
+@media (max-width: 767.98px) {
+  .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail { --vvjc-stage-h: calc(var(--height-small) * 0.0625rem); }
+  .vvj-pattern.vvjc.vvj-pattern--vvjc-thumb-rail .vvjc-nav-inner :is(.prev-arrow, .next-arrow) { --vvjc-arrow-top: calc(clamp(20px, 3vw, 40px) + var(--vvjc-stage-h) / 2 - 24px); width: 48px; height: 48px; }
+}

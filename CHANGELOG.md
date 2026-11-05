@@ -11,6 +11,16 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 
 ### Fixed
 
+- **3D depth follows the carousel width.** With Perspective left at zero, the
+  depth is now the ring's measured width times a ratio (ring 5x, coverflow
+  2x), set again on every resize. The old fixed 640px fell under the width
+  from 700px up, so a ring's side cards hid behind the front card, and the
+  setting's help text claimed it already followed the width. The coverflow's
+  step back is now a share of the card width instead of a fixed 120px. A
+  Perspective value in the view still wins. Themes can set
+  `--vvjc-perspective-ratio`. Views with Perspective at zero look different
+  after this update.
+
 - **The arrows no longer disappear at the ends.** On the ring, which does
   not loop, the previous arrow on the first card and the next arrow on the
   last card were hidden, which left a gap and shifted the controls beside

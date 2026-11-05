@@ -1,0 +1,58 @@
+/**
+ * @file
+ * vvjc Pattern Ambient stage.
+ *
+ * The ground is a soft grey glow: the blurred copy of the active photo needs
+ * the "ambient backdrop" setting (DECISIONS.md NEW 6), which is not built yet.
+ */
+
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage { position: relative; isolation: isolate; overflow: hidden; padding: clamp(32px, 5vw, 64px) 20px; grid-template-columns: minmax(0, 1fr) minmax(0, 400px) minmax(0, 1fr); grid-template-areas: "count stage play" "prev dots next"; align-items: center; justify-items: center; column-gap: clamp(20px, 4vw, 56px); row-gap: 18px; background: radial-gradient(60% 70% at 50% 40%, var(--vvj-raised), var(--vvj-surface)); opacity: 1; animation: vvjc-ambient-stage-in 1s var(--vvj-ease-out) both; }
+@keyframes vvjc-ambient-stage-in { from { opacity: 0; } }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav,
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner { display: contents; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage > .vvjc-inner { grid-area: stage; }
+
+/* Square cards; the words step up one after another. */
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-items > .vvjc-item { display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; padding: 24px; border-radius: 24px; box-shadow: var(--vvj-glass-shadow); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-items > .vvjc-item:not(.active) { opacity: 0.35; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-item :is(.vvj-kicker, .vvj-title, .vvj-summary) { opacity: 0; transform: translateY(18px); transition: opacity 0.4s, transform 0.6s var(--vvj-ease-out); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-item.active :is(.vvj-kicker, .vvj-title, .vvj-summary) { opacity: 1; transform: none; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-item.active .vvj-kicker { transition-delay: 0.35s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-item.active .vvj-title { transition-delay: 0.45s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-item.active .vvj-summary { transition-delay: 0.55s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-item .vvj-kicker { color: var(--vvj-stage-muted); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-item .vvj-title { font: 600 1.875rem/1.1 var(--vvj-font-display); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-item .vvj-summary { color: var(--vvj-stage-muted); font-size: 0.9375rem; line-height: 1.45; }
+
+/* Counter left. */
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .echo-total { grid-area: count; justify-self: end; color: var(--vvj-muted); font-size: 1.125rem; text-align: right; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .echo-total .current-slide { color: var(--vvj-ink); font: 600 clamp(56px, 7vw, 92px)/1 var(--vvj-font-display); }
+
+/* Square play with the progress ring inside; it turns round on hover. */
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner .control-btn[id^="btn-"] { grid-area: play; justify-self: start; width: 60px; height: 60px; color: var(--vvj-surface); border-radius: 16px; background: var(--vvj-ink); font-size: 14px; transition: transform 0.15s, border-radius 0.3s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner .control-btn[id^="btn-"]:hover { border-radius: 30px; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .echo-animation { z-index: 1; grid-area: play; justify-self: start; display: grid; place-items: center; width: 60px; height: 60px; margin: 0; pointer-events: none; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .progressbar { align-self: center; justify-self: center; margin: 0; width: 36px; height: 36px; border-radius: 50%; background: conic-gradient(var(--vvj-surface) var(--progress, 0%), var(--vvj-muted) 0); -webkit-mask: radial-gradient(circle, transparent 64%, var(--vvj-mask-solid) 66%); mask: radial-gradient(circle, transparent 64%, var(--vvj-mask-solid) 66%); }
+
+/* Tick scrubber = the dots; the thumb slides to the active tick. */
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-dots-nav { position: relative; display: grid; grid-area: dots; grid-template-columns: repeat(var(--vvj-total, 5), 1fr); gap: 0; width: 100%; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-dots-nav::before { content: ""; position: absolute; inset: calc(50% - 1px) 10% auto; height: 2px; background: var(--vvj-line); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-dots-nav::after { content: ""; position: absolute; inset: calc(50% - 5px) auto auto calc((var(--vvj-index, 0) + 0.5) * 100% / var(--vvj-total, 5) - 16px); width: 32px; height: 10px; border-radius: 6px; background: var(--vvj-ink); box-shadow: 0 0 0 3px var(--vvj-surface); pointer-events: none; transition: left 0.7s var(--vvj-ease-out); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-dots-nav .dots-numbers-button { width: 100%; min-width: 0; color: var(--vvj-ink); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-dots-nav .dots-numbers-button .vvjc-dot-num { display: none; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-dots-nav .dots-numbers-button::before { content: ""; width: 2px; height: 14px; border-radius: 2px; background: currentColor; transition: height 0.3s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-dots-nav .dots-numbers-button:hover::before { height: 20px; }
+
+/* Round outlined Previous / Next. */
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner .prev-arrow { grid-area: prev; justify-self: end; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner .next-arrow { grid-area: next; justify-self: start; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner :is(.prev-arrow, .next-arrow) { width: 64px; height: 48px; color: var(--vvj-ink); border: 1.5px solid var(--vvj-ink); border-radius: 999px; font-size: 16px; transition: background-color 0.2s, color 0.2s, transform 0.15s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvj-surface); background: var(--vvj-ink); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner :is(.prev-arrow, .next-arrow)::before { transition: transform 0.3s var(--vvj-ease-out); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner .next-arrow:not(.vvjc-disabled):hover::before { transform: translateX(4px); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner .prev-arrow:not(.vvjc-disabled):hover::before { transform: translateX(-4px); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage .vvjc-nav-inner .control-btn:active { transform: scale(0.94); }
+
+@media (max-width: 767.98px) {
+  .vvj-pattern.vvjc.vvj-pattern--vvjc-ambient-stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "stage stage" "count play" "dots dots" "prev next"; }
+}

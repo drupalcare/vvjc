@@ -42,7 +42,10 @@
   const CF_CENTRE_SCALE = 0.62;
   const CF_SPACING = 0.72;
   const CF_TILT = 45;
-  const CF_DEPTH = 120;
+  // How far each step back pushes a card, as a share of the card's own width.
+  // It was a fixed 120px, which looked deep on a small fan and flat on a wide
+  // one; 0.21 is 120px on the usual 576px card.
+  const CF_DEPTH_RATIO = 0.21;
   const CF_SHRINK = 0.16;
   const CF_MIN_SCALE = 0.3;
 
@@ -149,6 +152,9 @@
       this._nextButton = this.querySelector(`#next-${this._uniqueId}`);
       this._playPauseButton = this.querySelector(`#btn-${this._uniqueId}`);
       this._progressBar = this.querySelector('.progressbar');
+      // Pattern instances only (class `vvj-pattern`); a view without a
+      // Pattern never reaches any of the Pattern code below.
+      this._pattern = this.classList.contains('vvj-pattern');
       this._announcer = this.querySelector('.announcer');
       this._dotsContainer = this.querySelector('.vvjc-dots-nav');
       this._scrollableDotsWidth =
@@ -274,7 +280,24 @@
     // 3D layout.
     // -----------------------------------------------------------------
 
+    /**
+     * Hands the ring's measured width to the stylesheet.
+     *
+     * When no perspective is set in the view, vvjc.css uses this width times
+     * --vvjc-perspective-ratio (5 for a ring, 2 for a coverflow), so the 3D
+     * view looks the same at every width and screen size. A fixed 640px fell
+     * under the ring's width from 700px up and hid its side cards. Runs on
+     * build and after every resize; a CSSOM write, so CSP stays clean.
+     */
+    _setRingWidth() {
+      this._items.parentElement?.style.setProperty(
+        '--vvjc-ring-width',
+        String(this._items.offsetWidth),
+      );
+    }
+
     _buildCarousel() {
+      this._setRingWidth();
       if (this._style === 'coverflow') {
         // The deck never rotates; _updateSlide(), which every caller runs
         // next, lays the cards out.
@@ -354,7 +377,7 @@
         this._announcer.textContent = `Slide ${this._currentIndex + 1} of ${this._cellCount}`;
       }
       if (
-        this._features.showProgressBar &&
+        (this._features.showProgressBar || this._pattern) &&
         this._rotationDelay > 0 &&
         !this._isPaused
       ) {
@@ -362,6 +385,7 @@
       }
       this._updateDeepLinkHash();
       this._updateNavVisibility();
+      this._writePatternState();
     }
 
     /**
@@ -486,6 +510,9 @@
     _applyCoverflow() {
       const { reducedMotion } = this;
       const { left, right, step, maxDist } = this._getCoverflowLayout();
+      this._setRingWidth();
+      const depth =
+        CF_DEPTH_RATIO * (this._cells[0]?.offsetWidth || this._items.offsetWidth);
       // RTL: the next card sits on the left, so the fan is mirrored.
       const mirror = this._isRTL ? -1 : 1;
 
@@ -496,7 +523,7 @@
           slot,
           dist,
           x: slot * step * mirror,
-          z: -dist * CF_DEPTH,
+          z: -dist * depth,
           ry: -Math.sign(slot) * CF_TILT * mirror,
           scale: Math.max(
             CF_CENTRE_SCALE * (1 - dist * CF_SHRINK),
@@ -851,7 +878,7 @@
           () => this._advanceSlide(),
           this._rotationDelay,
         );
-        if (this._features.showProgressBar) {
+        if (this._features.showProgressBar || this._pattern) {
           this._startProgress();
         }
       }
@@ -903,13 +930,57 @@
       );
     }
 
+    // -----------------------------------------------------------------
+    // Patterns (only on elements with the `vvj-pattern` class).
+    // -----------------------------------------------------------------
+
+    /**
+     * Writes the shared state and resets the time fill of every dot.
+     *
+     * Dots before the active one read full, later ones empty; the active
+     * dot fills with time in _writePatternProgress().
+     */
+    _writePatternState() {
+      if (!this._pattern) {
+        return;
+      }
+      this.writeState({
+        index: this._currentIndex,
+        total: this._cellCount,
+        items: Array.from(this._cells),
+      });
+      this.querySelectorAll('.vvjc-dots-nav .dots-numbers-button').forEach(
+        (dot, index) => {
+          dot.style.setProperty(
+            '--vvj-progress',
+            index < this._currentIndex ? '1' : '0',
+          );
+        },
+      );
+    }
+
+    /**
+     * Patterns: the active dot fills with the autoplay time (0 to 1).
+     *
+     * @param {number} value
+     *   The share of the slide time that has passed.
+     */
+    _writePatternProgress(value) {
+      if (!this._pattern) {
+        return;
+      }
+      this.querySelector(
+        '.vvjc-dots-nav .dots-numbers-button.active',
+      )?.style.setProperty('--vvj-progress', String(value));
+    }
+
     _startProgress() {
-      if (!this._progressBar || this._rotationDelay <= 0) {
+      if ((!this._progressBar && !this._pattern) || this._rotationDelay <= 0) {
         return;
       }
       clearInterval(this._progressIntervalId);
-      this._progressBar.style.setProperty('--progress', '0%');
-      this._progressBar.setAttribute('aria-valuenow', '0');
+      this._progressBar?.style.setProperty('--progress', '0%');
+      this._progressBar?.setAttribute('aria-valuenow', '0');
       const startTime = Date.now();
       this._progressIntervalId = setInterval(() => {
         if (this._isPaused) {
@@ -918,11 +989,12 @@
         }
         const elapsed = Date.now() - startTime;
         const progress = Math.min(100, (elapsed / this._rotationDelay) * 100);
-        this._progressBar.style.setProperty('--progress', `${progress}%`);
-        this._progressBar.setAttribute(
+        this._progressBar?.style.setProperty('--progress', `${progress}%`);
+        this._progressBar?.setAttribute(
           'aria-valuenow',
           String(Math.round(progress)),
         );
+        this._writePatternProgress(progress / 100);
         if (progress >= 100) {
           clearInterval(this._progressIntervalId);
         }

@@ -1,0 +1,31 @@
+label: 'Ambient stage'
+description: 'A ring of square cards on a soft glow, a big counter, a square play button and a tick scrubber.'
+weight: 4
+options:
+  carousel_style: ring
+  max_width: '400'
+  large_screen_height: '460'
+  small_screen_height: '420'
+  perspective: 0
+  time_in_seconds: '6000'
+  enable_pause_on_hover: true
+  enable_touch_swipe: true
+  enable_keyboard_nav: true
+  show_navigation_arrows: true
+  show_play_pause: true
+  show_slide_counter: true
+  show_progress_bar: true
+  show_dots_navigation: true
+  scrollable_dots_width: 0
+  enable_screen_reader: true
+  pause_on_reduced_motion: true
+  background_color: '#ffffff'
+  background_color_opacity: 0.7
+  disable_background: true
+  available_breakpoints: '768'
+  enable_deeplink: false
+features: []
+needs:
+  - 'Fields in this order: the image (vvj_image, class vvj-media), kicker (vvj_kicker), title and summary (vvj_summary).'
+  - 'Give the field elements the classes vvj-media, vvj-kicker, vvj-title and vvj-summary.'
+  - 'Show the image with the image style vvj_square_800.'

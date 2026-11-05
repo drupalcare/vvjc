@@ -43,6 +43,9 @@ views.style.views_vvjc:
     enable_deeplink:
       type: boolean
       label: 'Enable deep linking'
+    vvj_pattern:
+      type: string
+      label: 'VVJ Pattern'
     deeplink_identifier:
       type: string
       label: 'Deep link URL identifier'

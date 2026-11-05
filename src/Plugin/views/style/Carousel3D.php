@@ -70,6 +70,15 @@ class Carousel3D extends VvjStylePluginBase {
   /**
    * {@inheritdoc}
    *
+   * The Patterns select appears only while vvj_patterns is enabled.
+   */
+  protected function supportsPatterns(): bool {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
    * @return list<string>
    *   Reserved words that conflict with vvjc's `#carousel3d-` prefix.
    */
@@ -201,7 +210,7 @@ class Carousel3D extends VvjStylePluginBase {
       '#default_value' => $this->options['perspective'],
       '#min' => VvjcConstants::MIN_PERSPECTIVE,
       '#step' => VvjcConstants::PERSPECTIVE_STEP,
-      '#description' => $this->t('The 3D perspective depth. By default, this adjusts with width selection. You can modify this value if the carousel circle appears too broad. Zero uses the default.'),
+      '#description' => $this->t('The 3D perspective depth in pixels. Zero (recommended) sets it from the carousel width: five times the width for a ring, twice for a coverflow, so it looks right at every size. Enter a value only to override it.'),
       '#required' => TRUE,
     ];
   }
@@ -592,6 +601,9 @@ class Carousel3D extends VvjStylePluginBase {
     }
 
     $flattened['unique_id'] = $this->options['unique_id'] ?? $this->generateUniqueId();
+
+    // Patterns: the shared logic lives in vvj_patterns.
+    $this->flattenPatternChoice($values, $flattened);
 
     return $flattened;
   }
