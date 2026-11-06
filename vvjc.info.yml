@@ -1,6 +1,6 @@
-name: 'Views Vanilla Javascript 3D Carousel - VVJC'
+name: 'Views Vanilla JavaScript 3D Carousel - VVJC'
 type: module
-description: 'Accessible 3D carousel display format for Views.'
+description: 'Displays Views results as an accessible 3D carousel.'
 core_version_requirement: ^11.3 || ^12
 package: VVJ
 php: 8.3

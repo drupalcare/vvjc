@@ -135,14 +135,14 @@ class Carousel3D extends VvjStylePluginBase {
   protected function buildDimensionsSection(array &$form): void {
     $form['dimensions_section'] = [
       '#type' => 'details',
-      '#title' => $this->t('Dimensions Settings'),
+      '#title' => $this->t('Dimensions settings'),
       '#open' => TRUE,
       '#weight' => -40,
     ];
 
     $form['dimensions_section']['carousel_style'] = [
       '#type' => 'select',
-      '#title' => $this->t('Carousel Style'),
+      '#title' => $this->t('Carousel style'),
       '#options' => [
         VvjcConstants::STYLE_RING => $this->t('Rotating ring (3D drum)'),
         VvjcConstants::STYLE_COVERFLOW => $this->t('Coverflow (angled cards)'),
@@ -154,7 +154,7 @@ class Carousel3D extends VvjStylePluginBase {
 
     $form['dimensions_section']['max_width'] = [
       '#type' => 'select',
-      '#title' => $this->t('Max Width'),
+      '#title' => $this->t('Max width'),
       '#options' => [
         VvjcConstants::WIDTH_300 => $this->t('300 px'),
         VvjcConstants::WIDTH_400 => $this->t('400 px'),
@@ -185,7 +185,7 @@ class Carousel3D extends VvjStylePluginBase {
 
     $form['dimensions_section']['large_screen_height'] = [
       '#type' => 'select',
-      '#title' => $this->t('Large Screen Height'),
+      '#title' => $this->t('Large screen height'),
       '#options' => $heights_large,
       '#default_value' => $this->options['large_screen_height'],
       '#description' => $this->t('The height applied uniformly to all carousel items on large screens.'),
@@ -197,7 +197,7 @@ class Carousel3D extends VvjStylePluginBase {
 
     $form['dimensions_section']['small_screen_height'] = [
       '#type' => 'select',
-      '#title' => $this->t('Small Screen Height'),
+      '#title' => $this->t('Small screen height'),
       '#options' => $heights_small,
       '#default_value' => $this->options['small_screen_height'],
       '#description' => $this->t('The height applied uniformly to all carousel items on small screens.'),
@@ -224,14 +224,14 @@ class Carousel3D extends VvjStylePluginBase {
   protected function buildBehaviorSection(array &$form): void {
     $form['behavior_section'] = [
       '#type' => 'details',
-      '#title' => $this->t('Behavior Settings'),
+      '#title' => $this->t('Behavior settings'),
       '#open' => TRUE,
       '#weight' => -30,
     ];
 
     $form['behavior_section']['time_in_seconds'] = [
       '#type' => 'select',
-      '#title' => $this->t('Auto-rotate Interval'),
+      '#title' => $this->t('Auto-rotate interval'),
       '#options' => [
         VvjcConstants::TIME_NONE => $this->t('None'),
         VvjcConstants::TIME_2000 => $this->t('2 s'),
@@ -256,21 +256,21 @@ class Carousel3D extends VvjStylePluginBase {
 
     $form['behavior_section']['enable_pause_on_hover'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Pause on Hover'),
+      '#title' => $this->t('Pause on hover'),
       '#default_value' => $this->options['enable_pause_on_hover'],
       '#description' => $this->t('Pause the carousel rotation when the user hovers over it.'),
     ];
 
     $form['behavior_section']['enable_touch_swipe'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Enable Touch/Swipe Gestures'),
+      '#title' => $this->t('Enable touch/swipe gestures'),
       '#default_value' => $this->options['enable_touch_swipe'],
       '#description' => $this->t('Allow users to navigate the carousel by swiping on touch devices.'),
     ];
 
     $form['behavior_section']['enable_keyboard_nav'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Enable Keyboard Navigation'),
+      '#title' => $this->t('Enable keyboard navigation'),
       '#default_value' => $this->options['enable_keyboard_nav'],
       '#description' => $this->t('Enable keyboard controls: Arrow keys to navigate, Space to play/pause, Home for first slide, End for last slide.'),
     ];
@@ -285,35 +285,35 @@ class Carousel3D extends VvjStylePluginBase {
   protected function buildControlsSection(array &$form): void {
     $form['controls_section'] = [
       '#type' => 'details',
-      '#title' => $this->t('Controls & Navigation'),
+      '#title' => $this->t('Controls & navigation'),
       '#open' => TRUE,
       '#weight' => -25,
     ];
 
     $form['controls_section']['show_navigation_arrows'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Show Navigation Arrows'),
+      '#title' => $this->t('Show navigation arrows'),
       '#default_value' => $this->options['show_navigation_arrows'],
       '#description' => $this->t('Display previous and next arrow buttons for manual navigation.'),
     ];
 
     $form['controls_section']['show_play_pause'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Show Play/Pause Button'),
+      '#title' => $this->t('Show play/pause button'),
       '#default_value' => $this->options['show_play_pause'],
       '#description' => $this->t('Display a button to control carousel auto-rotation.'),
     ];
 
     $form['controls_section']['show_slide_counter'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Show Slide Counter'),
+      '#title' => $this->t('Show slide counter'),
       '#default_value' => $this->options['show_slide_counter'],
       '#description' => $this->t('Display current slide number (e.g., "3 of 10").'),
     ];
 
     $form['controls_section']['show_progress_bar'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Show Progress Bar'),
+      '#title' => $this->t('Show progress bar'),
       '#default_value' => $this->options['show_progress_bar'],
       '#description' => $this->t('Display a visual progress indicator showing time until next slide. Note: Requires auto-rotation to be enabled.'),
       '#states' => [
@@ -325,7 +325,7 @@ class Carousel3D extends VvjStylePluginBase {
 
     $form['controls_section']['show_dots_navigation'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Show Dots Navigation'),
+      '#title' => $this->t('Show dots navigation'),
       '#default_value' => $this->options['show_dots_navigation'],
       '#description' => $this->t('Display clickable dot indicators for each slide, allowing direct navigation to any slide.<strong> Note: This feature required by Deep Linking.</strong>'),
     ];
@@ -359,21 +359,21 @@ class Carousel3D extends VvjStylePluginBase {
   protected function buildAccessibilitySection(array &$form): void {
     $form['accessibility_section'] = [
       '#type' => 'details',
-      '#title' => $this->t('Accessibility Options'),
+      '#title' => $this->t('Accessibility options'),
       '#open' => TRUE,
       '#weight' => -22,
     ];
 
     $form['accessibility_section']['enable_screen_reader'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Enable Screen Reader Announcements'),
+      '#title' => $this->t('Enable screen reader announcements'),
       '#default_value' => $this->options['enable_screen_reader'],
       '#description' => $this->t('Announce slide changes to screen reader users via ARIA live regions.'),
     ];
 
     $form['accessibility_section']['pause_on_reduced_motion'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Respect Reduced Motion Preference'),
+      '#title' => $this->t('Respect reduced motion preference'),
       '#default_value' => $this->options['pause_on_reduced_motion'],
       '#description' => $this->t('Automatically pause carousel rotation for users who prefer reduced motion (accessibility setting).'),
     ];
@@ -388,14 +388,14 @@ class Carousel3D extends VvjStylePluginBase {
   protected function buildStyleSection(array &$form): void {
     $form['style_section'] = [
       '#type' => 'details',
-      '#title' => $this->t('Style Settings'),
+      '#title' => $this->t('Style settings'),
       '#open' => TRUE,
       '#weight' => -20,
     ];
 
     $form['style_section']['background_color'] = [
       '#type' => 'color',
-      '#title' => $this->t('Background Color'),
+      '#title' => $this->t('Background color'),
       '#default_value' => $this->options['background_color'],
       '#description' => $this->t('Choose a background color. This color will be applied to each carousel item.'),
       '#empty_value' => '',
@@ -411,7 +411,7 @@ class Carousel3D extends VvjStylePluginBase {
 
     $form['style_section']['background_color_opacity'] = [
       '#type' => 'range',
-      '#title' => $this->t('Background Color Opacity'),
+      '#title' => $this->t('Background color opacity'),
       '#default_value' => $this->options['background_color_opacity'],
       '#min' => VvjcConstants::MIN_OPACITY,
       '#max' => VvjcConstants::MAX_OPACITY,
@@ -430,7 +430,7 @@ class Carousel3D extends VvjStylePluginBase {
 
     $form['style_section']['disable_background'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Disable Background Color'),
+      '#title' => $this->t('Disable background color'),
       '#default_value' => $this->options['disable_background'],
       '#description' => $this->t('Check this to disable background color completely.'),
     ];
@@ -445,14 +445,14 @@ class Carousel3D extends VvjStylePluginBase {
   protected function buildResponsiveSection(array &$form): void {
     $form['responsive_section'] = [
       '#type' => 'details',
-      '#title' => $this->t('Responsive Settings'),
+      '#title' => $this->t('Responsive settings'),
       '#open' => FALSE,
       '#weight' => -10,
     ];
 
     $form['responsive_section']['available_breakpoints'] = [
       '#type' => 'select',
-      '#title' => $this->t('Responsive Breakpoint'),
+      '#title' => $this->t('Responsive breakpoint'),
       '#options' => [
         '576' => $this->t('576 px / 36 rem'),
         '768' => $this->t('768 px / 48 rem'),

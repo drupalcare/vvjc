@@ -80,6 +80,7 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 
 ### Changed
 
+- Text follows the drupal.org standards: the module description begins with a verb, "JavaScript" is spelled as the language spells it, settings titles are in sentence case, comments use American spelling, and the README has its project and issue queue links.
 - Plugin extends `VvjStylePluginBase`. Implements four small subclass hooks;
   standard sections come from the base. supportsEnableCss = FALSE (v1 had no
   separate vvjc-style library; visual rules ship in vvjc.css).

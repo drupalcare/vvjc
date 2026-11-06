@@ -2,7 +2,7 @@
 
 /**
  * @file
- * VVJC — Views Vanilla Javascript 3D Carousel bootstrap.
+ * VVJC — Views Vanilla JavaScript 3D Carousel bootstrap.
  *
  * Hooks live as OOP `#[Hook]` attribute classes under `src/Hook/`.
  *

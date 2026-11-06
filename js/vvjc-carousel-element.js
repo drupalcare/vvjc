@@ -4,7 +4,7 @@
  *
  * Extends `Drupal.Vvj.ElementBase` from `vvj_core`. 3D carousel in two
  * styles: a ring (rotateY + translateZ placement of N cells on a virtual
- * cylinder, ping-pong at the ends) and a coverflow (an open fan, centre card
+ * cylinder, ping-pong at the ends) and a coverflow (an open fan, center card
  * forward, wrapping). The style comes from `data-vvjc-style`. Full
  * v1 feature set preserved: autoplay (with progress bar), arrows, dots
  * (with scrollable variant), play/pause, slide counter, screen-reader
@@ -126,7 +126,7 @@
       // Coverflow only: each card's slot at the previous layout, so a card
       // that wraps round the deck can be told apart from one that moves.
       this._lastSlot = new Map();
-      // Coverflow only: the stylesheet's card transition in ms, memoised.
+      // Coverflow only: the stylesheet's card transition in ms, memoized.
       this._cssDuration = null;
     }
 
@@ -452,7 +452,7 @@
       });
 
       // A keyboard user whose card has just left the screen goes to the
-      // centre card rather than to the top of the page (measured 2026-09-26:
+      // center card rather than to the top of the page (measured 2026-09-26:
       // a focused link on the edge card fell to <body> on one Prev).
       if (focusLost) {
         this._cells[this._currentIndex]?.focus({ preventScroll: true });
@@ -463,13 +463,13 @@
      * Card width, spacing and how far out a card can sit and still be seen.
      *
      * @return {{left: number, right: number, step: number, maxDist: number}}
-     *   Cards left and right of centre, px between slots, and the furthest
+     *   Cards left and right of center, px between slots, and the furthest
      *   slot still inside the clipping box.
      */
     _getCoverflowLayout() {
       const cardWidth = this._cells[0]?.offsetWidth || this._items.offsetWidth;
 
-      // Split the cards round one centre card; an odd remainder goes right.
+      // Split the cards round one center card; an odd remainder goes right.
       const left = Math.floor((this._cellCount - 1) / 2);
       const right = this._cellCount - 1 - left;
       const step = CF_SPACING * cardWidth * CF_CENTRE_SCALE;
@@ -496,7 +496,7 @@
      * The card in a given slot, wrapping round the ends.
      *
      * @param {number} slot
-     *   Slots from the centre; negative is left.
+     *   Slots from the center; negative is left.
      * @return {number}
      *   The cell index for that slot.
      */
@@ -508,7 +508,7 @@
     }
 
     /**
-     * The stylesheet's card transition duration in ms, memoised.
+     * The stylesheet's card transition duration in ms, memoized.
      *
      * First read at the first wrap, when the card carries no inline
      * transition of its own, so this is the stylesheet's value.

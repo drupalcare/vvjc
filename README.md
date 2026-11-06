@@ -1,13 +1,18 @@
 # Views Vanilla JavaScript 3D Carousel (VVJC)
 
-A vanilla-JavaScript 3D carousel **Views format** for Drupal 11.3+ / 12. Renders
+A vanilla-JavaScript 3D carousel **Views format** for Drupal. Renders
 Views rows as cells on a virtual 3D cylinder (rotateY + translateZ), with
 autoplay, dots / arrows / play-pause / progress / counter, full keyboard, touch,
 and screen-reader support, deep linking, RTL-aware navigation, and reduced-
 motion handling.
 
+- Project page: [drupal.org/project/vvjc](https://www.drupal.org/project/vvjc)
+- Issue queue:
+  [drupal.org/project/issues/vvjc](https://www.drupal.org/project/issues/vvjc)
+
 v2.0 builds on the **`drupal/vvj_core` foundation** (composer auto-installs it).
 Behavior runs in a `<vvjc-carousel>` custom element extending `VvjElementBase`.
+
 
 ## Table of contents
 
@@ -22,6 +27,7 @@ Behavior runs in a `<vvjc-carousel>` custom element extending `VvjElementBase`.
 - Changelog
 - Maintainers
 - License
+
 
 ## Overview
 
@@ -47,37 +53,46 @@ Behavior runs in a `<vvjc-carousel>` custom element extending `VvjElementBase`.
   with *Use replacement tokens from the first row*
 - **Drupal admin help**: `/admin/help/vvjc`
 
+
 ## Requirements
 
 - Drupal core `^11.3 || ^12`.
 - PHP 8.3 or later.
 - Drupal core modules Views and Filter.
-- [VVJ Core](https://www.drupal.org/project/vvj_core) (`vvj_core`), installed automatically by Composer.
+- [VVJ Core](https://www.drupal.org/project/vvj_core) (`vvj_core`), installed
+  automatically by Composer.
+
 
 ## Installation
 
-1. Install with Composer: `composer require drupal/vvjc:^2.0` (it pulls `drupal/vvj_core`), or download the module and `vvj_core` from [Drupal.org](https://www.drupal.org/project/vvjc).
-2. Enable it in the admin interface or with Drush: `drush en vvjc`.
-3. Clear caches so the new plugin is available: `drush cr`.
+1. Install with Composer: `composer require drupal/vvjc:^2.0` (it pulls
+   `drupal/vvj_core`), or download the module and `vvj_core` from
+   [Drupal.org](https://www.drupal.org/project/vvjc).
+1. Enable it in the admin interface or with Drush: `drush en vvjc`.
+1. Clear caches so the new plugin is available: `drush cr`.
+
 
 ## Configuration
 
-Settings live in the format settings of the view. Configure dimensions / behavior / controls / accessibility / style / responsive in the format settings.
+Settings live in the format settings of the view. Configure dimensions /
+behavior / controls / accessibility / style / responsive in the format settings.
 
 For a ready-made starting point, choose a Pattern (see Patterns below).
+
 
 ## Usage
 
 1. Create or edit a View.
-2. Set **Format** to *Views Vanilla JavaScript 3D Carousel*.
-3. Set **Show** to *Fields*.
-4. Configure the format settings (see Configuration).
-5. Save.
+1. Set **Format** to *Views Vanilla JavaScript 3D Carousel*.
+1. Set **Show** to *Fields*.
+1. Configure the format settings (see Configuration).
+1. Save.
 
 Recommended: limit slide count to ~30 for optimal 3D performance.
 
 **Sample view:** Optional config `views.view.vvjc_example` (`config/optional/`)
 installs when there is no ID conflict.
+
 
 ### Token support in Views text areas
 
@@ -92,6 +107,7 @@ instead:
 v2 resolves tokens through the shared `vvj_core.token_resolver` service; syntax
 is unchanged from v1. Tokens read from the **first row** of rendered View
 fields. Complex field rewrites are not supported.
+
 
 ### JavaScript API
 
@@ -113,10 +129,13 @@ Drupal.vvjc.getAllInstances();                // → array of <vvjc-carousel>
 elements
 ```
 
+
 ## Patterns
 
-A Pattern is a ready-made design for this format. One choice in the format settings sets the layout, animation,
-styling and deep linking together. Views Vanilla JavaScript 3D Carousel ships 5 Patterns:
+A Pattern is a ready-made design for this format. One choice in the format
+settings sets the layout, animation,
+styling and deep linking together. Views Vanilla JavaScript 3D Carousel ships 5
+Patterns:
 
 | Pattern | What it looks like | Demo page path |
 |---|---|---|
@@ -126,27 +145,42 @@ styling and deep linking together. Views Vanilla JavaScript 3D Carousel ships 5 
 | Thumb rail | A wide coverflow fan with a caption bar, round glass arrows over the stage and a rail of numbered tiles below. | `vvj/vvjc/thumb-rail` |
 | Ambient stage | A ring of square cards on a soft glow, a big counter, a square play button and a tick scrubber. | `vvj/vvjc/ambient-stage` |
 
-The demo pages exist only while the optional `vvj_patterns_demo` module is enabled (see "Example views" below).
+The demo pages exist only while the optional `vvj_patterns_demo` module is
+enabled (see "Example views" below).
+
 
 ### Choosing a Pattern
 
-1. Enable the shared Patterns base, which ships inside `vvj_core`: `drush en vvj_patterns`. The "Pattern" select
+1. Enable the shared Patterns base, which ships inside `vvj_core`:
+   `drush en vvj_patterns`. The "Pattern" select
    appears in the format settings only while `vvj_patterns` is enabled.
-2. Edit the view and open the format settings.
-3. In the "Patterns" section, pick a Pattern in the "Pattern" select and save.
-4. The Pattern's settings replace the layout, animation, styling and deep linking settings of the view. You can
+1. Edit the view and open the format settings.
+1. In the "Patterns" section, pick a Pattern in the "Pattern" select and save.
+1. The Pattern's settings replace the layout, animation, styling and deep
+   linking settings of the view. You can
    change them afterwards. Pick "None" to keep your own settings.
-5. A list titled "To finish the <name> Pattern" shows what the view must supply: which fields, which markup
-   classes and how many items. Follow it; a Pattern shows its finished design only when the view matches.
+1. A list titled "To finish the <name> Pattern" shows what the view must supply:
+   which fields, which markup
+   classes and how many items. Follow it; a Pattern shows its finished design
+   only when the view matches.
 
-A Pattern owns its layout and sizes itself by the room it has, not by the screen width. The breakpoint setting still picks when the regular carousel changes; a Pattern switches to its narrow stage below 768px wide, whatever that setting says. On narrow screens the Ambient stage, Index split and Orbit dock Patterns keep a 12px gutter each side of the card.
+A Pattern owns its layout and sizes itself by the room it has, not by the screen
+width. The breakpoint setting still picks when the regular carousel changes; a
+Pattern switches to its narrow stage below 768px wide, whatever that setting
+says. On narrow screens the Ambient stage, Index split and Orbit dock Patterns
+keep a 12px gutter each side of the card.
+
 
 ### Example views
 
-Enable the optional `vvj_patterns_demo` module (`drush en vvj_patterns_demo`) to see every Pattern with content.
-It creates a "VVJ Slide" content type with five demo slides and pictures, plus example views titled
-"VVJ demo: <format>" for the VVJ format modules that are enabled, one page per Pattern at the paths in the table
+Enable the optional `vvj_patterns_demo` module (`drush en vvj_patterns_demo`) to
+see every Pattern with content.
+It creates a "VVJ Slide" content type with five demo slides and pictures, plus
+example views titled
+"VVJ demo: <format>" for the VVJ format modules that are enabled, one page per
+Pattern at the paths in the table
 above. Uninstalling the demo module removes the slides and pictures it created.
+
 
 ## Upgrading from 1.x
 
@@ -167,6 +201,7 @@ preserves:
 Outer rendered tag changed from `<div>` to `<vvjc-carousel>`. Theme selectors
 targeting `.vvjc` keep matching.
 
+
 ## Troubleshooting
 
 | Symptom | Fix |
@@ -176,16 +211,21 @@ targeting `.vvjc` keep matching.
 | `drush updb` errors before `vvj_core` is enabled | Run `drush en vvj_core -y`, then `drush updb -y && drush cr`. |
 | No "Patterns" section in the format settings | Enable `vvj_patterns`: `drush en vvj_patterns`. |
 
-Report bugs and request features in the [issue queue](https://www.drupal.org/project/issues/vvjc).
+Report bugs and request features in the
+[issue queue](https://www.drupal.org/project/issues/vvjc).
+
 
 ## Changelog
 
 See [CHANGELOG.md](./CHANGELOG.md).
 
+
 ## Maintainers
 
 - Alaa Haddad - [flashwebcenter](https://www.drupal.org/u/flashwebcenter)
 
+
 ## License
 
-GPL-2.0-or-later. See the [GNU General Public License, version 2 or later](https://www.gnu.org/licenses/gpl-2.0.html).
+GPL-2.0-or-later. See the
+[GNU General Public License, version 2 or later](https://www.gnu.org/licenses/gpl-2.0.html).
