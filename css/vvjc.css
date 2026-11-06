@@ -86,12 +86,7 @@
      card shows with six cards), 2x for a coverflow (below). The old fixed
      640px fell under 1x the width from 700px up and hid the side cards. A
      theme may set --vvjc-perspective-ratio. */
-  perspective: calc(
-    var(
-        --perspective,
-        calc(var(--vvjc-ring-width, var(--max-width)) * var(--vvjc-perspective-ratio, 5))
-      ) * 1px
-  );
+  perspective: calc(var(--perspective, calc(var(--vvjc-ring-width, var(--max-width)) * var(--vvjc-perspective-ratio, 5))) * 1px);
 }
 
 /* A fan wants a shallower view than a drum: its side cards are already turned
@@ -162,7 +157,8 @@
   gap: 16px;
 }
 
-.vvjc .vvjc-nav-inner button {
+/* 0,1,1 so a Pattern's own button rules (0,2,0) win; a plain theme `button` rule still loses. */
+.vvjc :where(.vvjc-nav-inner) button {
   all: unset;
   display: flex;
   align-items: center;

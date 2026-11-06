@@ -1,0 +1,37 @@
+/**
+ * @file
+ * vvjc Pattern bridge for APEX: maps the module's colour tokens to the
+ * theme's region colours.
+ *
+ * Token mapping ONLY. Every Pattern rule keeps reading the vvjc tokens
+ * declared in vvjc-pattern-base.css; nothing here paints an element.
+ * `:where()` keeps this at zero specificity, and it loads just after the
+ * base file (weight 206), so it replaces the black-and-white defaults. Each
+ * mapping keeps the black-and-white value as its fallback, so a region that
+ * leaves a colour unset still renders. The Pattern inherits the region it
+ * sits in.
+ */
+/* Colours come from the shared --vvj-theme-* roles (vvj_patterns bridge), so the
+   theme's own colour spelling lives once, there. Each role keeps its black-and-white fallback. */
+:where(.vvj-pattern.vvjc) {
+  --vvjc-btn-fill: var(--vvj-theme-button-bg, var(--vvj-ink));
+  --vvjc-btn-text: var(--vvj-theme-button-text, var(--vvj-surface));
+  --vvjc-btn-line: var(--vvj-theme-button-bg, var(--vvj-ink));
+  --vvjc-btn-line-quiet: var(--vvj-theme-control-line, var(--vvj-muted));
+  --vvjc-tab-active: var(--vvj-theme-menu-text-hover, var(--vvj-ink));
+  --vvjc-tab-idle: var(--vvj-theme-menu-text, var(--vvj-muted));
+
+  /* APEX extra colours: the owner will name the five; none are mapped yet.
+     Add them here, one token each, with a black-and-white fallback. */
+}
+
+@media (forced-colors: active) {
+  :where(.vvj-pattern.vvjc) {
+    --vvjc-btn-fill: ButtonText;
+    --vvjc-btn-text: ButtonFace;
+    --vvjc-btn-line: ButtonText;
+    --vvjc-btn-line-quiet: CanvasText;
+    --vvjc-tab-active: CanvasText;
+    --vvjc-tab-idle: CanvasText;
+  }
+}

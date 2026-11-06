@@ -288,16 +288,24 @@
      * view looks the same at every width and screen size. A fixed 640px fell
      * under the ring's width from 700px up and hid its side cards. Runs on
      * build and after every resize; a CSSOM write, so CSP stays clean.
+     *
+     * @return {number}
+     *   The width it measured, in pixels.
      */
     _setRingWidth() {
+      const width = this._items.offsetWidth;
       this._items.parentElement?.style.setProperty(
         '--vvjc-ring-width',
-        String(this._items.offsetWidth),
+        String(width),
       );
+      return width;
     }
 
     _buildCarousel() {
-      this._setRingWidth();
+      // The width just measured: --vvjc-ring-width only sets the parent's
+      // perspective, which does not change the ring's width, so reading
+      // offsetWidth again would only force a style recalc.
+      const ringWidth = this._setRingWidth();
       if (this._style === 'coverflow') {
         // The deck never rotates; _updateSlide(), which every caller runs
         // next, lays the cards out.
@@ -310,7 +318,7 @@
 
       const theta = 360 / this._cellCount;
       const radius = Math.round(
-        this._items.offsetWidth / 2 / Math.tan(Math.PI / this._cellCount),
+        ringWidth / 2 / Math.tan(Math.PI / this._cellCount),
       );
       const reducedMotion =
         this._features.pauseOnReducedMotion && this.reducedMotion;
@@ -374,7 +382,10 @@
         this._updateDots();
       }
       if (this._features.enableScreenReader && this._announcer) {
-        this._announcer.textContent = `Slide ${this._currentIndex + 1} of ${this._cellCount}`;
+        this._announcer.textContent = Drupal.t('Slide @current of @total', {
+          '@current': this._currentIndex + 1,
+          '@total': this._cellCount,
+        });
       }
       if (
         (this._features.showProgressBar || this._pattern) &&
@@ -386,6 +397,31 @@
       this._updateDeepLinkHash();
       this._updateNavVisibility();
       this._writePatternState();
+      this._syncCellTabStops();
+    }
+
+    /**
+     * Keeps a slide out of the Tab order unless it is the only way in.
+     *
+     * A slide is a group, not a control: Tab reaches the links and buttons
+     * inside it, and arrows, dots or play reach the keys. Only when keyboard
+     * navigation is on and the carousel shows none of those controls does
+     * the current slide stay a tab stop, so the arrow keys can still be used.
+     * Every slide keeps tabindex -1 so focus can still be moved to it.
+     */
+    _syncCellTabStops() {
+      const hasControls =
+        (this._features.showNavigationArrows &&
+          Boolean(this._prevButton || this._nextButton)) ||
+        (this._features.showDotsNavigation && Boolean(this._dotsContainer)) ||
+        (this._features.showPlayPause && Boolean(this._playPauseButton));
+      const slideIsTheWayIn = this._features.enableKeyboardNav && !hasControls;
+      this._cells.forEach((cell, index) => {
+        cell.setAttribute(
+          'tabindex',
+          slideIsTheWayIn && index === this._currentIndex ? '0' : '-1',
+        );
+      });
     }
 
     /**
@@ -483,6 +519,7 @@
      *   Duration in ms; 0 when none is declared.
      */
     _cssDurationOf(cell) {
+      // vvj-motion: allow (d) clears the inline transition to read the stylesheet duration, once per instance.
       if (this._cssDuration !== null) {
         return this._cssDuration;
       }
@@ -512,7 +549,8 @@
       const { left, right, step, maxDist } = this._getCoverflowLayout();
       this._setRingWidth();
       const depth =
-        CF_DEPTH_RATIO * (this._cells[0]?.offsetWidth || this._items.offsetWidth);
+        CF_DEPTH_RATIO *
+        (this._cells[0]?.offsetWidth || this._items.offsetWidth);
       // RTL: the next card sits on the left, so the fan is mirrored.
       const mirror = this._isRTL ? -1 : 1;
 
@@ -706,25 +744,32 @@
           () => this._togglePlayPause(),
           { signal: this.signal },
         );
-        this._playPauseButton.addEventListener(
-          'keydown',
-          (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              this._togglePlayPause();
-            }
-          },
-          { signal: this.signal },
-        );
+        // No keydown here: the native button already turns Enter and Space
+        // into one click. A second handler toggled twice.
       }
+
+      // A visitor action turns announcements back on (timer steps turn them
+      // off in _startAutoPlay).
+      const polite = () => this._setLiveRegions(true);
+      this.addEventListener('click', polite, {
+        capture: true,
+        signal: this.signal,
+      });
+      this.addEventListener('keydown', polite, {
+        capture: true,
+        signal: this.signal,
+      });
 
       if (this._features.enableKeyboardNav) {
         this.addEventListener(
           'keydown',
           (event) => {
-            if (
-              event.target.closest('input, textarea, [contenteditable="true"]')
-            ) {
+            // A focused button, link or field keeps its own keys (Space,
+            // Enter, Home, End); only the carousel or a slide gets these.
+            const control = event.target.closest(
+              'a[href], button, input, select, textarea, summary, [contenteditable="true"]',
+            );
+            if (control && control !== this && this.contains(control)) {
               return;
             }
             switch (event.key) {
@@ -838,8 +883,12 @@
         .forEach((dot, index) => {
           const isActive = index === this._currentIndex;
           dot.classList.toggle('active', isActive);
-          dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
-          dot.setAttribute('tabindex', isActive ? '0' : '-1');
+          // Plain buttons in the Tab order; aria-current marks the shown one.
+          if (isActive) {
+            dot.setAttribute('aria-current', 'true');
+          } else {
+            dot.removeAttribute('aria-current');
+          }
         });
       if (this._scrollableDotsWidth > 0) {
         this._centerActiveDot();
@@ -874,14 +923,28 @@
     _startAutoPlay() {
       clearInterval(this._intervalId);
       if (this._rotationDelay > 0 && !this._isPaused) {
-        this._intervalId = setInterval(
-          () => this._advanceSlide(),
-          this._rotationDelay,
-        );
+        this._intervalId = setInterval(() => {
+          // A timer step is not announced; a visitor action is.
+          this._setLiveRegions(false);
+          this._advanceSlide();
+        }, this._rotationDelay);
         if (this._features.showProgressBar || this._pattern) {
           this._startProgress();
         }
       }
+    }
+
+    /**
+     * Turns the announcer and the slide counter on or off.
+     *
+     * @param {boolean} on
+     *   TRUE after a visitor action, FALSE before a timer step, so autoplay
+     *   does not talk over the page.
+     */
+    _setLiveRegions(on) {
+      const value = on ? 'polite' : 'off';
+      this._announcer?.setAttribute('aria-live', value);
+      this._slideNumberEl?.setAttribute('aria-live', value);
     }
 
     _pauseAutoPlay() {
@@ -920,14 +983,15 @@
         return;
       }
       this._playPauseButton.innerHTML = isPaused ? PLAY_SVG : PAUSE_SVG;
+      // The name carries the state, so no aria-pressed (it read as a
+      // contradiction). The play / pause classes drive the Pattern icon.
       this._playPauseButton.setAttribute(
         'aria-label',
-        isPaused ? 'Play slideshow' : 'Pause slideshow',
+        isPaused ? Drupal.t('Play slideshow') : Drupal.t('Pause slideshow'),
       );
-      this._playPauseButton.setAttribute(
-        'aria-pressed',
-        isPaused ? 'false' : 'true',
-      );
+      this._playPauseButton.removeAttribute('aria-pressed');
+      this._playPauseButton.classList.toggle('play', isPaused);
+      this._playPauseButton.classList.toggle('pause', !isPaused);
     }
 
     // -----------------------------------------------------------------

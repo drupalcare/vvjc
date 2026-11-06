@@ -20,10 +20,10 @@
 .vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav { position: relative; z-index: 5; display: flex; justify-content: center; margin: 30px 0 0; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav .vvjc-nav-inner { display: grid; grid-template-columns: 48px 52px auto 48px; grid-template-areas: "prev play count next"; align-items: center; gap: 4px; width: auto; padding: 6px; color: var(--vvj-ink); border: 1px solid var(--vvj-line); border-radius: 999px; background: var(--vvj-raised); box-shadow: var(--vvj-glass-shadow); animation: vvjc-orbit-dock-dock 0.9s var(--vvj-ease-out) 0.7s both; }
 @keyframes vvjc-orbit-dock-dock { from { opacity: 0; transform: translateY(26px) scale(0.9); } }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-nav-inner) .prev-arrow { grid-area: prev; }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-nav-inner) .next-arrow { grid-area: next; }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-nav-inner) .control-btn[id^="btn-"] { grid-area: play; justify-self: center; }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow, .control-btn[id^="btn-"]) { width: 48px; height: 48px; font-size: 16px; transition: background-color 0.2s, transform 0.15s; }
+.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .prev-arrow { grid-area: prev; }
+.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .next-arrow { grid-area: next; }
+.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .control-btn:where([id^="btn-"]) { grid-area: play; justify-self: center; }
+.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow, .control-btn:where([id^="btn-"])) { --vvjc-btn-w: 48px; --vvjc-btn-h: 48px; --vvjc-btn-size: 16px; transition: background-color 0.2s, transform 0.15s; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner :is(.prev-arrow, .next-arrow, .control-btn[id^="btn-"]):not(.vvjc-disabled):hover { background: var(--vvj-line); }
 :where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow)::before { transition: transform 0.25s var(--vvj-ease-out); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner .prev-arrow:hover::before { transform: translateX(-3px); }

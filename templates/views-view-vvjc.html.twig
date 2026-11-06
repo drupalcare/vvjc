@@ -110,7 +110,7 @@
       {% endif %}{% if geometry == 'coverflow' %} data-vvjc-style="coverflow"{% endif %}>
       {% for row in rows %}
         {% set row_id = 'item-' ~ unique_id ~ '-' ~ loop.index %}
-        <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="tabpanel" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="{{ loop.first ? '0' : '-1' }}" aria-labelledby="label-{{ row_id }}" {% if background_rgb and not options.disable_background %} style="background-color:{{ background_rgb }}"{% endif %}>
+        <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="group" aria-roledescription="{{ 'slide'|t }}" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="-1" aria-labelledby="label-{{ row_id }}" {% if background_rgb and not options.disable_background %} style="background-color:{{ background_rgb }}"{% endif %}>
           <div id="label-{{ row_id }}" class="visually-hidden">{{ 'Slide @index of @count'|t({'@index': loop.index, '@count': rows|length}) }}</div>
           {{ row.content }}
         </div>
@@ -133,7 +133,7 @@
       {% endif %}
 
       {% if show_play_pause and time_in_seconds > 0 %}
-        <button id="btn-{{ unique_id }}" class="button display-{{ time_in_seconds }}{% if time_in_seconds > 0 %} pause{% else %} play{% endif %} control-btn" aria-controls="{{ carousel_id }}" aria-pressed="{{ time_in_seconds > 0 ? 'true' : 'false' }}" aria-label="{{ time_in_seconds > 0 ? 'Pause Slideshow' : 'Play Slideshow' }}">
+        <button id="btn-{{ unique_id }}" class="button display-{{ time_in_seconds }}{% if time_in_seconds > 0 %} pause{% else %} play{% endif %} control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ time_in_seconds > 0 ? 'Pause slideshow'|t : 'Play slideshow'|t }}">
           <span class="visually-hidden">{{ 'Play Pause 3D Carousel'|t }}</span>
           {{ include('@vvjc/svg/svg-pause.svg') }}
         </button>
@@ -141,7 +141,9 @@
 
       {% if show_progress_bar and time_in_seconds > 0 %}
         <div class="echo-animation">
-          <div class="progressbar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="{{ 'Slide progress'|t }}" aria-live="polite" data-total-time="{{ time_in_seconds }}" data-current-progress="0" style="--progress: 0%;"></div>
+          {# Decorative, hidden from assistive technology: the slide counter carries
+             the state. aria-valuenow stays because the CSS draws the percentage. #}
+          <div class="progressbar" aria-hidden="true" aria-valuenow="0" data-total-time="{{ time_in_seconds }}" data-current-progress="0" style="--progress: 0%;"></div>
         </div>
       {% endif %}
 
@@ -153,7 +155,7 @@
 
       {% if show_dots_navigation %}
         <div class="vvjc-dots-nav{{ scrollable_dots_width > 0 ? ' vvjc-scrollable-dots' : '' }}"
-             role="tablist"
+             role="group"
              aria-label="{{ 'Slide navigation'|t }}"
              {% if scrollable_dots_width > 0 %}
              data-scrollable-dots-width="{{ scrollable_dots_width }}"
@@ -164,17 +166,15 @@
               {% set slide_link = '#carousel3d-' ~ deeplink_config.identifier ~ '-' ~ loop.index %}
               <a href="{{ slide_link }}"
                  class="dots-numbers-button{{ loop.first ? ' active' : '' }} control-btn"
-                 role="tab"
-                 aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                 {% if loop.first %}aria-current="true"{% endif %}
                  aria-controls="item-{{ unique_id }}-{{ loop.index }}"
-                 aria-label="{{ loop.first ? 'Slide @index selected'|t({'@index': loop.index}) : 'Go to slide @index'|t({'@index': loop.index}) }}"
-                 tabindex="{{ loop.first ? '0' : '-1' }}">
+                 aria-label="{{ 'Go to slide @index'|t({'@index': loop.index}) }}">
                 <span class="visually-hidden">{{ 'Slide @index'|t({'@index': loop.index}) }}</span>
                 {% if vvj_pattern %}<span class="vvjc-dot-num" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span>{% endif %}
               </a>
             {% else %}
               {# Default buttons #}
-              <button class="dots-numbers-button{{ loop.first ? ' active' : '' }} control-btn" role="tab" aria-selected="{{ loop.first ? 'true' : 'false' }}" aria-controls="item-{{ unique_id }}-{{ loop.index }}" aria-label="{{ 'Go to slide @index'|t({'@index': loop.index}) }}" tabindex="{{ loop.first ? '0' : '-1' }}">
+              <button class="dots-numbers-button{{ loop.first ? ' active' : '' }} control-btn" type="button"{% if loop.first %} aria-current="true"{% endif %} aria-controls="item-{{ unique_id }}-{{ loop.index }}" aria-label="{{ 'Go to slide @index'|t({'@index': loop.index}) }}">
                 <span class="visually-hidden">{{ 'Slide @index'|t({'@index': loop.index}) }}</span>
                 {% if vvj_pattern %}<span class="vvjc-dot-num" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span>{% endif %}
               </button>

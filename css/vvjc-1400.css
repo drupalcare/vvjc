@@ -7,16 +7,16 @@
  * Developer:    Alaa Haddad https://www.alaahaddad.com.
  */
 @media (max-width: 87.49875rem) {
-  .vvjc.br-1400 > .vvjc-inner,
-  :where(.vvjc.br-1400) > :where(.vvjc-inner) > .vvjc-items {
+  .vvjc.br-1400:where(:not(.vvj-pattern)) > .vvjc-inner,
+  :where(.vvjc.br-1400:where(:not(.vvj-pattern))) > :where(.vvjc-inner) > .vvjc-items {
     height: calc(var(--height-small) * 0.0625rem);
   }
 
-  .vvjc.br-1400 > .vvjc-inner > .vvjc-items > .vvjc-item {
+  .vvjc.br-1400:where(:not(.vvj-pattern)) > .vvjc-inner > .vvjc-items > .vvjc-item {
     height: calc((var(--height-small) - 16) * 0.0625rem);
   }
 
-  .vvjc.br-1400 .vvjc-items > .vvjc-item {
+  .vvjc.br-1400:where(:not(.vvj-pattern)) .vvjc-items > .vvjc-item {
     width: 100%;
     padding: 0 16px;
     inset-inline-start: 0;

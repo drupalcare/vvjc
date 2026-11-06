@@ -61,6 +61,18 @@ vvjc-coverflow:
   dependencies:
     - vvjc/vvjc
 
+# Theme bridges: token mapping only. vvj_patterns adds the one that matches the
+# active theme as a dependency of vvjc-pattern-base; neutral loads neither.
+pattern-bridge-solo:
+  css:
+    theme:
+      patterns/bridge/vvjc-bridge-solo.css: { weight: 206 }
+
+pattern-bridge-apex:
+  css:
+    theme:
+      patterns/bridge/vvjc-bridge-apex.css: { weight: 206 }
+
 # Patterns. The weights put them after the breakpoint (202) and coverflow
 # (201) files, so a Pattern rule wins over the module rule it restyles.
 vvjc-pattern-base:

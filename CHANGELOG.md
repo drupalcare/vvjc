@@ -11,6 +11,12 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 
 ### Fixed
 
+- Layout: the breakpoint stylesheets (`vvjc-576` to `vvjc-1400`) no longer match a Pattern, so a Pattern's layout comes from its own CSS only; the narrow stage height now follows the viewport rule the Patterns use. Classic 3D carousels render as before.
+- Accessibility: slides are no longer extra Tab stops (the first slide stayed one even after it turned away); the current slide is a Tab stop only when keyboard navigation is on and no arrows, dots or play button are shown.
+- Accessibility: Space on the play/pause button toggles once (the button and the carousel both toggled); carousel keys leave focused controls alone; the progress bar is hidden from screen readers and no longer a live region; timer steps no longer fill the live regions; play/pause drops `aria-pressed` and its labels and the slide announcement are translatable; dots are plain buttons with `aria-current` instead of a partial tabs pattern.
+
+- Index split: the card text now has 22px side padding (the card pads it; the picture stays full width).
+
 - **3D depth follows the carousel width.** With Perspective left at zero, the
   depth is now the ring's measured width times a ratio (ring 5x, coverflow
   2x), set again on every resize. The old fixed 640px fell under the width
@@ -49,8 +55,12 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
   row style" note instead.
 - Deep-link "URL Identifier" field show/hide + required toggle now works (fixed
   in the `vvj_core` base. The toggle attributes are slug-derived).
+- The carousel measures the ring width once per layout instead of writing then reading it.
 
 ### Added
+
+- Patterns: the bridge reads the shared `--vvj-theme-*` roles instead of spelling theme names.
+- Pattern theme bridges for Solo and APEX (`pattern-bridge-solo`, `pattern-bridge-apex`): they map the module's own colour tokens to the region colours, and the Pattern colours that were hard-coded are now declared once in the pattern base file. Black and white stays the default under any other theme.
 
 - **Patterns**: 5 ready-made designs for this format (Story reel, Orbit dock, Index split, Thumb rail, Ambient stage). Pick one in the "Patterns" section of the format settings and its layout, animation, styling and deep linking settings are applied to the view. Needs the `vvj_patterns` module from `vvj_core`; the optional `vvj_patterns_demo` module adds example views.
 - **Carousel Style** option (Format settings → Dimensions): *Rotating ring*
@@ -77,6 +87,10 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 - Hooks moved to OOP `#[Hook]` classes.
 - `Drupal.vvjc.{getInstance,getAllInstances,goToSlide,getCurrentSlide,getTotalSlides,nextSlide,prevSlide,pause,resume,pauseAll,resumeAll}`
   now delegate to methods on the custom element instance.
+- Code style: JavaScript and CSS follow Drupal core's ESLint, Stylelint and Prettier rules, and the spell-check job passes with a project word file. Rendering and behavior are unchanged.
+- Pattern controls draw as designed again: the module's round 28px nav-button rule now has lower specificity (0,1,1), so a Pattern's own button styles win (Story Reel's play/pause pill and arrows broke when the Patterns moved to low specificity).
+- Pattern buttons keep their designed shape: the shared Pattern reset reads `--vvjc-btn-*` custom properties, which the module's `all: unset` button rule cannot clear, so Story Reel's pills, Thumb Rail's glass arrows and Index Split's square buttons draw as designed.
+- The one deliberate style-write-then-read (reading the stylesheet's transition duration, once per carousel) is marked for the motion check with its reason. No behavior change.
 
 ### Drupal core / PHP
 

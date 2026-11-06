@@ -29,123 +29,225 @@
 .vvj-pattern.vvjc,
 :where(.vvj-pattern.vvjc) *,
 :where(.vvj-pattern.vvjc) *::before,
-:where(.vvj-pattern.vvjc) *::after { box-sizing: border-box; }
+:where(.vvj-pattern.vvjc) *::after {
+  box-sizing: border-box;
+}
+
+/* vvjc colour tokens: the ONE place each is declared. Defaults are the
+   black-and-white values from the --vvj-* tokens. Zero specificity, so a
+   theme bridge (patterns/bridge/) loaded after this file replaces them. */
+:where(.vvj-pattern.vvjc) {
+  /* Filled button (play, hover fill of an outlined arrow) and its text.
+     Not --vvjc-btn-bg: that name is the per-button background hook below. */
+  --vvjc-btn-fill: var(--vvj-ink);
+  --vvjc-btn-text: var(--vvj-surface);
+  /* Outlined arrow: text and border; the quiet border is the softer outline. */
+  --vvjc-btn-line: var(--vvj-ink);
+  --vvjc-btn-line-quiet: var(--vvj-muted);
+  /* Dots and tabs: the active mark and the idle label. */
+  --vvjc-tab-active: var(--vvj-ink);
+  --vvjc-tab-idle: var(--vvj-muted);
+  /* Caption bar scrim over the photo (Thumb rail): the stage ground at 60%. */
+  --vvjc-caption-scrim: color-mix(in sRGB, var(--vvj-stage-bg) 60%, transparent);
+}
 
 /* Theme resets: headings, paragraphs, lists, images. */
 :where(.vvj-pattern.vvjc) :is(h1, h2, h3, h4, h5, h6, p) {
   margin: 0;
   padding: 0;
+  word-break: normal;
+  hyphens: manual;
+  color: inherit;
   font-size: inherit;
   line-height: inherit;
-  color: inherit;
-  hyphens: manual;
   overflow-wrap: normal;
-  word-break: normal;
 }
-:where(.vvj-pattern.vvjc) :is(ul, ol, li) { list-style: none; margin: 0; padding: 0; }
-:where(.vvj-pattern.vvjc) :is(img, svg) { display: block; max-width: 100%; height: auto; }
+:where(.vvj-pattern.vvjc) :is(ul, ol, li) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+:where(.vvj-pattern.vvjc) :is(img, svg) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
 
 /* The view is a one-column grid: without this its track grows to the
    widest child (a row of dots) and the page scrolls sideways. */
-:where(.vvj-pattern.vvjc) > .vvjc-inner { min-width: 0; }
+:where(.vvj-pattern.vvjc) > .vvjc-inner {
+  min-width: 0;
+}
+
+/* Narrow stage height. The module's vvjc-NNN.css files no longer reach a
+   Pattern (they skip .vvj-pattern), and they used to set the small height on
+   the stage and its cards. The stage and every card read --height-large, so
+   the inner element reads the small value instead: same computed heights, at
+   zero specificity (a rule on the card itself could not win at 0,2,0). The
+   breakpoint is the one Thumb rail already uses for its arrow offset. */
+@media (max-width: 767.98px) {
+  :where(.vvj-pattern.vvjc) > .vvjc-inner {
+    --height-large: var(--height-small);
+  }
+}
 
 /* Cards: the image fills the card, the words sit on a scrim at the bottom. */
-.vvj-pattern.vvjc .vvjc-items > .vvjc-item { overflow: hidden; border-radius: var(--vvj-radius); background: var(--vvj-stage-bg); color: var(--vvj-stage-color); }
-.vvj-pattern.vvjc .vvjc-item .vvj-media { position: absolute; inset: 0; overflow: hidden; }
-.vvj-pattern.vvjc .vvjc-item .vvj-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.vvj-pattern.vvjc .vvjc-item .vvj-media::after { content: ""; position: absolute; inset: 0; background: var(--vvj-stage-scrim); pointer-events: none; }
-:where(.vvj-pattern.vvjc) :where(.vvjc-item) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) { position: relative; margin: 0; }
+.vvj-pattern.vvjc .vvjc-items > .vvjc-item {
+  overflow: hidden;
+  color: var(--vvj-stage-color);
+  border-radius: var(--vvj-radius);
+  background: var(--vvj-stage-bg);
+}
+.vvj-pattern.vvjc .vvjc-item .vvj-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.vvj-pattern.vvjc .vvjc-item .vvj-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vvj-pattern.vvjc .vvjc-item .vvj-media::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+  background: var(--vvj-stage-scrim);
+  inset: 0;
+}
+:where(.vvj-pattern.vvjc) :where(.vvjc-item) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) {
+  position: relative;
+  margin: 0;
+}
 
 /* Titles beat the theme's h1-h6 colour and never hyphenate. */
 .vvj-pattern.vvjc .vvjc-item .vvj-title,
-.vvj-pattern.vvjc .vvjc-item .vvj-title a { color: inherit; hyphens: manual; overflow-wrap: normal; word-break: normal; text-decoration: none; }
+.vvj-pattern.vvjc .vvjc-item .vvj-title a {
+  text-decoration: none;
+  word-break: normal;
+  hyphens: manual;
+  color: inherit;
+  overflow-wrap: normal;
+}
 /* A theme heading colour (apex_theme: dark purple on the dark stage) must not
    reach a heading the view prints inside the title field. */
-:where(.vvj-pattern.vvjc) :where(.vvjc-items) > :where(.vvjc-item) :where(.vvj-title) :is(h1, h2, h3, h4, h5, h6, a, span) { color: inherit; }
+:where(.vvj-pattern.vvjc) :where(.vvjc-items) > :where(.vvjc-item) :where(.vvj-title) :is(h1, h2, h3, h4, h5, h6, a, span) {
+  color: inherit;
+}
 
 /* Link control: full reset; each Pattern sets only its own shape. */
 .vvj-pattern.vvjc .vvjc-item :is(.vvj-title, .vvj-link) a {
-  appearance: none;
   display: inline;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
   margin: 0;
   padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-  color: inherit;
-  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  vertical-align: baseline;
+  text-decoration: none;
   letter-spacing: normal;
   text-transform: none;
-  text-decoration: none;
-  text-align: start;
-  width: auto;
-  height: auto;
-  min-width: 0;
-  min-height: 0;
-  vertical-align: baseline;
+  color: inherit;
+  border: 0;
+  border-radius: 0;
   outline: 0;
-  cursor: pointer;
+  background: none;
+  box-shadow: none;
+  font: inherit;
+  appearance: none;
 }
-.vvj-pattern.vvjc .vvjc-item :is(.vvj-title, .vvj-link) a:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.vvj-pattern.vvjc .vvjc-item :is(.vvj-title, .vvj-link) a:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
 
 /* Controls: drop the module's dark round chrome; each Pattern draws its own. */
 .vvj-pattern.vvjc .vvjc-nav-inner button,
 .vvj-pattern.vvjc .vvjc-nav-inner button:hover,
 .vvj-pattern.vvjc .vvjc-nav-inner .button.vvjc-disabled:hover,
 .vvj-pattern.vvjc .vvjc-nav-inner .button.vvjc-disabled:active {
-  appearance: none;
-  box-sizing: border-box;
-  position: relative;
+  position: var(--vvjc-btn-pos, relative);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  box-sizing: border-box;
+  /* A Pattern sets its button shape through these properties: this reset has to
+     outrank the module's hover and disabled rules, so plain declarations in a
+     Pattern's light rule would never apply. */
+  width: var(--vvjc-btn-w, 44px);
+  height: var(--vvjc-btn-h, 44px);
   margin: 0;
-  padding: 0;
+  padding: var(--vvjc-btn-pad, 0);
   cursor: pointer;
   transform: none;
-  color: inherit;
-  border: 0;
-  border-radius: 50%;
-  background: none;
-  box-shadow: none;
-  backdrop-filter: none;
-  font: inherit;
-  letter-spacing: normal;
-  text-transform: none;
-  text-decoration: none;
   text-align: center;
   vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--vvjc-btn-color, currentColor);
+  border: var(--vvjc-btn-border, 0);
+  border-radius: var(--vvjc-btn-radius, 50%);
   outline: 0;
+  background: var(--vvjc-btn-bg, none);
+  box-shadow: var(--vvjc-btn-shadow, none);
+  font: inherit;
+  font-size: var(--vvjc-btn-size, 1em);
+  appearance: none;
+  backdrop-filter: var(--vvjc-btn-backdrop, none);
   -webkit-tap-highlight-color: transparent;
 }
-.vvj-pattern.vvjc .vvjc-nav-inner button svg { display: none; }
+.vvj-pattern.vvjc .vvjc-nav-inner button svg {
+  display: none;
+}
 .vvj-pattern.vvjc .vvjc-nav-inner :is(.prev-arrow, .next-arrow, .control-btn[id^="btn-"])::before {
-  content: "";
   flex: none;
   width: 1em;
   height: 1em;
+  content: "";
   background: currentColor;
   -webkit-mask: var(--vvjc-icon) center / contain no-repeat;
   mask: var(--vvjc-icon) center / contain no-repeat;
 }
-:where(.vvj-pattern.vvjc) .prev-arrow { --vvjc-icon: var(--vvjc-icon-prev); }
-:where(.vvj-pattern.vvjc) .next-arrow { --vvjc-icon: var(--vvjc-icon-next); }
-:where(.vvj-pattern.vvjc) .control-btn[id^="btn-"] { --vvjc-icon: var(--vvjc-icon-pause); }
-.vvj-pattern.vvjc .control-btn[id^="btn-"]:is(.play, [aria-pressed="false"]) { --vvjc-icon: var(--vvjc-icon-play); }
-.vvj-pattern.vvjc .vvjc-nav-inner .control-btn:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
-.vvj-pattern.vvjc .vvjc-nav-inner .button.vvjc-disabled { cursor: not-allowed; opacity: 0.38; }
+:where(.vvj-pattern.vvjc) .prev-arrow {
+  --vvjc-icon: var(--vvjc-icon-prev);
+}
+:where(.vvj-pattern.vvjc) .next-arrow {
+  --vvjc-icon: var(--vvjc-icon-next);
+}
+:where(.vvj-pattern.vvjc) .control-btn[id^="btn-"] {
+  --vvjc-icon: var(--vvjc-icon-pause);
+}
+.vvj-pattern.vvjc .control-btn[id^="btn-"]:is(.play, [aria-pressed="false"]) {
+  --vvjc-icon: var(--vvjc-icon-play);
+}
+.vvj-pattern.vvjc .vvjc-nav-inner .control-btn:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+.vvj-pattern.vvjc .vvjc-nav-inner .button.vvjc-disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
 
 /* Dots: plain buttons; the Pattern gives them a shape. */
-.vvj-pattern.vvjc .vvjc-dots-nav { display: flex; flex-wrap: nowrap; gap: 6px; margin: 0; padding: 0; }
+.vvj-pattern.vvjc .vvjc-dots-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
 .vvj-pattern.vvjc .vvjc-dots-nav .dots-numbers-button,
 .vvj-pattern.vvjc .vvjc-dots-nav .dots-numbers-button:hover,
 .vvj-pattern.vvjc .vvjc-dots-nav .dots-numbers-button.active {
   width: auto;
-  height: 44px;
   min-width: 24px;
+  height: 44px;
   cursor: pointer;
   transform: none;
   animation: none;
@@ -157,17 +259,37 @@
   font-size: 0.8125rem;
   line-height: 1;
 }
-.vvj-pattern.vvjc .vvjc-dots-nav .dots-numbers-button.active { cursor: default; }
-:where(.vvj-pattern.vvjc) .vvjc-dot-num { font-variant-numeric: tabular-nums; }
+.vvj-pattern.vvjc .vvjc-dots-nav .dots-numbers-button.active {
+  cursor: default;
+}
+:where(.vvj-pattern.vvjc) .vvjc-dot-num {
+  font-variant-numeric: tabular-nums;
+}
 
 /* Counter and progress: no pill, no percentage inside the ring. */
-.vvj-pattern.vvjc .echo-total { width: auto; height: auto; margin: 0; padding: 0; color: inherit; border: 0; border-radius: 0; background: none; font-variant-numeric: tabular-nums; }
+.vvj-pattern.vvjc .echo-total {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-variant-numeric: tabular-nums;
+}
 .vvj-pattern.vvjc .progressbar::before,
-.vvj-pattern.vvjc .progressbar::after { display: none; }
+.vvj-pattern.vvjc .progressbar::after {
+  display: none;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .vvj-pattern.vvjc,
   :where(.vvj-pattern.vvjc) *,
   :where(.vvj-pattern.vvjc) *::before,
-  :where(.vvj-pattern.vvjc) *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  :where(.vvj-pattern.vvjc) *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

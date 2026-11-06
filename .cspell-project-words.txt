@@ -1,0 +1,3 @@
+# Project words for cspell (drupal.org CI reads this file by name).
+# Terms used in comments
+recalc

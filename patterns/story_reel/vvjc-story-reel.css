@@ -24,7 +24,7 @@
 
 /* Story bars = the dots; the active one fills with the slide time. */
 .vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-dots-nav { grid-area: bars; width: min(560px, 100%); gap: 6px; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-dots-nav .dots-numbers-button { flex: 1; min-width: 0; color: var(--vvj-ink); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-dots-nav .dots-numbers-button { flex: 1; min-width: 0; color: var(--vvjc-tab-active); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-dots-nav .dots-numbers-button .vvjc-dot-num { display: none; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-dots-nav .dots-numbers-button::before,
 .vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-dots-nav .dots-numbers-button::after { content: ""; position: absolute; inset: calc(50% - 2px) 0 auto; height: 4px; border-radius: 4px; }
@@ -33,12 +33,12 @@
 .vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-dots-nav .dots-numbers-button:hover::before { background: var(--vvj-muted); }
 
 /* Pill buttons; the arrow passes through the button on hover. */
-:where(.vvj-pattern--vvjc-story-reel) :where(.vvjc-nav-inner) .prev-arrow { grid-area: prev; }
-:where(.vvj-pattern--vvjc-story-reel) :where(.vvjc-nav-inner) .next-arrow { grid-area: next; }
-:where(.vvj-pattern--vvjc-story-reel) :where(.vvjc-nav-inner) .control-btn[id^="btn-"] { grid-area: play; }
-:where(.vvj-pattern--vvjc-story-reel) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow, .control-btn[id^="btn-"]) { overflow: hidden; width: auto; min-width: 64px; height: 48px; padding: 0 20px; color: var(--vvj-ink); border: 1.5px solid var(--vvj-muted); border-radius: 999px; font-size: 18px; transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.15s; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-nav-inner .control-btn[id^="btn-"] { min-width: 112px; color: var(--vvj-surface); border-color: var(--vvj-ink); background: var(--vvj-ink); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvj-surface); border-color: var(--vvj-ink); background: var(--vvj-ink); }
+.vvj-pattern--vvjc-story-reel :where(.vvjc-nav-inner) .prev-arrow { grid-area: prev; }
+.vvj-pattern--vvjc-story-reel :where(.vvjc-nav-inner) .next-arrow { grid-area: next; }
+.vvj-pattern--vvjc-story-reel :where(.vvjc-nav-inner) .control-btn:where([id^="btn-"]) { grid-area: play; }
+.vvj-pattern--vvjc-story-reel :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow, .control-btn:where([id^="btn-"])) { overflow: hidden; --vvjc-btn-w: auto; min-width: 64px; --vvjc-btn-h: 48px; --vvjc-btn-pad: 0 20px; --vvjc-btn-color: var(--vvjc-btn-line); --vvjc-btn-border: 1.5px solid var(--vvjc-btn-line-quiet); --vvjc-btn-radius: 999px; --vvjc-btn-size: 18px; transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.15s; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-nav-inner .control-btn[id^="btn-"] { min-width: 112px; color: var(--vvjc-btn-text); border-color: var(--vvjc-btn-fill); background: var(--vvjc-btn-fill); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvjc-btn-text); border-color: var(--vvjc-btn-fill); background: var(--vvjc-btn-fill); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-nav-inner .next-arrow:hover::before { animation: vvjc-story-reel-through-r 0.45s var(--vvj-ease-out); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-nav-inner .prev-arrow:hover::before { animation: vvjc-story-reel-through-l 0.45s var(--vvj-ease-out); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-story-reel .vvjc-nav-inner .control-btn:active { transform: scale(0.94); }

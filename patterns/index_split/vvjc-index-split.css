@@ -12,15 +12,16 @@
 :where(.vvj-pattern--vvjc-index-split) > .vvjc-inner { grid-area: stage; }
 
 /* Text cards: image on top, words below on the page ground. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-items > .vvjc-item { display: flex; flex-direction: column; gap: 8px; padding: 0 0 22px; color: var(--vvj-ink); border: 1px solid var(--vvj-line); border-radius: 20px; background: var(--vvj-surface); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-items > .vvjc-item { display: flex; flex-direction: column; gap: 8px; padding: 0 22px 22px; color: var(--vvj-ink); border: 1px solid var(--vvj-line); border-radius: 20px; background: var(--vvj-surface); }
 :where(.vvj-pattern--vvjc-index-split) :where(.vvjc-items) > .vvjc-item:not(.active) { opacity: 0.22; }
 /* A faded card shows its picture only: its words would be unreadable. */
 :where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item:not(.active)) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) { visibility: hidden; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media { position: relative; flex: 1 1 0; min-height: 96px; margin: 0 0 12px; background: var(--vvj-raised); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media { position: relative; flex: 1 1 0; min-height: 96px; margin: 0 -22px 12px; background: var(--vvj-raised); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media::after { content: none; }
 :where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item) :where(.vvj-media) img { clip-path: inset(0 100% 0 0); transition: clip-path 1s var(--vvj-ease-io) 0.35s; }
 :where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item.active) :where(.vvj-media) img { clip-path: inset(0); }
-:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) { padding: 0 22px; }
+/* The card holds the text inset; vvj_core's p and h reset (0,2,0) zeroes padding
+   set on the text itself. The picture stays full-bleed through negative margins. */
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-kicker { color: var(--vvj-muted); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-title { font: 600 1.75rem/1.1 var(--vvj-font-display); }
 .vvj-pattern--vvjc-index-split :where(.vvjc-item) .vvj-summary { color: var(--vvj-muted); font-size: 0.9375rem; line-height: 1.5; }
@@ -35,18 +36,18 @@
 
 /* The index = the dots. */
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav { grid-area: dots; flex-direction: column; gap: 0; width: 100%; border: solid var(--vvj-line); border-width: 1px 0 0; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button { justify-content: flex-start; width: 100%; height: auto; padding: 14px 0; color: var(--vvj-muted); border: solid var(--vvj-line); border-width: 0 0 1px; font-size: 1rem; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button { justify-content: flex-start; width: 100%; height: auto; padding: 14px 0; color: var(--vvjc-tab-idle); border: solid var(--vvj-line); border-width: 0 0 1px; font-size: 1rem; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button .vvjc-dot-num { font: 600 0.8125rem/1 ui-monospace, menlo, monospace; transition: transform 0.4s var(--vvj-ease-out), color 0.3s; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button::after { content: ""; position: absolute; inset: auto 0 -1px; height: 2px; background: var(--vvj-ink); transform: scaleX(0); transform-origin: left; transition: transform 0.6s var(--vvj-ease-io); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button:hover .vvjc-dot-num { color: var(--vvj-ink); transform: translateX(4px); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active { color: var(--vvj-ink); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button::after { content: ""; position: absolute; inset: auto 0 -1px; height: 2px; background: var(--vvjc-tab-active); transform: scaleX(0); transform-origin: left; transition: transform 0.6s var(--vvj-ease-io); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button:hover .vvjc-dot-num { color: var(--vvjc-tab-active); transform: translateX(4px); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active { color: var(--vvjc-tab-active); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active .vvjc-dot-num { transform: translateX(8px); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active::after { transform: scaleX(1); }
 
 /* Square arrows, side by side in one cell. */
-:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) { grid-area: arrows; justify-self: start; width: 52px; height: 52px; color: var(--vvj-ink); border: 1.5px solid var(--vvj-ink); border-radius: 4px; font-size: 18px; transition: background-color 0.2s, color 0.2s, transform 0.1s; }
+.vvj-pattern--vvjc-index-split :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) { grid-area: arrows; justify-self: start; --vvjc-btn-w: 52px; --vvjc-btn-h: 52px; --vvjc-btn-color: var(--vvjc-btn-line); --vvjc-btn-border: 1.5px solid var(--vvjc-btn-line); --vvjc-btn-radius: 4px; --vvjc-btn-size: 18px; transition: background-color 0.2s, color 0.2s, transform 0.1s; }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .next-arrow { margin: 0 0 0 64px; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvj-surface); background: var(--vvj-ink); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvjc-btn-text); background: var(--vvjc-btn-fill); }
 :where(.vvj-pattern--vvjc-index-split) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow)::before { transition: transform 0.25s var(--vvj-ease-out); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .next-arrow:not(.vvjc-disabled):hover::before { transform: translateX(3px); }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .prev-arrow:not(.vvjc-disabled):hover::before { transform: translateX(-3px); }
