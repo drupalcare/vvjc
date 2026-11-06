@@ -2,6 +2,8 @@
 
 ## [2.0.0] (UNRELEASED)
 
+- Accessibility: in Windows high contrast (forced colors) the Pattern icons stay visible; they are masks painted with the text color, which the system used to replace.
+
 **Drop-in upgrade for 1.x sites.** v2 modernizes internals: extends `vvj_core`
 foundation, ships `<vvjc-carousel>` custom element extending `VvjElementBase`,
 AbortController-tracked listeners, IntersectionObserver-driven pause-when-out-
@@ -60,7 +62,7 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 ### Added
 
 - Patterns: the bridge reads the shared `--vvj-theme-*` roles instead of spelling theme names.
-- Pattern theme bridges for Solo and APEX (`pattern-bridge-solo`, `pattern-bridge-apex`): they map the module's own colour tokens to the region colours, and the Pattern colours that were hard-coded are now declared once in the pattern base file. Black and white stays the default under any other theme.
+- Pattern theme bridges for Solo and APEX (`pattern-bridge-solo`, `pattern-bridge-apex`): they map the module's own color tokens to the region colors, and the Pattern colors that were hard-coded are now declared once in the pattern base file. Black and white stays the default under any other theme.
 
 - **Patterns**: 5 ready-made designs for this format (Story reel, Orbit dock, Index split, Thumb rail, Ambient stage). Pick one in the "Patterns" section of the format settings and its layout, animation, styling and deep linking settings are applied to the view. Needs the `vvj_patterns` module from `vvj_core`; the optional `vvj_patterns_demo` module adds example views.
 - **Carousel Style** option (Format settings → Dimensions): *Rotating ring*

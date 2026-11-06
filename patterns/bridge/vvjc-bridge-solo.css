@@ -1,18 +1,18 @@
 /**
  * @file
- * vvjc Pattern bridge for Solo: maps the module's colour tokens to the
- * theme's region colours.
+ * vvjc Pattern bridge for Solo: maps the module's color tokens to the
+ * theme's region colors.
  *
  * Token mapping ONLY. Every Pattern rule keeps reading the vvjc tokens
  * declared in vvjc-pattern-base.css; nothing here paints an element.
  * `:where()` keeps this at zero specificity, and it loads just after the
  * base file (weight 206), so it replaces the black-and-white defaults. Each
  * mapping keeps the black-and-white value as its fallback, so a region that
- * leaves a colour unset still renders. The Pattern inherits the region it
+ * leaves a color unset still renders. The Pattern inherits the region it
  * sits in.
  */
-/* Colours come from the shared --vvj-theme-* roles (vvj_patterns bridge), so the
-   theme's own colour spelling lives once, there. Each role keeps its black-and-white fallback. */
+/* Colors come from the shared --vvj-theme-* roles (vvj_patterns bridge), so the
+   theme's own color spelling lives once, there. Each role keeps its black-and-white fallback. */
 :where(.vvj-pattern.vvjc) {
   --vvjc-btn-fill: var(--vvj-theme-button-bg, var(--vvj-ink));
   --vvjc-btn-text: var(--vvj-theme-button-text, var(--vvj-surface));

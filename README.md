@@ -139,6 +139,8 @@ The demo pages exist only while the optional `vvj_patterns_demo` module is enabl
 5. A list titled "To finish the <name> Pattern" shows what the view must supply: which fields, which markup
    classes and how many items. Follow it; a Pattern shows its finished design only when the view matches.
 
+A Pattern owns its layout and sizes itself by the room it has, not by the screen width. The breakpoint setting still picks when the regular carousel changes; a Pattern switches to its narrow stage below 768px wide, whatever that setting says. On narrow screens the Ambient stage, Index split and Orbit dock Patterns keep a 12px gutter each side of the card.
+
 ### Example views
 
 Enable the optional `vvj_patterns_demo` module (`drush en vvj_patterns_demo`) to see every Pattern with content.

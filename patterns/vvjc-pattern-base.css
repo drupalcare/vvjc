@@ -3,7 +3,7 @@
  * Shared by every vvjc Pattern: resets the vvjc controls the Patterns restyle.
  *
  * Icons are Google Material arrow, pause and play paths, drawn as masks so
- * they take the button's text colour. Every selector starts at the view's
+ * they take the button's text color. Every selector starts at the view's
  * own element, so nothing reaches the page or the theme. Defensive: every
  * element a Pattern styles is reset here with full shorthands, so a theme
  * rule on buttons, links, headings, paragraphs, lists or images cannot reach
@@ -33,7 +33,7 @@
   box-sizing: border-box;
 }
 
-/* vvjc colour tokens: the ONE place each is declared. Defaults are the
+/* vvjc color tokens: the ONE place each is declared. Defaults are the
    black-and-white values from the --vvj-* tokens. Zero specificity, so a
    theme bridge (patterns/bridge/) loaded after this file replaces them. */
 :where(.vvj-pattern.vvjc) {
@@ -121,7 +121,7 @@
   margin: 0;
 }
 
-/* Titles beat the theme's h1-h6 colour and never hyphenate. */
+/* Titles beat the theme's h1-h6 color and never hyphenate. */
 .vvj-pattern.vvjc .vvjc-item .vvj-title,
 .vvj-pattern.vvjc .vvjc-item .vvj-title a {
   text-decoration: none;
@@ -130,7 +130,7 @@
   color: inherit;
   overflow-wrap: normal;
 }
-/* A theme heading colour (apex_theme: dark purple on the dark stage) must not
+/* A theme heading color (apex_theme: dark purple on the dark stage) must not
    reach a heading the view prints inside the title field. */
 :where(.vvj-pattern.vvjc) :where(.vvjc-items) > :where(.vvjc-item) :where(.vvj-title) :is(h1, h2, h3, h4, h5, h6, a, span) {
   color: inherit;
@@ -291,5 +291,15 @@
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+/* Forced colors: icons are masks painted with currentColor. Keep that paint,
+   so the system does not replace it with the page ground and hide the icon. */
+@media (forced-colors: active) {
+  :where(.vvj-pattern.vvjc .vvjc-nav-inner :is(.prev-arrow, .next-arrow, .control-btn))::before,
+  :where(.vvj-pattern.vvjc .vvj-link a)::after,
+  :where(.vvj-pattern.vvjc .vvj-title a)::after {
+    forced-color-adjust: none;
   }
 }
