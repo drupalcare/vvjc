@@ -13,6 +13,7 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 
 ### Fixed
 
+- Help page: follows the drupal.org help text standard (translatable About and Uses sections) instead of printing README.md as raw text.
 - Layout: the breakpoint stylesheets (`vvjc-576` to `vvjc-1400`) no longer match a Pattern, so a Pattern's layout comes from its own CSS only; the narrow stage height now follows the viewport rule the Patterns use. Classic 3D carousels render as before.
 - Accessibility: slides are no longer extra Tab stops (the first slide stayed one even after it turned away); the current slide is a Tab stop only when keyboard navigation is on and no arrows, dots or play button are shown.
 - Accessibility: Space on the play/pause button toggles once (the button and the carousel both toggled); carousel keys leave focused controls alone; the progress bar is hidden from screen readers and no longer a live region; timer steps no longer fill the live regions; play/pause drops `aria-pressed` and its labels and the slide announcement are translatable; dots are plain buttons with `aria-current` instead of a partial tabs pattern.
