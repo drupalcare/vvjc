@@ -1,6 +1,10 @@
 label: 'Index split'
 description: 'A big counter and a numbered index on the left, a ring of text cards on the right; no autoplay.'
 weight: 2
+stage: boxed
+ground: light
+placement: inner-padding
+serves: [associations, university, corporate]
 options:
   carousel_style: ring
   max_width: '600'

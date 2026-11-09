@@ -1,6 +1,10 @@
 label: 'Ambient stage'
 description: 'A ring of square cards on a soft glow, a big counter, a square play button and a tick scrubber.'
 weight: 4
+stage: open
+ground: dark
+placement: inner-padding
+serves: [saas, studio, events]
 options:
   carousel_style: ring
   max_width: '400'

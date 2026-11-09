@@ -85,10 +85,9 @@
    the inner element reads the small value instead: same computed heights, at
    zero specificity (a rule on the card itself could not win at 0,2,0). The
    breakpoint is the one Thumb rail already uses for its arrow offset. */
-@media (max-width: 767.98px) {
-  :where(.vvj-pattern.vvjc) > .vvjc-inner {
-    --height-large: var(--height-small);
-  }
+/* Narrow: vvjc-narrow is set from the Pattern's own width (vvjc-carousel-element.js). */
+:where(.vvj-pattern.vvjc.vvjc-narrow) > .vvjc-inner {
+  --height-large: var(--height-small);
 }
 
 /* Cards: the image fills the card, the words sit on a scrim at the bottom. */
@@ -238,7 +237,7 @@
 .vvj-pattern.vvjc .vvjc-dots-nav {
   display: flex;
   flex-wrap: nowrap;
-  gap: 6px;
+  gap: var(--vvj-space-6, 6px);
   margin: 0;
   padding: 0;
 }
@@ -256,7 +255,7 @@
   border-radius: 0;
   background: none;
   box-shadow: none;
-  font-size: 0.8125rem;
+  font-size: var(--vvj-text-13, 0.8125rem);
   line-height: 1;
 }
 .vvj-pattern.vvjc .vvjc-dots-nav .dots-numbers-button.active {

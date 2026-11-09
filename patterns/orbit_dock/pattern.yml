@@ -1,6 +1,10 @@
 label: 'Orbit dock'
 description: 'A deep ring of wide photos with a floor glow, a caption chip and a floating dock with a progress ring.'
 weight: 1
+stage: open
+ground: light
+placement: inner-padding
+serves: [cultural, studio, events]
 options:
   carousel_style: ring
   max_width: '800'

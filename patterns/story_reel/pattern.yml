@@ -1,6 +1,10 @@
 label: 'Story reel'
 description: 'A coverflow fan of tall photo cards, story bars on top that fill with time, and pill buttons below.'
 weight: 0
+stage: open
+ground: light
+placement: inner-padding
+serves: [nonprofit, publication, creative]
 options:
   carousel_style: coverflow
   max_width: '1000'

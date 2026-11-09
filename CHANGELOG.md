@@ -13,6 +13,14 @@ key, and the full Drupal.vvjc.* public API surface from 1.x.
 
 ### Fixed
 
+- Patterns: Orbit Dock's controls float above the ring, Story Reel's bars end the top row, and Thumb Rail's tiles and play button align with the card on a wide region. Thumb Rail's counter has a solid ground so it stays readable over a light photo.
+- Patterns: Index Split numbers use the shared monospace variable.
+- Patterns: spacing, corner radius, type size, shadow and motion read shared `--vvj-*` variables with fallbacks, so a site or theme can adjust them in one place; a few odd values moved to the nearest step, under 10%.
+- Patterns: each Pattern states its stage, ground, placement and the kinds of site it serves best in `pattern.yml`.
+- Patterns: Ambient Stage, Index Split, Thumb Rail and the card height take their stacked layout from the Pattern's own width (class `vvjc-narrow`), so they stack in a narrow column on a wide screen, not only on a small screen.
+- Patterns: Thumb Rail places its arrows on the start and end sides, so Previous sits on the right on right-to-left pages.
+- Patterns: sizes that followed the screen width (`vw`) now follow the Pattern's own width (`cqi`), so a Pattern in a sidebar or narrow column keeps its proportions.
+- Patterns: Index Split cuts its 3D stage on the start side, so the turned cards no longer paint over the index list, and the big numeral sits 12 px clear of the index and arrows; Ambient Stage keeps its tick targets 12 px from the counter on phones.
 - Help page: follows the drupal.org help text standard (translatable About and Uses sections) instead of printing README.md as raw text.
 - Layout: the breakpoint stylesheets (`vvjc-576` to `vvjc-1400`) no longer match a Pattern, so a Pattern's layout comes from its own CSS only; the narrow stage height now follows the viewport rule the Patterns use. Classic 3D carousels render as before.
 - Accessibility: slides are no longer extra Tab stops (the first slide stayed one even after it turned away); the current slide is a Tab stop only when keyboard navigation is on and no arrows, dots or play button are shown.

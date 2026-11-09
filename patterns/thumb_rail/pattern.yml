@@ -1,6 +1,10 @@
 label: 'Thumb rail'
 description: 'A wide coverflow fan with a caption bar, round glass arrows over the stage and a rail of numbered tiles below.'
 weight: 3
+stage: open
+ground: light
+placement: inner-padding
+serves: [events, studio, cultural]
 options:
   carousel_style: coverflow
   max_width: '1000'

@@ -31,7 +31,10 @@
 // phpcs:disable Squiz.WhiteSpace.OperatorSpacing
 
 ((Drupal) => {
-  const { ElementBase } = Drupal.Vvj;
+  const { ElementBase, ownWidth, watchOwnWidth } = Drupal.Vvj;
+
+  // Below this own width (CSS px) a Pattern takes its stacked layout.
+  const NARROW_WIDTH = 768;
 
   const PLAY_SVG = `<svg class="svg-play" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor"><path d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path></svg>`;
   const PAUSE_SVG = `<svg class="svg-pause" xmlns="http://www.w3.org/2000/svg" viewBox="80 -880 800 800" fill="currentcolor"><path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path></svg>`;
@@ -181,6 +184,13 @@
         }
       }
 
+      // A Pattern follows the room it has, so a narrow column on a wide
+      // screen stacks too; its CSS keys on `vvjc-narrow`. A view without a
+      // Pattern keeps the window rules.
+      if (this._pattern) {
+        this.classList.toggle('vvjc-narrow', ownWidth(this) < NARROW_WIDTH);
+      }
+
       this._buildCarousel();
       this._setupControls();
       this._initDeepLinking();
@@ -227,21 +237,33 @@
         { signal: this.signal },
       );
 
+      const relayout = () => {
+        if (this._style !== 'coverflow') {
+          // The ring rebuilds its drum from the first slide. A coverflow
+          // lays out from the current card, so it keeps its place.
+          this._currentIndex = 0;
+          this._direction = 1;
+        }
+        this._buildCarousel();
+        this._updateSlide();
+        this._restartAutoPlay();
+      };
       const onResize = debounce(() => {
         const w = window.innerWidth;
         if (Math.abs(w - this._lastWidth) >= 50) {
           this._lastWidth = w;
-          if (this._style !== 'coverflow') {
-            // The ring rebuilds its drum from the first slide. A coverflow
-            // lays out from the current card, so it keeps its place.
-            this._currentIndex = 0;
-            this._direction = 1;
-          }
-          this._buildCarousel();
-          this._updateSlide();
-          this._restartAutoPlay();
+          relayout();
         }
       }, 200);
+      if (this._pattern) {
+        watchOwnWidth(this, this.signal, (width) => {
+          const narrow = width < NARROW_WIDTH;
+          if (narrow !== this.classList.contains('vvjc-narrow')) {
+            this.classList.toggle('vvjc-narrow', narrow);
+            relayout();
+          }
+        });
+      }
       window.addEventListener('resize', onResize, { signal: this.signal });
       window.addEventListener('orientationchange', onResize, {
         signal: this.signal,
