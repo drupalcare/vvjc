@@ -168,24 +168,18 @@
 .vvj-pattern--vvjc-thumb-rail :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) {
   --vvjc-arrow-top: calc(clamp(20px, 3cqi, 40px) + var(--vvjc-stage-h) / 2 - 30px);
   --vvjc-btn-pos: absolute;
-
-  z-index: 120;
-
+  --vvjc-btn-size: 16px;
   --vvjc-btn-w: 60px;
   --vvjc-btn-h: 60px;
   --vvjc-btn-color: var(--vvj-stage-color);
   --vvjc-btn-border: 1px solid var(--vvj-glass-line);
   --vvjc-btn-bg: var(--vvj-glass-bg);
   --vvjc-btn-shadow: var(--vvj-glass-shadow);
-
-  -webkit-backdrop-filter: blur(10px);
-
   --vvjc-btn-backdrop: blur(10px);
 
+  z-index: 120;
+  -webkit-backdrop-filter: blur(10px);
   overflow: hidden;
-
-  --vvjc-btn-size: 16px;
-
   transition:
     transform var(--vvj-dur-200, 0.2s),
     background-color var(--vvj-dur-200, 0.2s),

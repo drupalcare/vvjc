@@ -171,9 +171,6 @@
 
 /* Square arrows, side by side in one cell. */
 .vvj-pattern--vvjc-index-split :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) {
-  grid-area: arrows;
-  justify-self: start;
-
   --vvjc-btn-w: 52px;
   --vvjc-btn-h: 52px;
   --vvjc-btn-color: var(--vvjc-btn-line);
@@ -181,6 +178,8 @@
   --vvjc-btn-radius: 4px;
   --vvjc-btn-size: 18px;
 
+  grid-area: arrows;
+  justify-self: start;
   transition:
     background-color var(--vvj-dur-200, 0.2s),
     color var(--vvj-dur-200, 0.2s),
@@ -209,10 +208,10 @@
 /* Side by side, the ring's turned cards reached back over the index list.
    The stage is cut on its start side only; the next card still peeks at the end. */
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split:not(.vvjc-narrow) > .vvjc-inner {
-  clip-path: inset(-100vmax -100vmax -100vmax 0);
+  clip-path: inset(-100vh -100vw -100vh 0);
 }
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split:not(.vvjc-narrow):dir(rtl) > .vvjc-inner {
-  clip-path: inset(-100vmax 0 -100vmax -100vmax);
+  clip-path: inset(-100vh 0 -100vh -100vw);
 }
 
 .vvj-pattern--vvjc-index-split.vvjc-narrow {

@@ -142,19 +142,16 @@
   grid-area: play;
 }
 .vvj-pattern--vvjc-story-reel :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow, .control-btn:where([id^="btn-"])) {
-  overflow: hidden;
-
-  --vvjc-btn-w: auto;
-
-  min-width: 64px;
-
   --vvjc-btn-h: 48px;
+  --vvjc-btn-w: auto;
   --vvjc-btn-pad: 0 20px;
   --vvjc-btn-color: var(--vvjc-btn-line);
   --vvjc-btn-border: 1.5px solid var(--vvjc-btn-line-quiet);
   --vvjc-btn-radius: 999px;
   --vvjc-btn-size: 18px;
 
+  overflow: hidden;
+  min-width: 64px;
   transition:
     background-color var(--vvj-dur-250, 0.25s),
     color var(--vvj-dur-250, 0.25s),
