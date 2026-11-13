@@ -3,39 +3,183 @@
  * vvjc Pattern Orbit dock.
  */
 
-.vvj-pattern--vvjc-orbit-dock { padding: clamp(28px, 4cqi, 56px) var(--vvj-space-12, 12px) var(--vvj-space-28, 28px); opacity: 1; animation: vvjc-orbit-dock-in var(--vvj-dur-1200, 1.2s) var(--vvj-ease-out) both; }
-@keyframes vvjc-orbit-dock-in { from { opacity: 0; transform: translateY(24px) scale(0.97); } }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock > .vvjc-inner::after { content: ""; position: absolute; inset: auto 10% -26px; height: 40px; border-radius: 50%; background: radial-gradient(closest-side, var(--vvj-line), transparent); pointer-events: none; transform: translateZ(-1px); }
+.vvj-pattern--vvjc-orbit-dock {
+  padding: clamp(28px, 4cqi, 56px) var(--vvj-space-12, 12px) var(--vvj-space-28, 28px);
+  animation: vvjc-orbit-dock-in var(--vvj-dur-1200, 1.2s) var(--vvj-ease-out) both;
+  opacity: 1;
+}
+@keyframes vvjc-orbit-dock-in {
+  from {
+    transform: translateY(24px) scale(0.97);
+    opacity: 0;
+  }
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock > .vvjc-inner::after {
+  position: absolute;
+  height: 40px;
+  content: "";
+  transform: translateZ(-1px);
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--vvj-line), transparent);
+  inset: auto 10% -26px;
+}
 
 /* Wide photo cards with a caption chip. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-items > .vvjc-item { display: grid; grid-template-columns: minmax(0, max-content); align-content: end; justify-content: start; padding: var(--vvj-space-16, 16px); border-radius: var(--vvj-radius-20, 20px); box-shadow: var(--vvj-glass-shadow); }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-items) > .vvjc-item:not(.active) { opacity: 0.42; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-item .vvj-media::after { content: none; }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-item) :is(.vvj-kicker, .vvj-title) { background: var(--vvj-glass-bg); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); opacity: 0; transform: translateY(10px); transition: opacity var(--vvj-dur-400, 0.4s) var(--vvj-dur-500, 0.5s), transform var(--vvj-dur-600, 0.6s) var(--vvj-ease-out) var(--vvj-dur-500, 0.5s); }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-item.active) :is(.vvj-kicker, .vvj-title) { opacity: 1; transform: none; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-item .vvj-kicker { padding: var(--vvj-space-10, 10px) var(--vvj-space-14, 14px) var(--vvj-space-2, 2px); border-radius: var(--vvj-radius-12, 12px) var(--vvj-radius-12, 12px) 0 0; color: var(--vvj-stage-muted); font-size: var(--vvj-text-12, 0.75rem); letter-spacing: 0.12em; text-transform: uppercase; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-item .vvj-title { padding: var(--vvj-space-2, 2px) var(--vvj-space-14, 14px) var(--vvj-space-10, 10px); border-radius: 0 0 var(--vvj-radius-12, 12px) var(--vvj-radius-12, 12px); font: 600 var(--vvj-text-15, 0.9375rem)/1.3 var(--vvj-font-ui); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-items > .vvjc-item {
+  display: grid;
+  grid-template-columns: minmax(0, max-content);
+  align-content: end;
+  justify-content: start;
+  padding: var(--vvj-space-16, 16px);
+  border-radius: var(--vvj-radius-20, 20px);
+  box-shadow: var(--vvj-glass-shadow);
+}
+:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-items) > .vvjc-item:not(.active) {
+  opacity: 0.42;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-item .vvj-media::after {
+  content: none;
+}
+:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-item) :is(.vvj-kicker, .vvj-title) {
+  transition:
+    opacity var(--vvj-dur-400, 0.4s) var(--vvj-dur-500, 0.5s),
+    transform var(--vvj-dur-600, 0.6s) var(--vvj-ease-out) var(--vvj-dur-500, 0.5s);
+  transform: translateY(10px);
+  opacity: 0;
+  background: var(--vvj-glass-bg);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-item.active) :is(.vvj-kicker, .vvj-title) {
+  transform: none;
+  opacity: 1;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-item .vvj-kicker {
+  padding: var(--vvj-space-10, 10px) var(--vvj-space-14, 14px) var(--vvj-space-2, 2px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vvj-stage-muted);
+  border-radius: var(--vvj-radius-12, 12px) var(--vvj-radius-12, 12px) 0 0;
+  font-size: var(--vvj-text-12, 0.75rem);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-item .vvj-title {
+  padding: var(--vvj-space-2, 2px) var(--vvj-space-14, 14px) var(--vvj-space-10, 10px);
+  border-radius: 0 0 var(--vvj-radius-12, 12px) var(--vvj-radius-12, 12px);
+  font: 600 var(--vvj-text-15, 0.9375rem) / 1.3 var(--vvj-font-ui);
+}
 
 /* The floating dock: prev, play inside its progress ring, 1 / 5, next. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav { position: relative; z-index: 5; display: flex; justify-content: center; margin: var(--vvj-space-30, 30px) 0 0; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav .vvjc-nav-inner { display: grid; grid-template-columns: 48px 52px auto 48px; grid-template-areas: "prev play count next"; align-items: center; gap: var(--vvj-space-4, 4px); width: auto; padding: var(--vvj-space-6, 6px); color: var(--vvj-ink); border: 1px solid var(--vvj-line); border-radius: var(--vvj-radius-pill, 999px); background: var(--vvj-raised); box-shadow: var(--vvj-glass-shadow); animation: vvjc-orbit-dock-dock var(--vvj-dur-900, 0.9s) var(--vvj-ease-out) var(--vvj-dur-700, 0.7s) both; }
-@keyframes vvjc-orbit-dock-dock { from { opacity: 0; transform: translateY(26px) scale(0.9); } }
-.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .prev-arrow { grid-area: prev; }
-.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .next-arrow { grid-area: next; }
-.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .control-btn:where([id^="btn-"]) { grid-area: play; justify-self: center; }
-.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow, .control-btn:where([id^="btn-"])) { --vvjc-btn-w: 48px; --vvjc-btn-h: 48px; --vvjc-btn-size: 16px; transition: background-color var(--vvj-dur-200, 0.2s), transform var(--vvj-dur-150, 0.15s); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner :is(.prev-arrow, .next-arrow, .control-btn[id^="btn-"]):not(.vvjc-disabled):hover { background: var(--vvj-line); }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow)::before { transition: transform var(--vvj-dur-250, 0.25s) var(--vvj-ease-out); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner .prev-arrow:hover::before { transform: translateX(-3px); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner .next-arrow:hover::before { transform: translateX(3px); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner .control-btn:active { transform: scale(0.88); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .echo-animation { grid-area: play; place-self: center; display: grid; place-items: center; width: 48px; height: 48px; margin: 0; pointer-events: none; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .progressbar { align-self: center; justify-self: center; margin: 0; width: 48px; height: 48px; border-radius: 50%; background: conic-gradient(var(--vvj-ink) var(--progress, 0%), var(--vvj-line) 0); -webkit-mask: radial-gradient(circle, transparent 62%, var(--vvj-mask-solid) 64%); mask: radial-gradient(circle, transparent 62%, var(--vvj-mask-solid) 64%); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .echo-total { grid-area: count; min-width: 92px; text-align: center; font-size: var(--vvj-text-16, 1rem); font-weight: 600; letter-spacing: 0.02em; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .echo-total .vvjc-counter-separator { font-size: 0; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .echo-total .vvjc-counter-separator::before { content: " / "; color: var(--vvj-muted); font-size: var(--vvj-text-16, 1rem); white-space: pre; }
-:where(.vvj-pattern--vvjc-orbit-dock) :where(.echo-total) .total-slides { color: var(--vvj-muted); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  margin: var(--vvj-space-30, 30px) 0 0;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav .vvjc-nav-inner {
+  display: grid;
+  grid-template-areas: "prev play count next";
+  grid-template-columns: 48px 52px auto 48px;
+  align-items: center;
+  width: auto;
+  padding: var(--vvj-space-6, 6px);
+  animation: vvjc-orbit-dock-dock var(--vvj-dur-900, 0.9s) var(--vvj-ease-out) var(--vvj-dur-700, 0.7s) both;
+  color: var(--vvj-ink);
+  border: 1px solid var(--vvj-line);
+  border-radius: var(--vvj-radius-pill, 999px);
+  background: var(--vvj-raised);
+  box-shadow: var(--vvj-glass-shadow);
+  gap: var(--vvj-space-4, 4px);
+}
+@keyframes vvjc-orbit-dock-dock {
+  from {
+    transform: translateY(26px) scale(0.9);
+    opacity: 0;
+  }
+}
+.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .prev-arrow {
+  grid-area: prev;
+}
+.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .next-arrow {
+  grid-area: next;
+}
+.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) .control-btn:where([id^="btn-"]) {
+  grid-area: play;
+  justify-self: center;
+}
+.vvj-pattern--vvjc-orbit-dock :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow, .control-btn:where([id^="btn-"])) {
+  --vvjc-btn-w: 48px;
+  --vvjc-btn-h: 48px;
+  --vvjc-btn-size: 16px;
+
+  transition:
+    background-color var(--vvj-dur-200, 0.2s),
+    transform var(--vvj-dur-150, 0.15s);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner :is(.prev-arrow, .next-arrow, .control-btn[id^="btn-"]):not(.vvjc-disabled):hover {
+  background: var(--vvj-line);
+}
+:where(.vvj-pattern--vvjc-orbit-dock) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow)::before {
+  transition: transform var(--vvj-dur-250, 0.25s) var(--vvj-ease-out);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner .prev-arrow:hover::before {
+  transform: translateX(-3px);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner .next-arrow:hover::before {
+  transform: translateX(3px);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav-inner .control-btn:active {
+  transform: scale(0.88);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .echo-animation {
+  display: grid;
+  grid-area: play;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  pointer-events: none;
+  place-self: center;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .progressbar {
+  align-self: center;
+  justify-self: center;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  border-radius: 50%;
+  background: conic-gradient(var(--vvj-ink) var(--progress, 0%), var(--vvj-line) 0);
+  -webkit-mask: radial-gradient(circle, transparent 62%, var(--vvj-mask-solid) 64%);
+  mask: radial-gradient(circle, transparent 62%, var(--vvj-mask-solid) 64%);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .echo-total {
+  grid-area: count;
+  min-width: 92px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  font-size: var(--vvj-text-16, 1rem);
+  font-weight: 600;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .echo-total .vvjc-counter-separator {
+  font-size: 0;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .echo-total .vvjc-counter-separator::before {
+  content: " / ";
+  white-space: pre;
+  color: var(--vvj-muted);
+  font-size: var(--vvj-text-16, 1rem);
+}
+:where(.vvj-pattern--vvjc-orbit-dock) :where(.echo-total) .total-slides {
+  color: var(--vvj-muted);
+}
 
 /* Own place (rule 11): the dock floats above the ring. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock { display: flex; flex-direction: column; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav { order: -1; margin: 0 0 var(--vvj-space-30, 30px); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock {
+  display: flex;
+  flex-direction: column;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-orbit-dock .vvjc-nav {
+  order: -1;
+  margin: 0 0 var(--vvj-space-30, 30px);
+}

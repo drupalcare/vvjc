@@ -29,6 +29,10 @@ options:
   available_breakpoints: '768'
   enable_deeplink: false
 features: []
+pictures:
+  vvj_image:
+    style: vvj_square_800
+    responsive: false
 needs:
   - 'Fields in this order: the image (vvj_image, class vvj-media), kicker (vvj_kicker), title and summary (vvj_summary).'
   - 'Give the field elements the classes vvj-media, vvj-kicker, vvj-title and vvj-summary.'

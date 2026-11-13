@@ -101,6 +101,10 @@
       this._currentIndex = 0;
       this._direction = 1;
       this._isPaused = false;
+      // Rotation holds while keyboard focus or the pointer is inside; these
+      // are not the visitor's Pause (_isPaused), so leaving resumes it.
+      this._focusWithin = false;
+      this._hoverWithin = false;
       this._intervalId = null;
       this._progressIntervalId = null;
       this._rotationDelay = 0;
@@ -180,7 +184,9 @@
         this._isPaused = true;
         this._updatePlayPauseButton(true);
         if (this._features.enableScreenReader) {
-          this._announce('Carousel paused due to reduced motion preference');
+          this._announce(
+            Drupal.t('Carousel paused due to reduced motion preference'),
+          );
         }
       }
 
@@ -378,14 +384,27 @@
         : 'transform 0.8s ease-in-out';
       this._items.style.transform = `translateZ(${-radius}px) rotateY(${angle}deg)`;
 
+      // Read before anything moves: a slide turned `inert` below loses focus
+      // at once (same rescue as _updateCoverflow()).
+      const focused = document.activeElement;
+      let focusLost = false;
+
       this._cells.forEach((cell, index) => {
         const isActive = index === this._currentIndex;
+        if (!isActive && focused instanceof Node && cell.contains(focused)) {
+          focusLost = true;
+        }
         cell.setAttribute('aria-hidden', String(!isActive));
-        cell.querySelectorAll('a, button').forEach((el) => {
-          el.setAttribute('tabindex', isActive ? '0' : '-1');
-        });
+        // `inert` keeps every control of a hidden slide out of the Tab order
+        // (fields, iframes, media controls too), as coverflow does, without
+        // rewriting the tabindex values the content authored.
+        cell.toggleAttribute('inert', !isActive);
         cell.classList.toggle('active', isActive);
       });
+
+      if (focusLost) {
+        this._cells[this._currentIndex]?.focus({ preventScroll: true });
+      }
 
       this._syncSlideState();
     }
@@ -412,7 +431,8 @@
       if (
         (this._features.showProgressBar || this._pattern) &&
         this._rotationDelay > 0 &&
-        !this._isPaused
+        !this._isPaused &&
+        !this._isHeld()
       ) {
         this._startProgress();
       }
@@ -466,10 +486,9 @@
           focusLost = true;
         }
         cell.setAttribute('aria-hidden', String(!shown));
+        // `inert` alone keeps a hidden card's controls out of the Tab order;
+        // no tabindex rewrite, so values the content authored stay.
         cell.toggleAttribute('inert', !shown);
-        cell.querySelectorAll('a, button').forEach((el) => {
-          el.setAttribute('tabindex', shown ? '0' : '-1');
-        });
         cell.classList.toggle('active', index === this._currentIndex);
       });
 
@@ -807,7 +826,8 @@
 
               case ' ':
               case 'Spacebar':
-                if (this._features.showPlayPause) {
+                // Only with a button to mirror; else the page keeps Space.
+                if (this._features.showPlayPause && this._playPauseButton) {
                   event.preventDefault();
                   this._togglePlayPause();
                 }
@@ -833,10 +853,42 @@
         );
       }
 
+      // Keyboard focus inside holds rotation (APG carousel); it resumes when
+      // focus leaves, unless the visitor pressed Pause. relatedTarget tells a
+      // move between two controls inside from focus entering or leaving.
+      this.addEventListener(
+        'focusin',
+        (event) => {
+          if (this._focusWithin || this.contains(event.relatedTarget)) {
+            return;
+          }
+          this._focusWithin = true;
+          this._pauseAutoPlay();
+          if (this._features.showProgressBar) {
+            this._pauseProgress();
+          }
+        },
+        { signal: this.signal },
+      );
+      this.addEventListener(
+        'focusout',
+        (event) => {
+          if (this.contains(event.relatedTarget)) {
+            return;
+          }
+          this._focusWithin = false;
+          if (this._isInViewport && !document.hidden) {
+            this._resumeAutoPlay();
+          }
+        },
+        { signal: this.signal },
+      );
+
       if (this._features.enablePauseOnHover) {
         this.addEventListener(
           'mouseenter',
           () => {
+            this._hoverWithin = true;
             this._pauseAutoPlay();
             if (this._features.showProgressBar) {
               this._pauseProgress();
@@ -844,9 +896,14 @@
           },
           { signal: this.signal },
         );
-        this.addEventListener('mouseleave', () => this._resumeAutoPlay(), {
-          signal: this.signal,
-        });
+        this.addEventListener(
+          'mouseleave',
+          () => {
+            this._hoverWithin = false;
+            this._resumeAutoPlay();
+          },
+          { signal: this.signal },
+        );
       }
     }
 
@@ -935,16 +992,30 @@
         activeDot.offsetLeft - containerWidth / 2 + activeDot.offsetWidth / 2;
       const maxScroll = this._dotsContainer.scrollWidth - containerWidth;
       const clamped = Math.max(0, Math.min(target, maxScroll));
-      this._dotsContainer.scrollTo({ left: clamped, behavior: 'smooth' });
+      this._dotsContainer.scrollTo({
+        left: clamped,
+        behavior: this.reducedMotion ? 'auto' : 'smooth',
+      });
     }
 
     // -----------------------------------------------------------------
     // Autoplay + progress + play/pause.
     // -----------------------------------------------------------------
 
+    /**
+     * Whether focus or the pointer inside holds rotation for now.
+     *
+     * @return {boolean}
+     *   TRUE while keyboard focus is inside, or the pointer is over the
+     *   carousel with "Pause on hover" on.
+     */
+    _isHeld() {
+      return this._focusWithin || this._hoverWithin;
+    }
+
     _startAutoPlay() {
       clearInterval(this._intervalId);
-      if (this._rotationDelay > 0 && !this._isPaused) {
+      if (this._rotationDelay > 0 && !this._isPaused && !this._isHeld()) {
         this._intervalId = setInterval(() => {
           // A timer step is not announced; a visitor action is.
           this._setLiveRegions(false);
@@ -996,6 +1067,10 @@
           this._pauseProgress();
         }
       } else {
+        // Play is an explicit request: it overrides a focus or hover hold
+        // (APG: rotation resumes only when the visitor asks for it).
+        this._focusWithin = false;
+        this._hoverWithin = false;
         this._restartAutoPlay();
       }
     }
@@ -1207,6 +1282,8 @@
         return false;
       }
       this._isPaused = false;
+      this._focusWithin = false;
+      this._hoverWithin = false;
       this._startAutoPlay();
       this._updatePlayPauseButton(false);
       return true;

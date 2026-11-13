@@ -12,9 +12,9 @@
   --vvjb-progress-color: #3b82f6; /* Active progress color */
   --vvjb-progress-track: rgb(255, 255, 255, 0.3); /* Background track */
   --vvjb-progress-inner-bg: #fff; /* Inner circle background */
-  --vvjb-progress-text-color: #3b82f6; /* Percentage text color */
+  --vvjb-progress-text-color: #2563eb; /* Percentage text color, 5.2:1 on white */
   --vvjb-progress-complete-color: #22c55e; /* Color at 100% */
-  --vvjb-progress-complete-text: #22c55e; /* Text color at 100% */
+  --vvjb-progress-complete-text: #15803d; /* Text color at 100%, 5.0:1 on white */
   --vvjb-progress-font-size: 0.625rem;
 }
 /* ==========================================================================
@@ -299,7 +299,7 @@
   height: calc(100% - var(--vvjb-progress-thickness, 6px));
   content: attr(aria-valuenow) "%";
   transition: color 0.3s ease;
-  color: var(--vvjb-progress-text-color, #3b82f6);
+  color: var(--vvjb-progress-text-color, #2563eb);
   border-radius: inherit;
   background: var(--vvjb-progress-inner-bg, #fff);
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "DejaVu Sans Mono", monospace !important;
@@ -315,7 +315,7 @@
 }
 
 .vvjc .progressbar[aria-valuenow="100"]::after {
-  color: var(--vvjb-progress-complete-text, #22c55e);
+  color: var(--vvjb-progress-complete-text, #15803d);
 }
 
 /* Reduced motion support */

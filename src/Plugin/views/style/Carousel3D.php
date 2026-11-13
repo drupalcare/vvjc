@@ -301,7 +301,7 @@ class Carousel3D extends VvjStylePluginBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Show play/pause button'),
       '#default_value' => $this->options['show_play_pause'],
-      '#description' => $this->t('Display a button to control carousel auto-rotation.'),
+      '#description' => $this->t('Display a button to control carousel auto-rotation. The button is always shown while auto-rotation is on (an interval other than "None"), so every visitor can stop the movement; this setting only matters when auto-rotation is off.'),
     ];
 
     $form['controls_section']['show_slide_counter'] = [

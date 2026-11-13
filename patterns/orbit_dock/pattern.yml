@@ -29,6 +29,10 @@ options:
   available_breakpoints: '768'
   enable_deeplink: false
 features: []
+pictures:
+  vvj_image:
+    style: vvj_landscape_1200
+    responsive: false
 needs:
   - 'Fields in this order: the image (vvj_image, class vvj-media), kicker (vvj_kicker, class vvj-kicker) and title (class vvj-title).'
   - 'Show the image with the image style vvj_landscape_1200.'

@@ -44,7 +44,10 @@
 {%- set geometry = options.carousel_style|default('ring') == 'coverflow' ? 'coverflow' : 'ring' %}
 
 {% set show_navigation_arrows = options.show_navigation_arrows ?? true %}
-{% set show_play_pause = options.show_play_pause ?? true %}
+{# WCAG 2.2.2: while auto-rotation runs every visitor gets a way to stop it,
+   so the play/pause button is shown whatever the option says. The option only
+   decides it when auto-rotation is off. #}
+{% set show_play_pause = (options.show_play_pause ?? true) or time_in_seconds > 0 %}
 {% set show_slide_counter = options.show_slide_counter ?? true %}
 {% set show_progress_bar = options.show_progress_bar ?? false %}
 {% set show_dots_navigation = options.show_dots_navigation ?? false %}
@@ -83,7 +86,7 @@
 
 {% set inner_styles = '--max-width: ' ~ max_width ~ ';' ~ (perspective > 0 ? ' --perspective: ' ~ perspective ~ ';' : '') %}
 
-<vvjc-carousel {{ attributes.addClass(classes).setAttribute('id', vvjc_id).setAttribute('style', carousel_styles) }} role="region" aria-label="{{ vvj_pattern and options.vvj_pattern_label ? options.vvj_pattern_label : 'Carousel'|t }}"
+<vvjc-carousel {{ attributes.addClass(classes).setAttribute('id', vvjc_id).setAttribute('style', carousel_styles) }} role="region" aria-roledescription="{{ 'carousel'|t }}" aria-label="{{ vvj_pattern and options.vvj_pattern_label ? options.vvj_pattern_label : 'Carousel'|t }}"
   {%- if deeplink_config.enabled and deeplink_config.identifier and show_dots_navigation %} data-deeplink-id="{{ deeplink_config.identifier }}"{% endif %}>
   {% if enable_pause_on_hover %}
     <span id="vvjc-hover-info-{{ unique_id }}" class="visually-hidden">{{ 'Carousel pauses when you hover over it.'|t }}</span>
@@ -91,9 +94,8 @@
 
   <div class="vvjc-inner" style="{{ inner_styles }}">
     <div id="{{ carousel_id }}" class="vvjc-items"
-      role="region"
-      aria-roledescription="carousel"
-      aria-labelledby="index-{{ unique_id }}"
+      role="group"
+      aria-label="{{ 'Slides'|t }}"
       data-show-navigation-arrows="{{ show_navigation_arrows ? 'true' : 'false' }}"
       data-show-play-pause="{{ show_play_pause ? 'true' : 'false' }}"
       data-show-slide-counter="{{ show_slide_counter ? 'true' : 'false' }}"
@@ -110,7 +112,7 @@
       {% endif %}{% if geometry == 'coverflow' %} data-vvjc-style="coverflow"{% endif %}>
       {% for row in rows %}
         {% set row_id = 'item-' ~ unique_id ~ '-' ~ loop.index %}
-        <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="group" aria-roledescription="{{ 'slide'|t }}" aria-hidden="{{ loop.first ? 'false' : 'true' }}" tabindex="-1" aria-labelledby="label-{{ row_id }}" {% if background_rgb and not options.disable_background %} style="background-color:{{ background_rgb }}"{% endif %}>
+        <div id="{{ row_id }}" class="vvjc-item item-{{ unique_id }}-{{ loop.index }}" role="group" aria-roledescription="{{ 'slide'|t }}" aria-hidden="{{ loop.first ? 'false' : 'true' }}"{% if geometry == 'ring' and not loop.first %} inert{% endif %} tabindex="-1" aria-labelledby="label-{{ row_id }}" {% if background_rgb and not options.disable_background %} style="background-color:{{ background_rgb }}"{% endif %}>
           <div id="label-{{ row_id }}" class="visually-hidden">{{ 'Slide @index of @count'|t({'@index': loop.index, '@count': rows|length}) }}</div>
           {{ row.content }}
         </div>
@@ -122,18 +124,18 @@
     {% endif %}
   </div>
 
-  <div id="{{ bottom_nav_id }}" class="vvjc-nav" data-time="{{ time_in_seconds }}" aria-label="{{ 'Carousel Controls'|t }}">
+  <div id="{{ bottom_nav_id }}" class="vvjc-nav" data-time="{{ time_in_seconds }}" role="group" aria-label="{{ 'Carousel Controls'|t }}">
     <div class="vvjc-nav-inner">
 
       {% if show_navigation_arrows %}
-        <button id="prev-{{ unique_id }}" role="button" class="button prev-arrow control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'Previous Slide'|t }}">
+        <button id="prev-{{ unique_id }}" type="button" class="button prev-arrow control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'Previous Slide'|t }}">
           <span class="visually-hidden">{{ 'Previous Slide'|t }}</span>
           {{ include('@vvjc/svg/svg-prev.svg') }}
         </button>
       {% endif %}
 
       {% if show_play_pause and time_in_seconds > 0 %}
-        <button id="btn-{{ unique_id }}" class="button display-{{ time_in_seconds }}{% if time_in_seconds > 0 %} pause{% else %} play{% endif %} control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ time_in_seconds > 0 ? 'Pause slideshow'|t : 'Play slideshow'|t }}">
+        <button id="btn-{{ unique_id }}" type="button" class="button display-{{ time_in_seconds }}{% if time_in_seconds > 0 %} pause{% else %} play{% endif %} control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ time_in_seconds > 0 ? 'Pause slideshow'|t : 'Play slideshow'|t }}">
           <span class="visually-hidden">{{ 'Play Pause 3D Carousel'|t }}</span>
           {{ include('@vvjc/svg/svg-pause.svg') }}
         </button>
@@ -184,7 +186,7 @@
       {% endif %}
 
       {% if show_navigation_arrows %}
-        <button id="next-{{ unique_id }}" role="button" class="button next-arrow control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'Next Slide'|t }}">
+        <button id="next-{{ unique_id }}" type="button" class="button next-arrow control-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'Next Slide'|t }}">
           <span class="visually-hidden">{{ 'Next Slide'|t }}</span>
           {{ include('@vvjc/svg/svg-next.svg') }}
         </button>

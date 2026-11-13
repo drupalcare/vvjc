@@ -6,59 +6,220 @@
  * setting (DECISIONS.md NEW 4), which is not built yet.
  */
 
-.vvj-pattern--vvjc-index-split { max-width: 1160px; margin: 0 auto; padding: clamp(28px, 5cqi, 72px) var(--vvj-space-20, 20px); grid-template-columns: minmax(240px, 380px) minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; grid-template-areas: "count stage" "dots stage" "arrows stage" ". stage"; align-items: center; column-gap: clamp(32px, 7cqi, 110px); row-gap: var(--vvj-space-20, 20px); opacity: 1; animation: none; }
+.vvj-pattern--vvjc-index-split {
+  grid-template-areas: "count stage" "dots stage" "arrows stage" ". stage";
+  grid-template-rows: auto auto auto 1fr;
+  grid-template-columns: minmax(240px, 380px) minmax(0, 1fr);
+  align-items: center;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: clamp(28px, 5cqi, 72px) var(--vvj-space-20, 20px);
+  column-gap: clamp(32px, 7cqi, 110px);
+  animation: none;
+  opacity: 1;
+  row-gap: var(--vvj-space-20, 20px);
+}
 .vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav,
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner { display: contents; }
-:where(.vvj-pattern--vvjc-index-split) > .vvjc-inner { grid-area: stage; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner {
+  display: contents;
+}
+:where(.vvj-pattern--vvjc-index-split) > .vvjc-inner {
+  grid-area: stage;
+}
 
 /* Text cards: image on top, words below on the page ground. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-items > .vvjc-item { display: flex; flex-direction: column; gap: var(--vvj-space-8, 8px); padding: 0 var(--vvj-space-22, 22px) var(--vvj-space-22, 22px); color: var(--vvj-ink); border: 1px solid var(--vvj-line); border-radius: var(--vvj-radius-20, 20px); background: var(--vvj-surface); }
-:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-items) > .vvjc-item:not(.active) { opacity: 0.22; }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-items > .vvjc-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vvj-space-8, 8px);
+  padding: 0 var(--vvj-space-22, 22px) var(--vvj-space-22, 22px);
+  color: var(--vvj-ink);
+  border: 1px solid var(--vvj-line);
+  border-radius: var(--vvj-radius-20, 20px);
+  background: var(--vvj-surface);
+}
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-items) > .vvjc-item:not(.active) {
+  opacity: 0.22;
+}
 /* A faded card shows its picture only: its words would be unreadable. */
-:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item:not(.active)) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) { visibility: hidden; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media { position: relative; flex: 1 1 0; min-height: 96px; margin: 0 calc(var(--vvj-space-22, 22px) * -1) var(--vvj-space-12, 12px); background: var(--vvj-raised); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media::after { content: none; }
-:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item) :where(.vvj-media) img { clip-path: inset(0 100% 0 0); transition: clip-path var(--vvj-dur-1000, 1s) var(--vvj-ease-io) var(--vvj-dur-350, 0.35s); }
-:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item.active) :where(.vvj-media) img { clip-path: inset(0); }
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item:not(.active)) :is(.vvj-kicker, .vvj-title, .vvj-summary, .vvj-link) {
+  visibility: hidden;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 96px;
+  margin: 0 calc(var(--vvj-space-22, 22px) * -1) var(--vvj-space-12, 12px);
+  background: var(--vvj-raised);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-media::after {
+  content: none;
+}
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item) :where(.vvj-media) img {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--vvj-dur-1000, 1s) var(--vvj-ease-io) var(--vvj-dur-350, 0.35s);
+}
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-item.active) :where(.vvj-media) img {
+  clip-path: inset(0);
+}
 /* The card holds the text inset; vvj_core's p and h reset (0,2,0) zeroes padding
    set on the text itself. The picture stays full-bleed through negative margins. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-kicker { color: var(--vvj-muted); font-size: var(--vvj-text-12, 0.75rem); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-title { font: 600 var(--vvj-text-30, 1.875rem)/1.1 var(--vvj-font-display); }
-.vvj-pattern--vvjc-index-split :where(.vvjc-item) .vvj-summary { color: var(--vvj-muted); font-size: var(--vvj-text-15, 0.9375rem); line-height: 1.5; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link { margin: auto 0 0; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link a { display: inline-flex; align-items: center; gap: var(--vvj-space-8, 8px); min-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link a::after { content: ""; width: 16px; height: 16px; background: currentColor; -webkit-mask: var(--vvjc-icon-next) center / contain no-repeat; mask: var(--vvjc-icon-next) center / contain no-repeat; transition: transform var(--vvj-dur-250, 0.25s) var(--vvj-ease-out); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link a:hover::after { transform: translateX(5px); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-kicker {
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vvj-muted);
+  font-size: var(--vvj-text-12, 0.75rem);
+  font-weight: 700;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-title {
+  font: 600 var(--vvj-text-30, 1.875rem) / 1.1 var(--vvj-font-display);
+}
+.vvj-pattern--vvjc-index-split :where(.vvjc-item) .vvj-summary {
+  color: var(--vvj-muted);
+  font-size: var(--vvj-text-15, 0.9375rem);
+  line-height: 1.5;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link {
+  margin: auto 0 0;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: underline;
+  font-weight: 600;
+  gap: var(--vvj-space-8, 8px);
+  text-underline-offset: 4px;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link a::after {
+  width: 16px;
+  height: 16px;
+  content: "";
+  transition: transform var(--vvj-dur-250, 0.25s) var(--vvj-ease-out);
+  background: currentColor;
+  -webkit-mask: var(--vvjc-icon-next) center / contain no-repeat;
+  mask: var(--vvjc-icon-next) center / contain no-repeat;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-item .vvj-link a:hover::after {
+  transform: translateX(5px);
+}
 
 /* Big counter. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .echo-total { grid-area: count; align-self: end; color: var(--vvj-muted); font-size: var(--vvj-text-18, 1.125rem); padding-block-end: var(--vvj-space-18, 18px); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .echo-total {
+  grid-area: count;
+  align-self: end;
+  padding-block-end: var(--vvj-space-18, 18px);
+  color: var(--vvj-muted);
+  font-size: var(--vvj-text-18, 1.125rem);
+}
 /* The big numeral's glyph reaches below its 0.9 line box; the padding keeps
    it 12px clear of the index and the arrows under it. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .echo-total .current-slide { margin: 0 var(--vvj-space-6, 6px) 0 0; color: var(--vvj-ink); font: 600 clamp(64px, 8cqi, 104px)/0.9 var(--vvj-font-display); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .echo-total .current-slide {
+  margin: 0 var(--vvj-space-6, 6px) 0 0;
+  color: var(--vvj-ink);
+  font: 600 clamp(64px, 8cqi, 104px) / 0.9 var(--vvj-font-display);
+}
 
 /* The index = the dots. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav { grid-area: dots; flex-direction: column; gap: 0; width: 100%; border: solid var(--vvj-line); border-width: 1px 0 0; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button { justify-content: flex-start; width: 100%; height: auto; padding: var(--vvj-space-14, 14px) 0; color: var(--vvjc-tab-idle); border: solid var(--vvj-line); border-width: 0 0 1px; font-size: var(--vvj-text-16, 1rem); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button .vvjc-dot-num { font: 600 var(--vvj-text-13, 0.8125rem)/1 var(--vvj-font-mono, monospace); transition: transform var(--vvj-dur-400, 0.4s) var(--vvj-ease-out), color var(--vvj-dur-300, 0.3s); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button::after { content: ""; position: absolute; inset: auto 0 -1px; height: 2px; background: var(--vvjc-tab-active); transform: scaleX(0); transform-origin: left; transition: transform var(--vvj-dur-600, 0.6s) var(--vvj-ease-io); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button:hover .vvjc-dot-num { color: var(--vvjc-tab-active); transform: translateX(4px); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active { color: var(--vvjc-tab-active); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active .vvjc-dot-num { transform: translateX(8px); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active::after { transform: scaleX(1); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav {
+  flex-direction: column;
+  grid-area: dots;
+  width: 100%;
+  border: solid var(--vvj-line);
+  border-width: 1px 0 0;
+  gap: 0;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button {
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  padding: var(--vvj-space-14, 14px) 0;
+  color: var(--vvjc-tab-idle);
+  border: solid var(--vvj-line);
+  border-width: 0 0 1px;
+  font-size: var(--vvj-text-16, 1rem);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button .vvjc-dot-num {
+  transition:
+    transform var(--vvj-dur-400, 0.4s) var(--vvj-ease-out),
+    color var(--vvj-dur-300, 0.3s);
+  font: 600 var(--vvj-text-13, 0.8125rem) / 1 var(--vvj-font-mono, monospace);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button::after {
+  position: absolute;
+  height: 2px;
+  content: "";
+  transition: transform var(--vvj-dur-600, 0.6s) var(--vvj-ease-io);
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--vvjc-tab-active);
+  inset: auto 0 -1px;
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button:hover .vvjc-dot-num {
+  transform: translateX(4px);
+  color: var(--vvjc-tab-active);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active {
+  color: var(--vvjc-tab-active);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active .vvjc-dot-num {
+  transform: translateX(8px);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-dots-nav .dots-numbers-button.active::after {
+  transform: scaleX(1);
+}
 
 /* Square arrows, side by side in one cell. */
-.vvj-pattern--vvjc-index-split :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) { grid-area: arrows; justify-self: start; --vvjc-btn-w: 52px; --vvjc-btn-h: 52px; --vvjc-btn-color: var(--vvjc-btn-line); --vvjc-btn-border: 1.5px solid var(--vvjc-btn-line); --vvjc-btn-radius: 4px; --vvjc-btn-size: 18px; transition: background-color var(--vvj-dur-200, 0.2s), color var(--vvj-dur-200, 0.2s), transform var(--vvj-dur-100, 0.1s); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .next-arrow { margin: 0 0 0 var(--vvj-space-64, 64px); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover { color: var(--vvjc-btn-text); background: var(--vvjc-btn-fill); }
-:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow)::before { transition: transform var(--vvj-dur-250, 0.25s) var(--vvj-ease-out); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .next-arrow:not(.vvjc-disabled):hover::before { transform: translateX(3px); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .prev-arrow:not(.vvjc-disabled):hover::before { transform: translateX(-3px); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .control-btn:active { transform: translateY(1px); }
+.vvj-pattern--vvjc-index-split :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow) {
+  grid-area: arrows;
+  justify-self: start;
+
+  --vvjc-btn-w: 52px;
+  --vvjc-btn-h: 52px;
+  --vvjc-btn-color: var(--vvjc-btn-line);
+  --vvjc-btn-border: 1.5px solid var(--vvjc-btn-line);
+  --vvjc-btn-radius: 4px;
+  --vvjc-btn-size: 18px;
+
+  transition:
+    background-color var(--vvj-dur-200, 0.2s),
+    color var(--vvj-dur-200, 0.2s),
+    transform var(--vvj-dur-100, 0.1s);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .next-arrow {
+  margin: 0 0 0 var(--vvj-space-64, 64px);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner :is(.prev-arrow, .next-arrow):not(.vvjc-disabled):hover {
+  color: var(--vvjc-btn-text);
+  background: var(--vvjc-btn-fill);
+}
+:where(.vvj-pattern--vvjc-index-split) :where(.vvjc-nav-inner) :is(.prev-arrow, .next-arrow)::before {
+  transition: transform var(--vvj-dur-250, 0.25s) var(--vvj-ease-out);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .next-arrow:not(.vvjc-disabled):hover::before {
+  transform: translateX(3px);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .prev-arrow:not(.vvjc-disabled):hover::before {
+  transform: translateX(-3px);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split .vvjc-nav-inner .control-btn:active {
+  transform: translateY(1px);
+}
 
 /* Side by side, the ring's turned cards reached back over the index list.
    The stage is cut on its start side only; the next card still peeks at the end. */
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split:not(.vvjc-narrow) > .vvjc-inner { clip-path: inset(-100vmax -100vmax -100vmax 0); }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split:not(.vvjc-narrow):dir(rtl) > .vvjc-inner { clip-path: inset(-100vmax 0 -100vmax -100vmax); }
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split:not(.vvjc-narrow) > .vvjc-inner {
+  clip-path: inset(-100vmax -100vmax -100vmax 0);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split:not(.vvjc-narrow):dir(rtl) > .vvjc-inner {
+  clip-path: inset(-100vmax 0 -100vmax -100vmax);
+}
 
-.vvj-pattern--vvjc-index-split.vvjc-narrow { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "stage" "count" "arrows" "dots"; }
-.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split.vvjc-narrow .echo-total .current-slide { font-size: var(--vvj-text-56, 3.5rem); }
+.vvj-pattern--vvjc-index-split.vvjc-narrow {
+  grid-template-areas: "stage" "count" "arrows" "dots";
+  grid-template-rows: none;
+  grid-template-columns: minmax(0, 1fr);
+}
+.vvj-pattern.vvjc.vvj-pattern--vvjc-index-split.vvjc-narrow .echo-total .current-slide {
+  font-size: var(--vvj-text-56, 3.5rem);
+}
