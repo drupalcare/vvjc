@@ -31,8 +31,8 @@ options:
 features: []
 pictures:
   vvj_image:
-    style: vvj_square_800
+    style: vvj_portrait_1280
     responsive: false
 needs:
   - 'Fields in this order: the image (vvj_image, class vvj-media), kicker (vvj_kicker, class vvj-kicker) and title (class vvj-title).'
-  - 'Show the image with the image style vvj_square_800; dark images read best.'
+  - 'Show the image with the image style vvj_portrait_1280 (the cards are taller than wide); dark images read best.'

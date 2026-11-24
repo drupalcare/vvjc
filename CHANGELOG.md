@@ -2,6 +2,7 @@
 
 ## [2.0.0] (UNRELEASED)
 
+- Patterns Story reel and Ambient stage recommend the image style `vvj_portrait_1280` instead of `vvj_square_800`. Their cards are taller than wide (about 440 x 534px and 376 x 444px), so a square 800px copy was drawn larger than its own size and looked soft on high-density screens.
 - Accessibility: the play/pause button is always shown while auto-rotation runs (the option now decides it only without rotation); keyboard focus inside holds rotation until focus leaves, unless Pause was pressed; hidden ring slides are `inert` (printed in the template for the first render) and a focused slide that turns hidden hands focus to the current one; the slide area is a group named "Slides" (it was a second region named by the counter), the outer region carries "carousel", the control bar is a named group, and the arrow and play buttons are `type="button"` without a redundant role; the reduced-motion announcement is translatable; Space is left to the page when there is no play/pause button; scrollable dots no longer smooth-scroll under reduced motion; the progress percentage text is dark blue (5.2:1) and dark green at 100% (5.0:1).
 - Accessibility: in Windows high contrast (forced colors) the Pattern icons stay visible; they are masks painted with the text color, which the system used to replace.
 
