@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [2.1.0] — 2026-11-27
+
+First release from the new `2.1.x` branch. Covers everything since 2.0.3, the last published release.
+
 ### Changed
 
 - Patterns Story reel and Ambient stage recommend the image style `vvj_portrait_1280` instead of `vvj_square_800`. Their cards are taller than wide (about 440 x 534px and 376 x 444px), so a square 800px copy was drawn larger than its own size and looked soft on high-density screens.
